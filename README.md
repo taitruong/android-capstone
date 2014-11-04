@@ -50,7 +50,7 @@ Now you can start the emulator / device by double-clicking on the virtual device
 
 Start Android Studio and import the server project via the menu:
 - File>Import Project
-- Select build.gradle file in the folder Server
+- Select the build.gradle file (and NOT the directory) in D:\development\android_capstone\git\Server
 
 It takes some time since some libraries will be downloaded. Once it is finished you need to check whether everything is compile correctly. Open in the Project view (tab on the left side):
 - open file Application.java in folder java/org.aliensource.symptommanagement.cloud.video
