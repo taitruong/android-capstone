@@ -6,15 +6,18 @@ This is the implementation from the Android Capstone project. For more details l
 ## Java
 
 Make sure you have the JDK installed and not only the JRE.
-- Check in the folder:
--- C:\Program Files\Java (for 64bit version) and
--- C:\Program Files (x86)\Java (for 32bit version)
-- Is there a folder named jdkXXXXX and/or jreXXXXX?
-- Install the JDK here: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
--- accept license
--- select "Windows x86" version for 32bit
--- select "Windows x64" version for 64bit
 
+|Check the folders                                |
+|:------------------------------------------------|
+| C:\Program Files\Java (for 64bit version)       |
+| C:\Program Files (x86)\Java (for 32bit version) |
+
+Is there a folder named jdkXXXXX and/or jreXXXXX?
+
+Install the JDK here: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+- accept license
+- select "Windows x86" version for 32bit
+- select "Windows x64" version for 64bit
 
 ## Install Git and TortoiseGit
 
@@ -27,35 +30,31 @@ Now install TortoiseGit: https://code.google.com/p/tortoisegit/
 
 ## GitHub
 
-- Register on GitHub: https://github.com/
-- Ask Tai for having access to https://github.com/taitruong/android-capstone
-- Create folder D:\development\android_capstone
-- Enter in command prompt and jump to the created folder:
--- cd D:\development\android_capstone
--- cd D:
-- Clone repository from GitHub to local Git on separate git folder "git"
--- git clone --separate-git-dir git https://github.com/taitruong/android-capstone
+Register on GitHub: https://github.com/ and ask Tai for having access to: https://github.com/taitruong/android-capstone
+
+Create the folder D:\development\android_capstone and start the command prompt in this folder. Clone the remote repository from GitHub to a local Git repository into the "git" folder:
+```
+ git clone https://github.com/taitruong/android-capstone git
+```
 
 ## Install Android Studio
 
 ### Download and install the Android emulator Genymotion: https://cloud.genymotion.com/page/launchpad/download/
 
-- Start Genymotion
-- click 'Add'
-- Create Android Device
--- select 'Google Nexus 5-4.4.4-API19-1080x1920' > next > next > finish
-- start device by double-clicking
+Start Genymotion and click 'Add' to create a new Android device:
+- select 'Google Nexus 5-4.4.4-API19-1080x1920' > next > next > finish
 
+Now you can start the emulator / device by double-clicking on the virtual device list.
 
 ### Download and install the development environment: https://developer.android.com/sdk/installing/studio.html#download
 
-Import the server project
-- open Android Studio
+Start Android Studio and import the server project via the menu:
 - File>Import Project
 - Select build.gradle file in the folder Server
-- open in the Project view (tab on the left side):
--- open file Application.java in folder java/org.aliensource.symptommanagement.cloud.video
--- If there is an error showing "Project SDK is not defined" then click on "Setup SDK" and set to the JDK (and not to Android SDK!)
+
+It takes some time since some libraries will be downloaded. Once it is finished you need to check whether everything is compile correctly. Open in the Project view (tab on the left side):
+- open file Application.java in folder java/org.aliensource.symptommanagement.cloud.video
+- If there is an error showing "Project SDK is not defined" then click on "Setup SDK" and set to the JDK (and not to Android SDK!)
 
 Starting and stopping the Server
 - right-click on the file>Run 'Application.main()'
@@ -63,26 +62,19 @@ Starting and stopping the Server
 - click on bottom, tab "application", press stop button
 - this stops the Java process (check on Task Manager)
 
-
 Server tests
 - open file VideoSvcClientApiTest in folder tests/org.aliensource.symptommanagement.cloud.integration.test
--- right-click file>Run 'VideoSvcClientApiTest'
--- Test should pass (green)
+- right-click file>Run 'VideoSvcClientApiTest'
+- Test should pass (green)
 
 
 Import the client project
 - see above to import build.gradle file in the Client folder
 
 Starting the app on Genymotion
-- assuming you have the server started
-- assuming you have the Android device in Genymotion started, you can install and run the app:
--- In the menu Run>Run 'app'
---- for the first time this takes some time
---- if an ADB error occurs open the task manager and close all ADB processes
--- select the Genymotion device > OK
-- in the app on Genymotion:
--- click the OK button for login
--- next UI should appear
+Assuming you have the server in den Android Studio environment and the Android device in Genymotion started, you can install and run the app. Click in the menu Run>Run 'app'. For the first time this takes some time.
+
+If an ADB (Android Debugging Bridge) error occurs open the task manager and close all ADB processes. Select the Genymotion device you want the app to install and press OK. The app starts in Genymotion. Click the OK button for login and the next UI should appear
 
 Client tests
 - select package org.aliensource.symptommanagement.android.test
