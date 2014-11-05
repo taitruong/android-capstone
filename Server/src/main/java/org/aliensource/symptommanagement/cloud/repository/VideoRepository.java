@@ -1,8 +1,9 @@
-package org.aliensource.symptommanagement.cloud.video.repository;
+package org.aliensource.symptommanagement.cloud.repository;
 
 import java.util.Collection;
 
-import org.aliensource.symptommanagement.cloud.video.client.VideoSvcApi;
+import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
+import org.aliensource.symptommanagement.cloud.repository.Video;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

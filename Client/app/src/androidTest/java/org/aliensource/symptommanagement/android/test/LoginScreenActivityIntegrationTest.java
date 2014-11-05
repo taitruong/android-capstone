@@ -11,7 +11,7 @@ import org.aliensource.symptommanagement.android.R;
 
 import org.aliensource.symptommanagement.android.LoginScreenActivity;
 import org.aliensource.symptommanagement.android.MainActivity;
-import org.aliensource.symptommanagement.cloud.video.TestUtils;
+import org.aliensource.symptommanagement.cloud.TestUtils;
 
 public class LoginScreenActivityIntegrationTest extends ActivityInstrumentationTestCase2 {
 

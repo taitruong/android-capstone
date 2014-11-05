@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
+import org.aliensource.symptommanagement.cloud.repository.Video;
 
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.filters.FilterPackageInfo;

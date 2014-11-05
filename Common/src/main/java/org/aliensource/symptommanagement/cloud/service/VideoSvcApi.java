@@ -1,8 +1,8 @@
-package org.aliensource.symptommanagement.cloud.video.client;
+package org.aliensource.symptommanagement.cloud.service;
 
 import java.util.Collection;
 
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
+import org.aliensource.symptommanagement.cloud.repository.Video;
 
 import retrofit.http.Body;
 import retrofit.http.DELETE;

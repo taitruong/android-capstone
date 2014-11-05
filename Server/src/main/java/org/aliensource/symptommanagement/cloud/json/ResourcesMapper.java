@@ -1,4 +1,4 @@
-package org.aliensource.symptommanagement.cloud.video.json;
+package org.aliensource.symptommanagement.cloud.json;
 
 import java.io.IOException;
 

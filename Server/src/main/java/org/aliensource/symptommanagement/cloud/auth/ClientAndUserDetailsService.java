@@ -4,7 +4,7 @@
  **
  ** 
  */
-package org.aliensource.symptommanagement.cloud.video.auth;
+package org.aliensource.symptommanagement.cloud.auth;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -10,8 +10,8 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.aliensource.symptommanagement.cloud.video.client.VideoSvcApi;
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
+import org.aliensource.symptommanagement.cloud.repository.Video;
+import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

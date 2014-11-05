@@ -1,11 +1,7 @@
-package org.aliensource.symptommanagement.cloud.video;
+package org.aliensource.symptommanagement.cloud;
 
-import org.aliensource.symptommanagement.cloud.video.client.VideoSvcApi;
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
+import org.aliensource.symptommanagement.cloud.repository.Video;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.UUID;
 
 public class TestUtils {

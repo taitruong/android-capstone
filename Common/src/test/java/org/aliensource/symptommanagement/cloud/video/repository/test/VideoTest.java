@@ -3,7 +3,7 @@ package org.aliensource.symptommanagement.cloud.video.repository.test;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
+import org.aliensource.symptommanagement.cloud.repository.Video;
 
 public class VideoTest {
 

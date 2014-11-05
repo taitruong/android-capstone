@@ -5,9 +5,9 @@ import com.google.gson.JsonObject;
 import org.aliensource.symptommanagement.client.oauth.SecuredRestBuilder;
 import org.aliensource.symptommanagement.client.oauth.SecuredRestException;
 import org.aliensource.symptommanagement.cloud.integration.test.org.aliensource.symptommanagement.cloud.model.TestData;
-import org.aliensource.symptommanagement.cloud.video.client.EasyHttpClient;
-import org.aliensource.symptommanagement.cloud.video.client.VideoSvcApi;
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
+import org.aliensource.symptommanagement.client.EasyHttpClient;
+import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
+import org.aliensource.symptommanagement.cloud.repository.Video;
 import org.junit.Test;
 
 import java.util.Collection;

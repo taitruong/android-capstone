@@ -7,8 +7,8 @@
 package org.aliensource.symptommanagement.android;
 
 import org.aliensource.symptommanagement.client.oauth.SecuredRestBuilder;
-import org.aliensource.symptommanagement.cloud.video.client.EasyHttpClient;
-import org.aliensource.symptommanagement.cloud.video.client.VideoSvcApi;
+import org.aliensource.symptommanagement.client.EasyHttpClient;
+import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
 
 import retrofit.RestAdapter.LogLevel;
 import retrofit.client.ApacheClient;

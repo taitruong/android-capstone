@@ -3,9 +3,9 @@ package org.aliensource.symptommanagement.android.test;
 import junit.framework.TestCase;
 
 import org.aliensource.symptommanagement.android.VideoSvc;
-import org.aliensource.symptommanagement.cloud.video.TestUtils;
-import org.aliensource.symptommanagement.cloud.video.client.VideoSvcApi;
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
+import org.aliensource.symptommanagement.cloud.TestUtils;
+import org.aliensource.symptommanagement.cloud.repository.Video;
+import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
 
 import java.util.Collection;
 

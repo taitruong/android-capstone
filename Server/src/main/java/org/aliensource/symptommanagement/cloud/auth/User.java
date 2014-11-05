@@ -4,7 +4,7 @@
  **
  ** 
  */
-package org.aliensource.symptommanagement.cloud.video.auth;
+package org.aliensource.symptommanagement.cloud.auth;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;

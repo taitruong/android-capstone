@@ -1,9 +1,9 @@
-package org.aliensource.symptommanagement.cloud.video;
+package org.aliensource.symptommanagement.cloud;
 
-import org.aliensource.symptommanagement.cloud.video.auth.OAuth2SecurityConfiguration;
-import org.aliensource.symptommanagement.cloud.video.json.ResourcesMapper;
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
-import org.aliensource.symptommanagement.cloud.video.repository.VideoRepository;
+import org.aliensource.symptommanagement.cloud.auth.OAuth2SecurityConfiguration;
+import org.aliensource.symptommanagement.cloud.json.ResourcesMapper;
+import org.aliensource.symptommanagement.cloud.repository.Video;
+import org.aliensource.symptommanagement.cloud.repository.VideoRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableAutoConfiguration
 // Tell Spring to automatically create a JPA implementation of our
 // VideoRepository
-@EnableJpaRepositories(basePackageClasses = VideoRepository.class)
+@EnableJpaRepositories(basePackageClasses = {VideoRepository.class})
 // Tell Spring to turn on WebMVC (e.g., it should enable the DispatcherServlet
 // so that requests can be routed to our Controllers)
 @EnableWebMvc

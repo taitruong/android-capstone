@@ -2,7 +2,7 @@ package org.aliensource.symptommanagement.cloud.integration.test.org.aliensource
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
+import org.aliensource.symptommanagement.cloud.repository.Video;
 
 import java.util.UUID;
 

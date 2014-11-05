@@ -7,9 +7,9 @@ import android.widget.ListView;
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.MainActivity;
 import org.aliensource.symptommanagement.android.VideoSvc;
-import org.aliensource.symptommanagement.cloud.video.TestUtils;
-import org.aliensource.symptommanagement.cloud.video.client.VideoSvcApi;
-import org.aliensource.symptommanagement.cloud.video.repository.Video;
+import org.aliensource.symptommanagement.cloud.TestUtils;
+import org.aliensource.symptommanagement.cloud.repository.Video;
+import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
 
 import java.util.Collection;
 

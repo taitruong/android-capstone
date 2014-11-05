@@ -1,4 +1,4 @@
-package org.aliensource.symptommanagement.cloud.video.repository;
+package org.aliensource.symptommanagement.cloud.repository;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

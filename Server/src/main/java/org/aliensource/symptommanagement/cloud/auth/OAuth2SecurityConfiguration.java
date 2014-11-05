@@ -1,4 +1,4 @@
-package org.aliensource.symptommanagement.cloud.video.auth;
+package org.aliensource.symptommanagement.cloud.auth;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11NioProtocol;

@@ -4,7 +4,7 @@
 **
 ** 
 */
-package org.aliensource.symptommanagement.cloud.video.client;
+package org.aliensource.symptommanagement.client;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
