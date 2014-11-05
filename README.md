@@ -67,6 +67,10 @@ Server tests
 - right-click file>Run 'VideoSvcClientApiTest'
 - Test should pass (green)
 
+Attach project to Git and GitHub
+- Open menu File>Settings>Version Control>GitHub
+- Enter user username and password
+- Go one up to Version Control and press "Add root" for the "Unregistered Git root: D:\development\android_capstone\git"
 
 Import the client project
 - see above to import build.gradle file in the Client folder
