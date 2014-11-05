@@ -84,3 +84,8 @@ Client tests
 - select package org.aliensource.symptommanagement.android.test
 - right-click on the package > Run > Run 'org.aliensource...'
 - Test should pass (green)
+
+Attach project to Git and GitHub
+- Open menu File>Settings>Version Control>GitHub
+- Enter user username and password
+- Go one up to Version Control and press "Add root" for the "Unregistered Git root: D:\development\android_capstone\git"
