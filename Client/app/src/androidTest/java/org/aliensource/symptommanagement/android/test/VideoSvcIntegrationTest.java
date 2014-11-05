@@ -9,16 +9,6 @@ import org.aliensource.symptommanagement.cloud.video.repository.Video;
 
 import java.util.Collection;
 
-/**
- * This test assumes that you are running integration testing against
- * a local version of the server and using the emulator. The server
- * must already be running before you launch this test. Since different
- * emulators have different addresses to represent the "real" localhost,
- * the test uses a helper method to derive the true localhost address.
- *
- *
- * Created by jules on 10/6/14.
- */
 public class VideoSvcIntegrationTest extends TestCase {
 
     private String localhost_;

@@ -7,13 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-/**
- * An interface for a repository that can store Video
- * objects and allow them to be searched by title.
- * 
- * @author jules
- *
- */
 // This @RepositoryRestResource annotation tells Spring Data Rest to
 // expose the VideoRepository through a controller and map it to the 
 // "/video" path. This automatically enables you to do the following:

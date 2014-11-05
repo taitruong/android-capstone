@@ -9,10 +9,6 @@ import org.aliensource.symptommanagement.android.TaskCallback;
 
 import java.util.concurrent.Callable;
 
-/**
- *
- * Created by jules on 10/6/14.
- */
 public class CallableTaskTest extends TestCase {
 
     private boolean notified_ = false;

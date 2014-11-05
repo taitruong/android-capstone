@@ -8,14 +8,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.UUID;
 
-/**
- * Created by jules on 10/6/14.
- */
 public class TestUtils {
 
     public static final String PROTOCOL = "https";
     public static final String PORT = "8443";
-    public static final String USER_DOCTOR1 = "admin";
+    public static final String USER_DOCTOR1 = "doctor1";
     public static final String USER_DOCTOR1_PASS = "pass";
 
     private static final String[] POSSIBLE_LOCALHOSTS = {

@@ -5,7 +5,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.aliensource.symptommanagement.android.R;
-import org.aliensource.symptommanagement.android.VideoListActivity;
+import org.aliensource.symptommanagement.android.MainActivity;
 import org.aliensource.symptommanagement.android.VideoSvc;
 import org.aliensource.symptommanagement.cloud.video.TestUtils;
 import org.aliensource.symptommanagement.cloud.video.client.VideoSvcApi;
@@ -23,18 +23,18 @@ import java.util.Collection;
  *
  * Created by jules on 10/6/14.
  */
-public class VideoListActivityTest extends ActivityInstrumentationTestCase2<VideoListActivity> {
+public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     private VideoSvcApi videoSvc_;
 
-    private VideoListActivity activity_;
+    private MainActivity activity_;
 
     private ListView videoList_;
 
     private final Video video_ = TestUtils.randomVideo();
 
-    public VideoListActivityTest() {
-        super(VideoListActivity.class);
+    public MainActivityTest() {
+        super(MainActivity.class);
     }
 
     @Override

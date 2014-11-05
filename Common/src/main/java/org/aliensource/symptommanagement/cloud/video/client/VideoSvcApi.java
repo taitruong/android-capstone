@@ -11,16 +11,6 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-/**
- * This interface defines an API for a VideoSvc. The
- * interface is used to provide a contract for client/server
- * interactions. The interface is annotated with Retrofit
- * annotations so that clients can automatically convert the
- * 
- * 
- * @author jules
- *
- */
 public interface VideoSvcApi {
 	
 	public static final String TITLE_PARAMETER = "title";

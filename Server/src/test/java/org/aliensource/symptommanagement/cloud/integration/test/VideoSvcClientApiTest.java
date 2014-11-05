@@ -47,7 +47,7 @@ import static org.junit.Assert.fail;
  */
 public class VideoSvcClientApiTest {
 
-	private final String USERNAME = "admin";
+	private final String USERNAME = "doctor1";
 	private final String PASSWORD = "pass";
 	private final String CLIENT_ID = "mobile";
 	private final String READ_ONLY_CLIENT_ID = "mobileReader";

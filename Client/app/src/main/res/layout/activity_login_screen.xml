@@ -17,7 +17,7 @@
         android:layout_marginTop="120dp"
         android:ems="10"
         android:hint="@string/userName"
-        android:text="admin" />
+        android:text="patient1" />
 
     <EditText
         android:id="@+id/password"

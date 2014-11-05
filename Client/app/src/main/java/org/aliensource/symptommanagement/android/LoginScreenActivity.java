@@ -21,9 +21,7 @@ import butterknife.OnClick;
  * 
  * This application uses ButterKnife. AndroidStudio has better support for
  * ButterKnife than Eclipse, but Eclipse was used for consistency with the other
- * courses in the series. If you have trouble getting the login button to work,
- * please follow these directions to enable annotation processing for this
- * Eclipse project:
+ * courses in the series.
  * 
  * http://jakewharton.github.io/butterknife/ide-eclipse.html
  * 
@@ -69,7 +67,7 @@ public class LoginScreenActivity extends Activity {
 				// can talk to the server, open up the video listing
 				startActivity(new Intent(
 						LoginScreenActivity.this,
-						VideoListActivity.class));
+						MainActivity.class));
 			}
 
 			@Override
