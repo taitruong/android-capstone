@@ -12,7 +12,7 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 
 public interface VideoSvcApi {
-	
+
 	public static final String TITLE_PARAMETER = "title";
 	
 	public static final String DURATION_PARAMETER = "duration";

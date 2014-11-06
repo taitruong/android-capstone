@@ -7,6 +7,8 @@ import org.aliensource.symptommanagement.cloud.repository.Video;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 // This @RepositoryRestResource annotation tells Spring Data Rest to
 // expose the VideoRepository through a controller and map it to the 
@@ -22,7 +24,13 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(path = VideoSvcApi.VIDEO_SVC_PATH)
 public interface VideoRepository extends CrudRepository<Video, Long>{
 
-	// Find all videos with a matching title (e.g., Video.name)
+    @Override
+    //@PreAuthorize("hasRole('Doctor')")
+    @PreAuthorize("principal.name.equals('xxx')")
+    //@PostFilter("hasPermission(filterObject, xxxx)")
+    public Iterable<Video> findAll();
+
+    // Find all videos with a matching title (e.g., Video.name)
 	public Collection<Video> findByName(
 			// The @Param annotation tells Spring Data Rest which HTTP request
 			// parameter it should use to fill in the "title" variable used to

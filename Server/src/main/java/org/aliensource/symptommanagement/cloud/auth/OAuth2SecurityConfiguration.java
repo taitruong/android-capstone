@@ -1,5 +1,6 @@
 package org.aliensource.symptommanagement.cloud.auth;
 
+import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,12 +165,12 @@ public class OAuth2SecurityConfiguration {
 			// Create a series of hard-coded users. 
 			UserDetailsService svc = new InMemoryUserDetailsManager(
 					Arrays.asList(
-							User.create("doctor1", "pass", "Doctor"),
-                            User.create("doctor2", "pass", "Doctor"),
-                            User.create("doctor3", "pass", "Doctor"),
-							User.create("patient1", "pass", "Patient"),
-                            User.create("patient2", "pass", "Patient"),
-                            User.create("patient3", "pass", "Patient")));
+							User.create("doctor1", "pass", SecurityService.ROLE_DOCTOR),
+                            User.create("doctor2", "pass", SecurityService.ROLE_DOCTOR),
+                            User.create("doctor3", "pass", SecurityService.ROLE_DOCTOR),
+							User.create("patient1", "pass", SecurityService.ROLE_PATIENT),
+                            User.create("patient2", "pass", SecurityService.ROLE_PATIENT),
+                            User.create("patient3", "pass", SecurityService.ROLE_PATIENT)));
 
 			// Since clients have to use BASIC authentication with the client's id/secret,
 			// when sending a request for a password grant, we make each client a user

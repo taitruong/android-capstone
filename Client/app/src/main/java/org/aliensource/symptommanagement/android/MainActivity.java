@@ -3,23 +3,30 @@ package org.aliensource.symptommanagement.android;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import org.aliensource.symptommanagement.cloud.repository.Video;
+import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
 
 import butterknife.ButterKnife;
@@ -36,7 +43,10 @@ public class MainActivity extends Activity {
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] menuTitles;
+    //workaround: initialize with empty array, will be set in initMenus() later anyway
+    private String[] menuTitles = {""};
+    //layouts array must be in the same order/position as for menuTitles array
+    private int[] layouts;
 
 	@InjectView(R.id.videoList)
 	protected ListView videoList_;
@@ -49,12 +59,8 @@ public class MainActivity extends Activity {
 		ButterKnife.inject(this);
 
         mTitle = mDrawerTitle = getTitle();
-        menuTitles = getResources().getStringArray(R.array.menu_array);
-
-        // set a custom shadow that overlays the main content when the drawer opens
-        //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-        mainMenuList.setAdapter(new ArrayAdapter<String>(this,
+        mainMenuList.setAdapter(new ArrayAdapter<String>(MainActivity.this,
                 R.layout.drawer_list_item, menuTitles));
         mainMenuList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -62,7 +68,7 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
-        // ActionBarDrawerToggle ties together the the proper interactions
+        // ActionBarDrawerToggle ties together to the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
@@ -82,16 +88,13 @@ public class MainActivity extends Activity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        if (savedInstanceState == null) {
-            selectItem(0);
-        }
-
     }
 
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        //TODO - not ideal to always call initMenus but I don't know yet how to remove the init logic in the onCreate()-method
+        initMenus();
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mainMenuList);
         //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
@@ -121,6 +124,17 @@ public class MainActivity extends Activity {
     }
 
     private void selectItem(int position) {
+        // update the main content by replacing fragments
+        Fragment fragment = new DoctorOrPatientFragment();
+        Bundle args = new Bundle();
+        int layout = layouts[position];
+        args.putInt(DoctorOrPatientFragment.ARG_LAYOUT, layout);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+        // update selected item and title, then close the drawer
         mainMenuList.setItemChecked(position, true);
         setTitle(menuTitles[position]);
         mDrawerLayout.closeDrawer(mainMenuList);
@@ -159,6 +173,50 @@ public class MainActivity extends Activity {
 		refreshVideos();
 	}
 
+    private void initMenus() {
+        final SecurityService svc = VideoSvc.getSecurityServiceOrShowLogin(this);
+        if (svc != null) {
+            CallableTask.invoke(new Callable<Boolean>() {
+
+                @Override
+                public Boolean call() throws Exception {
+                    return svc.hasRole(SecurityService.ROLE_DOCTOR);
+                }
+            }, new TaskCallback<Boolean>() {
+
+                @Override
+                public void success(Boolean isDoctor) {
+                    if (isDoctor) {
+                        String menu1 = getResources().getString(R.string.patient_list);
+                        String menu2 = getResources().getString(R.string.patient_report);
+                        menuTitles = new String[]{menu1, menu2};
+                        layouts = new int[] {R.layout.fragment_patient_list, R.layout.fragment_patient_report};
+                    } else {
+                        String menu1 = getResources().getString(R.string.check_in);
+                        String menu2 = getResources().getString(R.string.reminder_settings);
+                        menuTitles = new String[]{menu1, menu2};
+                        layouts = new int[] {R.layout.fragment_check_in, R.layout.fragment_reminder_settings};
+                    }
+
+                    // set up the drawer's list view with items and click listener
+                    mainMenuList.setAdapter(new ArrayAdapter<String>(MainActivity.this,
+                            R.layout.drawer_list_item, menuTitles));
+                }
+
+                @Override
+                public void error(Exception e) {
+                    Toast.makeText(
+                            MainActivity.this,
+                            "Unable to login.",
+                            Toast.LENGTH_SHORT).show();
+
+                    startActivity(new Intent(MainActivity.this,
+                            LoginScreenActivity.class));
+                }
+            });
+        }
+    }
+
 	private void refreshVideos() {
 		final VideoSvcApi svc = VideoSvc.getOrShowLogin(this);
 
@@ -196,4 +254,21 @@ public class MainActivity extends Activity {
 		}
 	}
 
+    /**
+     * Fragment that appears in the "content_frame"
+     */
+    public static class DoctorOrPatientFragment extends Fragment {
+        public static final String ARG_LAYOUT = "doctor_or_patient_layout";
+
+        public DoctorOrPatientFragment() {
+            // Empty constructor required for fragment subclasses
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            int layout = getArguments().getInt(ARG_LAYOUT);
+            return inflater.inflate(layout, container, false);
+        }
+    }
 }

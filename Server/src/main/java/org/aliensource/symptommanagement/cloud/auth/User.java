@@ -44,9 +44,7 @@ public class User implements UserDetails {
 		authorities_ = authorities;
 	}
 
-	public Collection<GrantedAuthority> getAuthorities() {
-		return authorities_;
-	}
+	public Collection<GrantedAuthority> getAuthorities() { return authorities_;	}
 
 	public String getPassword() {
 		return password_;
