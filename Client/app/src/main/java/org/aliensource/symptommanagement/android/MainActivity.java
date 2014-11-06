@@ -187,13 +187,13 @@ public class MainActivity extends Activity {
                 @Override
                 public void success(Boolean isDoctor) {
                     if (isDoctor) {
-                        String menu1 = getResources().getString(R.string.patient_list);
-                        String menu2 = getResources().getString(R.string.patient_report);
+                        String menu1 = getString(R.string.patient_list);
+                        String menu2 = getString(R.string.patient_report);
                         menuTitles = new String[]{menu1, menu2};
                         layouts = new int[] {R.layout.fragment_patient_list, R.layout.fragment_patient_report};
                     } else {
-                        String menu1 = getResources().getString(R.string.check_in);
-                        String menu2 = getResources().getString(R.string.reminder_settings);
+                        String menu1 = getString(R.string.check_in);
+                        String menu2 = getString(R.string.reminder_settings);
                         menuTitles = new String[]{menu1, menu2};
                         layouts = new int[] {R.layout.fragment_check_in, R.layout.fragment_reminder_settings};
                     }
