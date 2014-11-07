@@ -45,8 +45,8 @@ public class MainActivity extends Activity {
     private CharSequence mTitle;
     //workaround: initialize with empty array, will be set in initMenus() later anyway
     private String[] menuTitles = {""};
-    //layouts array must be in the same order/position as for menuTitles array
-    private int[] layouts;
+    //fragment array must be in the same order/position as for menuTitles array
+    private AbstractFragment[] fragments;
 
 	@InjectView(R.id.videoList)
 	protected ListView videoList_;
@@ -125,14 +125,11 @@ public class MainActivity extends Activity {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = new DoctorOrPatientFragment();
-        Bundle args = new Bundle();
-        int layout = layouts[position];
-        args.putInt(DoctorOrPatientFragment.ARG_LAYOUT, layout);
-        fragment.setArguments(args);
-
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.content_frame, fragments[position])
+                .commit();
 
         // update selected item and title, then close the drawer
         mainMenuList.setItemChecked(position, true);
@@ -190,12 +187,34 @@ public class MainActivity extends Activity {
                         String menu1 = getString(R.string.patient_list);
                         String menu2 = getString(R.string.patient_report);
                         menuTitles = new String[]{menu1, menu2};
-                        layouts = new int[] {R.layout.fragment_patient_list, R.layout.fragment_patient_report};
+
+                        AbstractFragment fragment1 = new PatientListFragment();
+                        Bundle args1 = new Bundle();
+                        args1.putInt(AbstractFragment.ARG_LAYOUT, R.layout.fragment_patient_list);
+                        fragment1.setArguments(args1);
+
+                        AbstractFragment fragment2 = new PatientReportFragment();
+                        Bundle args2 = new Bundle();
+                        args2.putInt(AbstractFragment.ARG_LAYOUT, R.layout.fragment_patient_report);
+                        fragment2.setArguments(args2);
+
+                        fragments = new AbstractFragment[] {fragment1, fragment2};
                     } else {
                         String menu1 = getString(R.string.check_in);
                         String menu2 = getString(R.string.reminder_settings);
                         menuTitles = new String[]{menu1, menu2};
-                        layouts = new int[] {R.layout.fragment_check_in, R.layout.fragment_reminder_settings};
+
+                        AbstractFragment fragment1 = new CheckInFragment();
+                        Bundle args1 = new Bundle();
+                        args1.putInt(AbstractFragment.ARG_LAYOUT, R.layout.fragment_check_in);
+                        fragment1.setArguments(args1);
+
+                        AbstractFragment fragment2 = new ReminderSettingsFragment();
+                        Bundle args2 = new Bundle();
+                        args2.putInt(AbstractFragment.ARG_LAYOUT, R.layout.fragment_reminder_settings);
+                        fragment2.setArguments(args2);
+
+                        fragments = new AbstractFragment[] {fragment1, fragment2};
                     }
 
                     // set up the drawer's list view with items and click listener
@@ -254,21 +273,4 @@ public class MainActivity extends Activity {
 		}
 	}
 
-    /**
-     * Fragment that appears in the "content_frame"
-     */
-    public static class DoctorOrPatientFragment extends Fragment {
-        public static final String ARG_LAYOUT = "doctor_or_patient_layout";
-
-        public DoctorOrPatientFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            int layout = getArguments().getInt(ARG_LAYOUT);
-            return inflater.inflate(layout, container, false);
-        }
-    }
 }

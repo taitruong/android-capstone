@@ -46,7 +46,7 @@ public class LoginScreenActivity extends Activity {
 	}
 
 	@OnClick(R.id.loginButton)
-	public void login() {
+	protected void login() {
 		String user = userName_.getText().toString();
 		String pass = password_.getText().toString();
 		String server = server_.getText().toString();

@@ -1,8 +1,88 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/image"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_settings_reminder"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000"
-    android:gravity="center"
-    android:padding="32dp"
-    android:text="@string/reminder_settings"/>
+    android:layout_height="match_parent">
+
+    <TableRow android:id="@+id/reminderRow1"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <TextView android:text="@string/reminder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="18dp" />
+
+        <TextView android:text="06:00 AM" android:id="@+id/reminderTime1"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:textSize="18dp"
+            android:background="#CCCCCC"
+            android:gravity="end|center_vertical" />
+    </TableRow>
+    <TableRow android:id="@+id/reminderRow2"
+        android:layout_below="@+id/reminderRow1"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <TextView android:text="@string/reminder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="18dp" />
+
+        <TextView android:text="12:00 AM" android:id="@+id/reminderTime2"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:textSize="18dp"
+            android:gravity="end|center_vertical" />
+    </TableRow>
+    <TableRow android:id="@+id/reminderRow3"
+        android:layout_below="@+id/reminderRow2"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <TextView android:text="@string/reminder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="18dp" />
+
+        <TextView android:text="06:00 PM" android:id="@+id/reminderTime3"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:textSize="18dp"
+            android:gravity="end|center_vertical" />
+    </TableRow>
+    <TableRow android:id="@+id/reminderRow4"
+        android:layout_below="@+id/reminderRow3"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <TextView android:text="@string/reminder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="18dp" />
+
+        <TextView android:text="12:00 PM" android:id="@+id/reminderTime4"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:textSize="18dp"
+            android:gravity="end|center_vertical" />
+    </TableRow>
+</RelativeLayout>

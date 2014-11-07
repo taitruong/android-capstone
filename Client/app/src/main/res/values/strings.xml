@@ -11,6 +11,7 @@
 
     <!-- patient menu items-->
     <string name="check_in">Check-In</string>
+    <string name="reminder">Reminder</string>
     <string name="reminder_settings">Reminder Settings</string>
     <string-array name="menu_patient_array">
         <item>Check-In</item>
