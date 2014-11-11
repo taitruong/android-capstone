@@ -1,4 +1,4 @@
-package org.aliensource.symptommanagement.android;
+package org.aliensource.symptommanagement.android.reminder;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -12,17 +12,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import org.aliensource.symptommanagement.android.AbstractFragment;
+import org.aliensource.symptommanagement.android.R;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -33,17 +32,7 @@ import butterknife.OnClick;
  */
 public class ReminderSettingsFragment extends AbstractFragment {
 
-    private static final String REMINDERS = "reminders";
-    private static final Set<String> DEFAULT_REMINDERS;
     private static final String ARG_TEXT_VIEW = "text_view";
-
-    static {
-        DEFAULT_REMINDERS = new LinkedHashSet<String>();
-        DEFAULT_REMINDERS.add(getTimeAsString(6,0).toString());
-        DEFAULT_REMINDERS.add(getTimeAsString(12,0).toString());
-        DEFAULT_REMINDERS.add(getTimeAsString(18,0).toString());
-        DEFAULT_REMINDERS.add(getTimeAsString(0,0).toString());
-    }
 
     @InjectView(R.id.reminderTime1)
     protected TextView reminder1;
@@ -64,17 +53,9 @@ public class ReminderSettingsFragment extends AbstractFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.inject(this, view);
 
-        prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        updateReminderTextView(getReminderPreferences());
+        prefs = ReminderPreferencesUtils.getPreferences(getActivity());
+        updateReminderTextView(ReminderPreferencesUtils.getReminderPreferences(prefs));
         return view;
-    }
-
-    protected Set<String> getReminderPreferences() {
-        //we have to create a NEW set
-        //otherwise the preferences are saved only for the first time and than not anymore!!
-        //see: http://stackoverflow.com/questions/12528836/shared-preferences-only-saved-first-time
-        HashSet<String> reminders = new HashSet<String>(prefs.getStringSet(REMINDERS, DEFAULT_REMINDERS));
-        return reminders;
     }
 
     @Override
@@ -90,20 +71,20 @@ public class ReminderSettingsFragment extends AbstractFragment {
         ArrayList<Long> timeList = new ArrayList<Long>();
         Iterator<String> iterator = reminders.iterator();
 
-        int[] hourAndMinute1 = getHourAndMinute(iterator.next());
-        long time1 = getTime(hourAndMinute1[0], hourAndMinute1[1]);
+        int[] hourAndMinute1 = ReminderPreferencesUtils.getHourAndMinute(iterator.next());
+        long time1 = ReminderPreferencesUtils.getTime(hourAndMinute1[0], hourAndMinute1[1]);
         timeList.add(new Long(time1));
 
-        int[] hourAndMinute2 = getHourAndMinute(iterator.next());
-        long time2 = getTime(hourAndMinute2[0], hourAndMinute2[1]);
+        int[] hourAndMinute2 = ReminderPreferencesUtils.getHourAndMinute(iterator.next());
+        long time2 = ReminderPreferencesUtils.getTime(hourAndMinute2[0], hourAndMinute2[1]);
         timeList.add(new Long(time2));
 
-        int[] hourAndMinute3 = getHourAndMinute(iterator.next());
-        long time3 = getTime(hourAndMinute3[0], hourAndMinute3[1]);
+        int[] hourAndMinute3 = ReminderPreferencesUtils.getHourAndMinute(iterator.next());
+        long time3 = ReminderPreferencesUtils.getTime(hourAndMinute3[0], hourAndMinute3[1]);
         timeList.add(new Long(time3));
 
-        int[] hourAndMinute4 = getHourAndMinute(iterator.next());
-        long time4 = getTime(hourAndMinute4[0], hourAndMinute4[1]);
+        int[] hourAndMinute4 = ReminderPreferencesUtils.getHourAndMinute(iterator.next());
+        long time4 = ReminderPreferencesUtils.getTime(hourAndMinute4[0], hourAndMinute4[1]);
         timeList.add(new Long(time4));
 
         Collections.sort(timeList);
@@ -111,16 +92,16 @@ public class ReminderSettingsFragment extends AbstractFragment {
         reminders = new LinkedHashSet<String>();
         Iterator<Long> timeIterator = timeList.iterator();
         time1 = timeIterator.next();
-        reminders.add(getTimeAsString(time1).toString());
+        reminders.add(ReminderPreferencesUtils.getTimeAsString(time1).toString());
 
         time2 = timeIterator.next();
-        reminders.add(getTimeAsString(time2).toString());
+        reminders.add(ReminderPreferencesUtils.getTimeAsString(time2).toString());
 
         time3 = timeIterator.next();
-        reminders.add(getTimeAsString(time3).toString());
+        reminders.add(ReminderPreferencesUtils.getTimeAsString(time3).toString());
 
         time4 = timeIterator.next();
-        reminders.add(getTimeAsString(time4).toString());
+        reminders.add(ReminderPreferencesUtils.getTimeAsString(time4).toString());
 
         iterator = reminders.iterator();
         reminder1.setText(iterator.next());
@@ -172,7 +153,7 @@ public class ReminderSettingsFragment extends AbstractFragment {
             int id = getArguments().getInt(ARG_TEXT_VIEW);
             timeView = (TextView) getActivity().findViewById(id);
 
-            int[] hourAndMinute = getHourAndMinute(timeView.getText());
+            int[] hourAndMinute = ReminderPreferencesUtils.getHourAndMinute(timeView.getText());
 
             // Create a new instance of TimePickerDialog and return it
             return new TimePickerDialog(
@@ -194,64 +175,24 @@ public class ReminderSettingsFragment extends AbstractFragment {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             //save changes into preferences
             String oldTime = timeView.getText().toString();
-            String newTime = getTimeAsString(hourOfDay, minute).toString();
+            String newTime = ReminderPreferencesUtils.getTimeAsString(hourOfDay, minute).toString();
             ((ReminderSettingsFragment) getTargetFragment()).saveReminderPreferences(oldTime, newTime);
 
         }
 
     }
 
-    private static int[] getHourAndMinute(CharSequence timeS) {
-        CharSequence hourOfDayS = timeS.subSequence(0, 2);
-        CharSequence minuteS = timeS.subSequence(3, 5);
-
-        int hourOfDay = Integer.parseInt(hourOfDayS.toString());
-        int minute = Integer.parseInt(minuteS.toString());
-        return new int[] {hourOfDay, minute};
-    }
-
-    // Prepends a "0" to 1-digit minutes
-    private static String pad(int c) {
-        if (c >= 10)
-            return String.valueOf(c);
-        else
-            return "0" + String.valueOf(c);
-    }
-
-    private static CharSequence getTimeAsString(int hourOfDay, int minute) {
-        return new StringBuilder().append(pad(hourOfDay)).append(":")
-                .append(pad(minute));
-    }
-
-    private static CharSequence getTimeAsString(long time) {
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTimeInMillis(time);
-        int hourOfDay = cal.get(GregorianCalendar.HOUR_OF_DAY);
-        int minute = cal.get(GregorianCalendar.MINUTE);
-        return new StringBuilder().append(pad(hourOfDay)).append(":")
-                .append(pad(minute));
-    }
-
-    private static long getTime(int hourOfDay, int minute) {
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTimeInMillis(0);
-        cal.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay);
-        cal.set(GregorianCalendar.MINUTE, minute);
-        return cal.getTimeInMillis();
-    }
-
-    protected void saveReminderPreferences(String oldTime, String newTime) {
+    private void saveReminderPreferences(String oldTime, String newTime) {
         //something changed?
-        Set<String> reminders = getReminderPreferences();
+        Set<String> reminders = ReminderPreferencesUtils.getReminderPreferences(prefs);
         if (!reminders.contains(newTime)) {
             reminders.remove(oldTime);
             reminders.add(newTime);
 
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putStringSet(REMINDERS, reminders);
-            editor.commit();
+            ReminderPreferencesUtils.saveReminderPreferences(prefs, reminders);
             updateReminderTextView(reminders);
         }
 
     }
+
 }
