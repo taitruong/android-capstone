@@ -7,8 +7,10 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="14" />
+        android:minSdkVersion="16"
+        android:targetSdkVersion="20" />
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -28,6 +30,8 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main" >
         </activity>
+
+        <receiver android:name=".reminder.AlarmNotificationReceiver"/>
     </application>
 
 </manifest>

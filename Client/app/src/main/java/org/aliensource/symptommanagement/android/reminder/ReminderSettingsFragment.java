@@ -3,7 +3,6 @@ package org.aliensource.symptommanagement.android.reminder;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,12 +12,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import org.aliensource.symptommanagement.android.AbstractFragment;
+import org.aliensource.symptommanagement.android.MainActivity;
 import org.aliensource.symptommanagement.android.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -54,7 +52,7 @@ public class ReminderSettingsFragment extends AbstractFragment {
         ButterKnife.inject(this, view);
 
         prefs = ReminderPreferencesUtils.getPreferences(getActivity());
-        updateReminderTextView(ReminderPreferencesUtils.getReminderPreferences(prefs));
+        updateReminderTextView(ReminderPreferencesUtils.getReminderAlarms(prefs));
         return view;
     }
 
@@ -63,13 +61,13 @@ public class ReminderSettingsFragment extends AbstractFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    protected void updateReminderTextView(Set<String> reminders) {
+    protected void updateReminderTextView(Set<String> reminderAlarms) {
 
         //since the set is unsorted we needed to sort it by the time (of type long):
         //1. convert a list of reminder text into a list of reminder of type long
         //2. then sort this list
         ArrayList<Long> timeList = new ArrayList<Long>();
-        Iterator<String> iterator = reminders.iterator();
+        Iterator<String> iterator = reminderAlarms.iterator();
 
         int[] hourAndMinute1 = ReminderPreferencesUtils.getHourAndMinute(iterator.next());
         long time1 = ReminderPreferencesUtils.getTime(hourAndMinute1[0], hourAndMinute1[1]);
@@ -89,21 +87,21 @@ public class ReminderSettingsFragment extends AbstractFragment {
 
         Collections.sort(timeList);
         //now add the sorted back to the Set
-        reminders = new LinkedHashSet<String>();
+        reminderAlarms = new LinkedHashSet<String>();
         Iterator<Long> timeIterator = timeList.iterator();
         time1 = timeIterator.next();
-        reminders.add(ReminderPreferencesUtils.getTimeAsString(time1).toString());
+        reminderAlarms.add(ReminderPreferencesUtils.getTimeAsString(time1).toString());
 
         time2 = timeIterator.next();
-        reminders.add(ReminderPreferencesUtils.getTimeAsString(time2).toString());
+        reminderAlarms.add(ReminderPreferencesUtils.getTimeAsString(time2).toString());
 
         time3 = timeIterator.next();
-        reminders.add(ReminderPreferencesUtils.getTimeAsString(time3).toString());
+        reminderAlarms.add(ReminderPreferencesUtils.getTimeAsString(time3).toString());
 
         time4 = timeIterator.next();
-        reminders.add(ReminderPreferencesUtils.getTimeAsString(time4).toString());
+        reminderAlarms.add(ReminderPreferencesUtils.getTimeAsString(time4).toString());
 
-        iterator = reminders.iterator();
+        iterator = reminderAlarms.iterator();
         reminder1.setText(iterator.next());
         reminder2.setText(iterator.next());
         reminder3.setText(iterator.next());
@@ -183,14 +181,15 @@ public class ReminderSettingsFragment extends AbstractFragment {
     }
 
     private void saveReminderPreferences(String oldTime, String newTime) {
-        //something changed?
-        Set<String> reminders = ReminderPreferencesUtils.getReminderPreferences(prefs);
-        if (!reminders.contains(newTime)) {
-            reminders.remove(oldTime);
-            reminders.add(newTime);
+        Set<String> reminderAlarms = ReminderPreferencesUtils.getReminderAlarms(prefs);
+        //save only when new time is not already set
+        if (!reminderAlarms.contains(newTime)) {
+            reminderAlarms.remove(oldTime);
+            reminderAlarms.add(newTime);
 
-            ReminderPreferencesUtils.saveReminderPreferences(prefs, reminders);
-            updateReminderTextView(reminders);
+            ReminderPreferencesUtils.saveReminderPreferences(prefs, reminderAlarms);
+            updateReminderTextView(reminderAlarms);
+            ((MainActivity) getActivity()).initAlarms();
         }
 
     }

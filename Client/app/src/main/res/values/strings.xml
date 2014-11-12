@@ -13,11 +13,6 @@
     <string name="check_in">Check-In</string>
     <string name="reminder">Reminder</string>
     <string name="reminder_settings">Reminder Settings</string>
-    <string-array name="menu_patient_array">
-        <item>Check-In</item>
-        <item>Reminder Settings</item>
-        <item>Logout</item>
-    </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -30,4 +25,8 @@
     <string name="server">Server IP or Hostname</string>
     <string name="localhost" translatable="false">https://192.168.1.5:8443</string>
 
+    <!-- Reminder translations-->
+    <string name="reminder_ticker_text">Symptom Management: Your check-in at %s o\'clock is required!</string>
+    <string name="reminder_notification_title">Symptom Management</string>
+    <string name="reminder_notification_text">Your check-in is required</string>
 </resources>

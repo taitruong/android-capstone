@@ -1,13 +1,23 @@
 package org.aliensource.symptommanagement.android;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -22,6 +32,8 @@ import android.widget.Toast;
 
 import org.aliensource.symptommanagement.android.patient.PatientListFragment;
 import org.aliensource.symptommanagement.android.patient.PatientReportFragment;
+import org.aliensource.symptommanagement.android.reminder.AlarmNotificationReceiver;
+import org.aliensource.symptommanagement.android.reminder.ReminderPreferencesUtils;
 import org.aliensource.symptommanagement.android.reminder.ReminderSettingsFragment;
 import org.aliensource.symptommanagement.cloud.repository.Video;
 import org.aliensource.symptommanagement.cloud.service.SecurityService;
@@ -46,6 +58,11 @@ public class MainActivity extends Activity {
     //fragment array must be in the same order/position as for menuTitles array
     private AbstractFragment[] fragments;
 
+    private Map<String, PendingIntent> mReminderNotificationReceiverPendingIntentMap = new LinkedHashMap<String, PendingIntent>();
+
+    private AlarmManager mAlarmManager;
+    private int alarmId = 0;
+
 	@InjectView(R.id.videoList)
 	protected ListView videoList_;
 
@@ -56,6 +73,12 @@ public class MainActivity extends Activity {
 
 		ButterKnife.inject(this);
 
+        initDrawerMenu();
+
+        initAlarms();
+    }
+
+    private void initDrawerMenu() {
         mTitle = mDrawerTitle = getTitle();
         // set up the drawer's list view with items and click listener
         mainMenuList.setAdapter(new ArrayAdapter<String>(MainActivity.this,
@@ -232,6 +255,70 @@ public class MainActivity extends Activity {
                 }
             });
         }
+    }
+
+    public void initAlarms() {
+        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        SharedPreferences prefs = ReminderPreferencesUtils.getPreferences(this);
+        Set<String> reminderAlarms = ReminderPreferencesUtils.getReminderAlarms(prefs);
+
+        //cancel old alarms
+        if (!mReminderNotificationReceiverPendingIntentMap.isEmpty()) {
+            // System.out.println(">>>>> remove old alarms <<<<<");
+            for (PendingIntent alarm: mReminderNotificationReceiverPendingIntentMap.values()) {
+                mAlarmManager.cancel(alarm);
+            }
+            mReminderNotificationReceiverPendingIntentMap.clear();
+        }
+
+        GregorianCalendar now = new GregorianCalendar();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:sss");
+        for (String reminderTime: reminderAlarms) {
+            int[] hourAndMinute = ReminderPreferencesUtils.getHourAndMinute(reminderTime);
+            //always create a new calendar
+            GregorianCalendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(now.getTimeInMillis());
+            cal.set(Calendar.MILLISECOND, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.HOUR_OF_DAY, hourAndMinute[0]);
+            cal.set(Calendar.MINUTE, hourAndMinute[1]);
+            // in case the reminderTime time the date needs to move to the next day
+            //otherwise the alarm notification is shown right away
+            String calS = formatter.format(new Date(cal.getTimeInMillis()));
+            String nowS = formatter.format(new Date(now.getTimeInMillis()));
+            // System.out.println(">>> " + cal.before(now) + ": " + calS + " before " + nowS);
+            if (cal.before(now)) {
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+            // System.out.println(">>> alarm at: " + reminderTime + " - " + formatter.format(new Date(cal.getTimeInMillis())));
+
+            //create the intent for the AlarmNotificationReceiver and then wrap it in a PendingIntent
+            Intent mAlarmNotificationReceiverIntent = new Intent(MainActivity.this, AlarmNotificationReceiver.class);
+
+            //the id must be passed to the receiver and defined in the PendingIntent
+            alarmId++;
+            mAlarmNotificationReceiverIntent.putExtra(AlarmNotificationReceiver.ARGS_ALARM_ID, alarmId);
+            mAlarmNotificationReceiverIntent.putExtra(AlarmNotificationReceiver.ARGS_ALARM_TIME, reminderTime);
+            PendingIntent mAlarmNotificationReceiverPendingIntent = PendingIntent.getBroadcast(
+                    MainActivity.this,
+                    alarmId, //this ID must be unique for each PendingIntent, otherwise only the last is set as an alarm
+                    mAlarmNotificationReceiverIntent,
+                    //set flag otherwiese when an alarm is replace the old extra bundle is not replaced!
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            mAlarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    cal.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY,
+                    mAlarmNotificationReceiverPendingIntent);
+
+            mReminderNotificationReceiverPendingIntentMap.put(reminderTime, mAlarmNotificationReceiverPendingIntent);
+        }
+    }
+
+    protected void updateReminderNotification(String oldTime, String newTime) {
+        PendingIntent mReminderNotificationReceiverPendingIntent = mReminderNotificationReceiverPendingIntentMap.remove(oldTime);
+
     }
 
 	private void refreshVideos() {

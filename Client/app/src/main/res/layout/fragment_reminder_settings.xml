@@ -22,7 +22,6 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:textSize="18dp"
-            android:background="#CCCCCC"
             android:gravity="end|center_vertical" />
     </TableRow>
     <TableRow android:id="@+id/reminderRow2"

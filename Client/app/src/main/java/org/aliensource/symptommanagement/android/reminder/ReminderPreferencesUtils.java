@@ -32,7 +32,7 @@ public final class ReminderPreferencesUtils {
         return activity.getPreferences(Context.MODE_PRIVATE);
     }
 
-    public static Set<String> getReminderPreferences(SharedPreferences prefs) {
+    public static Set<String> getReminderAlarms(SharedPreferences prefs) {
         //we have to create a NEW set
         //otherwise the preferences are saved only for the first time and than not anymore!!
         //see: http://stackoverflow.com/questions/12528836/shared-preferences-only-saved-first-time
