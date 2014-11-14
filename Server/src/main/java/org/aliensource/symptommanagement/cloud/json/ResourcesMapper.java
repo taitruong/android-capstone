@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 /**
+ * HAL model is part of HATEOAS. More on HAL: http://stateless.co/hal_specification.html
+ *
  * <Begin long explanation of why this class was created...>
  * 
  * 

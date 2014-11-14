@@ -97,6 +97,7 @@ public class VideoSvcClientApiTest {
 
 		// We should get back the video that we added above
 		Collection<Video> videos = videoService.getVideoList();
+        System.out.println(">>>>> videos: " + videos.size());
 		assertTrue(videos.contains(video));
 	}
 

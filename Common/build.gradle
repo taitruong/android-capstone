@@ -16,7 +16,9 @@ repositories {
 }
 
 dependencies {
-    compile("org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final")
+    //version 2.1 contains new javax.persistence.JoinTable (including method indexes())
+    compile("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final")
+    // compile("org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final")
     compile("com.google.guava:guava:17.0")
     compile("com.squareup.retrofit:retrofit:1.6.1")
     compile("commons-io:commons-io:2.4")
@@ -24,7 +26,11 @@ dependencies {
 	compile("com.fasterxml.jackson.core:jackson-core:2.4.0")
 	compile("com.fasterxml.jackson.core:jackson-databind:2.4.0")
 	compile("com.fasterxml.jackson.core:jackson-annotations:2.4.0")
+    //define data type for jackson
+    //another data type e.g for joda time is: compile("com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.2")
+    //see: http://blog.codeleak.pl/2014/10/exposing-spring-data-repositories-over-rest.html
 	compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.0")
+
 	compile('org.apache.httpcomponents:httpcore:4.3.3')
     compile('org.apache.httpcomponents:httpclient:4.3.5')
 
@@ -33,5 +39,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '2.2'
 }
