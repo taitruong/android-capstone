@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.1.7.RELEASE'
+		springBootVersion = '1.0.2.RELEASE'
 	}
     repositories {
         maven { url "http://repo.spring.io/libs-snapshot" }
@@ -53,9 +53,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
     //compile("org.springframework.data:spring-data-rest-webmvc")
 
-    //compile("org.springframework.security.oauth:spring-security-oauth2:2.0.0.RC2")
-    compile("org.springframework.security.oauth:spring-security-oauth2:2.0.4.RELEASE")
-    //compile("org.springframework.security.oauth:spring-security-oauth2-javaconfig:1.0.0.M1")
+    //compile("org.springframework.security.oauth:spring-security-oauth2:2.0.4.RELEASE")
+    compile("org.springframework.security.oauth:spring-security-oauth2:2.0.0.RC2")
+    compile("org.springframework.security.oauth:spring-security-oauth2-javaconfig:1.0.0.M1")
 
     //uses the latest HSQLDB version (2.3.2) for Spring Boot
     //also possible: compile("org.hsqldb:hsqldb")
