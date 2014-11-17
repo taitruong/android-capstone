@@ -38,8 +38,8 @@ Create the folder D:\development\android_capstone and start the command prompt i
 ```
 ## Set JAVA_HOME variable
 
-Name: JAVA_HOME
-Value: C:\Program Files\Java\jdk1.8.0_25
+- Name: JAVA_HOME
+- Value: C:\Program Files\Java\jdk1.8.0_25
 
 ## Install Android Studio
 
