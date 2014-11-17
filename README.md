@@ -36,6 +36,10 @@ Create the folder D:\development\android_capstone and start the command prompt i
 ```
  git clone https://github.com/taitruong/android-capstone git
 ```
+## Set JAVA_HOME variable
+
+Name: JAVA_HOME
+Value: C:\Program Files\Java\jdk1.8.0_25
 
 ## Install Android Studio
 
