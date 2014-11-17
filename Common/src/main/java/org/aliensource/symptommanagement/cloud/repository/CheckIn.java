@@ -2,11 +2,7 @@ package org.aliensource.symptommanagement.cloud.repository;
 
 import java.util.Collection;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 /**
  * Created by ttruong on 14-Nov-14.
@@ -14,30 +10,24 @@ import javax.persistence.OneToOne;
 @Entity
 public class CheckIn extends BaseModel {
 
-    @ManyToMany
-    //define join table with the Patient entity being the owner
-    @JoinTable(
-            name = "CHECKIN_SYMPTOM",
-            joinColumns = @JoinColumn(name="checkin_id", referencedColumnName = "Id"),
-            inverseJoinColumns = @JoinColumn(name = "symptom_id", referencedColumnName = "Id")
-    )
-    private Collection<Symptom> symptoms;
+    @OneToMany
+    private Collection<Symptom> symptomTimes;
 
     @ManyToMany
     //define join table with the Patient entity being the owner
     @JoinTable(
             name = "CHECKIN_INTAKETIME",
-            joinColumns = @JoinColumn(name="checkin_id", referencedColumnName = "Id"),
-            inverseJoinColumns = @JoinColumn(name = "intaketime_id", referencedColumnName = "Id")
+            joinColumns = @JoinColumn(name="checkin_id"),
+            inverseJoinColumns = @JoinColumn(name = "intaketime_id")
     )
     private Collection<IntakeTime> intakeTimes;
 
-    public Collection<Symptom> getSymptoms() {
-        return symptoms;
+    public Collection<Symptom> getSymptomTimes() {
+        return symptomTimes;
     }
 
-    public void setSymptoms(Collection<Symptom> symptoms) {
-        this.symptoms = symptoms;
+    public void setSymptomTimes(Collection<Symptom> symptomTimes) {
+        this.symptomTimes = symptomTimes;
     }
 
     public Collection<IntakeTime> getIntakeTimes() {

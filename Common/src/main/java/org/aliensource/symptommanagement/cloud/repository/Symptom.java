@@ -10,9 +10,13 @@ import javax.persistence.Entity;
 @Entity
 public class Symptom extends BaseModel {
 
-    private String name;
+    private String type;
 
-    private String severity;
+    public String getType() {
+        return type;
+    }
 
-    private Calendar timestamp;
+    public void setType(String type) {
+        this.type = type;
+    }
 }

@@ -21,8 +21,8 @@ public class Patient extends Person {
     //define join table with the Patient entity being the owner
     @JoinTable(
             name = "PATIENT_DOCTOR",
-            joinColumns = @JoinColumn(name="patient_id", referencedColumnName = "Id"),
-            inverseJoinColumns = @JoinColumn(name = "doctor_id", referencedColumnName = "Id")
+            joinColumns = @JoinColumn(name="patient_id"),
+            inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
     private Collection<Doctor> doctors;
 

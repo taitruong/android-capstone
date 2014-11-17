@@ -145,7 +145,7 @@ public class OAuth2SecurityConfiguration {
 			// If you were going to reuse this class in another
 			// application, this is one of the key sections that you
 			// would want to change
-			
+
 			
 			// Create a service that has the credentials for all our clients
 			ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()

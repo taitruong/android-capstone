@@ -16,12 +16,14 @@ import javax.persistence.OneToMany;
 /**
  * Created by ttruong on 13-Nov-14.
  */
+@MappedSuperclass
 public abstract class Person extends BaseModel {
+
+    private String firstName;
+    private String lastName;
 
     private String username;
     private String password;
-    private String firstName;
-    private String lastName;
 
     private Calendar dateOfBirth;
 

@@ -42,6 +42,7 @@ public class Application extends RepositoryRestMvcConfiguration {
 	// Tell Spring to launch our app!
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
+
 	}
 
 	// We are overriding the bean that RepositoryRestMvcConfiguration

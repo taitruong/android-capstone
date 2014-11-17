@@ -26,4 +26,13 @@ public class Medication extends BaseModel {
         this.medicament = medicament;
     }
 
+    public Collection<IntakeTime> getIntakeTimes() {
+        return intakeTimes;
+    }
+
+    public void setIntakeTimes(Collection<IntakeTime> intakeTimes) {
+        this.intakeTimes = intakeTimes;
+    }
+
+
 }
