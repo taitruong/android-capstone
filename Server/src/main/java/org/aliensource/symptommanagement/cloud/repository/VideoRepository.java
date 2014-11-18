@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 //    (e.g., /video/search/findByName?title=Foo)
 //
 @RepositoryRestResource(path = VideoSvcApi.VIDEO_SVC_PATH)
-@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, produces = {"application/json"})
 public interface VideoRepository extends CrudRepository<Video, Long>{
 
     @Override
