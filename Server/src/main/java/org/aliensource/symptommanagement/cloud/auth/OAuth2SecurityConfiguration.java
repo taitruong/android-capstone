@@ -1,6 +1,11 @@
 package org.aliensource.symptommanagement.cloud.auth;
 
+import com.google.common.collect.Lists;
+
+import org.aliensource.symptommanagement.cloud.repository.DoctorRepository;
 import org.aliensource.symptommanagement.cloud.repository.PatientRepository;
+import org.aliensource.symptommanagement.cloud.repository.Person;
+import org.aliensource.symptommanagement.cloud.repository.Role;
 import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11NioProtocol;
@@ -23,6 +28,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -34,9 +40,15 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.util.CollectionUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *	Configure this web application to use OAuth 2.0.
@@ -142,6 +154,9 @@ public class OAuth2SecurityConfiguration {
         private PatientRepository patientRepository;
 
         @Autowired
+        private DoctorRepository doctorRepository;
+
+        @Autowired
         private AuthenticationManager authenticationManager;
 
 		// A data structure used to store both a ClientDetailsService and a UserDetailsService
@@ -165,30 +180,38 @@ public class OAuth2SecurityConfiguration {
             // would want to change
 
             if (combinedService_ == null) {
+
                 // Create a service that has the credentials for all our clients
                 ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
                         // Create a client that has "read" and "write" access to the
                         // video service
                         .withClient("mobile").authorizedGrantTypes("password")
-                        .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+                        //.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
                         .scopes("read", "write").resourceIds("symptom-management")
                         .and()
                                 // Create a second client that only has "read" access to the
                                 // video service
                         .withClient("mobileReader").authorizedGrantTypes("password")
-                        .authorities("ROLE_CLIENT")
+                        //.authorities("ROLE_CLIENT")
                         .scopes("read").resourceIds("symptom-management")
                         .accessTokenValiditySeconds(3600).and().build();
 
+                Collection<Person> persons = getPersons();
+                Collection<UserDetails> userDetails = new ArrayList<UserDetails>();
+
+                for (Person person: persons) {
+                    Collection<Role> roles = person.getRoles();
+                    String[] userRoles = new String[roles.size()];
+                    int index = 0;
+                    for (Role role: roles) {
+                        userRoles[index] = role.getName();
+                        index++;
+                    }
+                    userDetails.add(User.create(person.getUsername(), person.getPassword(), userRoles));
+                }
+
                 // Create a series of hard-coded users.
-                UserDetailsService svc = new InMemoryUserDetailsManager(
-                        Arrays.asList(
-                                User.create("doctor1", "pass", SecurityService.ROLE_DOCTOR),
-                                User.create("doctor2", "pass", SecurityService.ROLE_DOCTOR),
-                                User.create("doctor3", "pass", SecurityService.ROLE_DOCTOR),
-                                User.create("patient1", "pass", SecurityService.ROLE_PATIENT),
-                                User.create("patient2", "pass", SecurityService.ROLE_PATIENT),
-                                User.create("patient3", "pass", SecurityService.ROLE_PATIENT)));
+                UserDetailsService svc = new InMemoryUserDetailsManager(userDetails);
 
                 // Since clients have to use BASIC authentication with the client's id/secret,
                 // when sending a request for a password grant, we make each client a user
@@ -198,6 +221,13 @@ public class OAuth2SecurityConfiguration {
                 combinedService_ = new ClientAndUserDetailsService(csvc, svc);
             }
             return combinedService_;
+        }
+
+        private Collection<Person> getPersons() {
+            Collection<Person> persons = new ArrayList<Person>();
+            persons.addAll(Lists.newArrayList(patientRepository.findAll()));
+            persons.addAll(Lists.newArrayList(doctorRepository.findAll()));
+            return persons ;
         }
 
 		/**

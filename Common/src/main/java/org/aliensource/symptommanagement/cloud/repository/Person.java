@@ -4,12 +4,17 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
@@ -27,7 +32,7 @@ public abstract class Person extends BaseModel {
 
     private Calendar dateOfBirth;
 
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles;
 
     public String getUsername() {

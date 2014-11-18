@@ -98,3 +98,32 @@ INSERT INTO patient_medications VALUES (
 INSERT INTO patient_medications VALUES (
     3, 6 /* patient 3 with medication 6 */
 );
+
+/* Roles for patients and doctors */
+INSERT INTO role VALUES (
+    1, 'ROLE_PATIENT'
+);
+INSERT INTO role VALUES (
+    2, 'ROLE_DOCTOR'
+);
+
+/* Join table mapping patients and doctors with roles */
+INSERT INTO patient_roles VALUES (
+    1, 1 /* patient 1 with role 1 */
+);
+INSERT INTO patient_roles VALUES (
+    2, 1 /* patient 2 with role 1 */
+);
+INSERT INTO patient_roles VALUES (
+    3, 1 /* patient 3 with role 1 */
+);
+
+INSERT INTO doctor_roles VALUES (
+    1, 2 /* doctor 1 with role 2 */
+);
+INSERT INTO doctor_roles VALUES (
+    2, 2 /* doctor 2 with role 2 */
+);
+INSERT INTO doctor_roles VALUES (
+    3, 2 /* doctor 3 with role 2 */
+);
