@@ -1,5 +1,7 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import java.util.Collection;
+
 import javax.persistence.Entity;
 
 /**
@@ -7,6 +9,8 @@ import javax.persistence.Entity;
  */
 @Entity
 public class Role extends BaseModel {
+
+    private String name;
 
     public String getName() {
         return name;
@@ -16,6 +20,4 @@ public class Role extends BaseModel {
         this.name = name;
     }
 
-    private String name;
-    
 }
