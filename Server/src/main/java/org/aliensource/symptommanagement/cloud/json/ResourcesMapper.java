@@ -80,6 +80,7 @@ public class ResourcesMapper extends ObjectMapper {
 	// This anonymous inner class will handle conversion of the Spring Data Rest
 	// Resources objects into JSON. Resources are objects that Spring Data Rest
 	// creates with the Videos it obtains from your VideoRepository
+    @SuppressWarnings("rawtypes")
 	private JsonSerializer<Resources> serializer = new JsonSerializer<Resources>() {
 
 		// We are going to register this class to handle all instances of type

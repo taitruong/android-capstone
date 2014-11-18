@@ -25,11 +25,21 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import java.io.IOException;
+import java.util.List;
 
 //Tell Spring to automatically inject any dependencies that are marked in
 //our classes with @Autowired
@@ -58,8 +68,6 @@ public class Application extends RepositoryRestMvcConfiguration {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
-    private ResourcesMapper resourcesMapper = new ResourcesMapper();
-
 	// Tell Spring to launch our app!
 	public static void main(String[] args) {
         LOGGER.info(">>>>> starting Symptom Management");
@@ -84,18 +92,36 @@ public class Application extends RepositoryRestMvcConfiguration {
 	// client.
 	//
 	// See the ResourcesMapper class for more details.
-	@Override
-    @Bean
-    @Primary
-	public ObjectMapper halObjectMapper() {
-		return resourcesMapper;
-	}
 
-    @Bean
-    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-        MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
-        jsonConverter.setObjectMapper(resourcesMapper);
-        return jsonConverter;
+    @Override
+    protected void configureJacksonObjectMapper(ObjectMapper objectMapper) {
+        JsonSerializer<Resources> serializer = new JsonSerializer<Resources>() {
+
+            // We are going to register this class to handle all instances of type
+            // Resources
+            @Override
+            public Class<Resources> handledType() {
+                return Resources.class;
+            }
+
+            @Override
+            public void serialize(Resources value, JsonGenerator jgen,
+                                  SerializerProvider provider) throws IOException,
+                    JsonProcessingException {
+                // Extracted the actual data inside of the Resources object
+                // that we care about (e.g., the list of Video objects)
+                Object content = value.getContent();
+                // Instead of all of the Resources member variables, etc.
+                // Just mashall the actual content (Videos) into the JSON
+                JsonSerializer<Object> s = provider.findValueSerializer(
+                        content.getClass(), null);
+                s.serialize(content, jgen, provider);
+            }
+        };
+
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(serializer);
+        objectMapper.registerModule(module);
     }
 
 	@Override
