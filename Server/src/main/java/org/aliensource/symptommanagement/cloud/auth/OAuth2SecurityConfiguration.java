@@ -199,6 +199,10 @@ public class OAuth2SecurityConfiguration {
                 Collection<Person> persons = getPersons();
                 Collection<UserDetails> userDetails = new ArrayList<UserDetails>();
 
+                LOGGER.debug("Persons found: " + persons);
+                if (persons == null || persons.isEmpty()) {
+                    throw new RuntimeException("No persons found in database!");
+                }
                 for (Person person: persons) {
                     Collection<Role> roles = person.getRoles();
                     String[] userRoles = new String[roles.size()];
@@ -207,6 +211,7 @@ public class OAuth2SecurityConfiguration {
                         userRoles[index] = role.getName();
                         index++;
                     }
+                    LOGGER.debug("adding user " + person.getUsername() + " with roles " + Lists.newArrayList(userRoles));
                     userDetails.add(User.create(person.getUsername(), person.getPassword(), userRoles));
                 }
 
