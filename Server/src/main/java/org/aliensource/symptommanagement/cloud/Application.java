@@ -2,16 +2,31 @@ package org.aliensource.symptommanagement.cloud;
 
 import org.aliensource.symptommanagement.cloud.auth.OAuth2SecurityConfiguration;
 import org.aliensource.symptommanagement.cloud.json.ResourcesMapper;
+import org.aliensource.symptommanagement.cloud.repository.CheckIn;
+import org.aliensource.symptommanagement.cloud.repository.Doctor;
+import org.aliensource.symptommanagement.cloud.repository.IntakeTime;
+import org.aliensource.symptommanagement.cloud.repository.Medicament;
+import org.aliensource.symptommanagement.cloud.repository.Medication;
+import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.Role;
+import org.aliensource.symptommanagement.cloud.repository.Symptom;
+import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
 import org.aliensource.symptommanagement.cloud.repository.Video;
 import org.aliensource.symptommanagement.cloud.repository.VideoRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,10 +52,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 // as part of this configuration so that we can have security and oauth
 // setup by Spring
 @Import(OAuth2SecurityConfiguration.class)
+// enable for using @PreAuthorize
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class Application extends RepositoryRestMvcConfiguration {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(Application.class);
+
+    private ResourcesMapper resourcesMapper = new ResourcesMapper();
 
 	// Tell Spring to launch our app!
 	public static void main(String[] args) {
+        LOGGER.info(">>>>> starting Symptom Management");
 		SpringApplication.run(Application.class, args);
 
 	}
@@ -63,14 +85,32 @@ public class Application extends RepositoryRestMvcConfiguration {
 	//
 	// See the ResourcesMapper class for more details.
 	@Override
+    @Bean
+    @Primary
 	public ObjectMapper halObjectMapper() {
-		return new ResourcesMapper();
+		return resourcesMapper;
 	}
+
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
+        jsonConverter.setObjectMapper(resourcesMapper);
+        return jsonConverter;
+    }
 
 	@Override
 	protected void configureRepositoryRestConfiguration(
 			RepositoryRestConfiguration config) {
-		config.exposeIdsFor(Video.class);
+		config.exposeIdsFor(Video.class,
+                CheckIn.class,
+                Doctor.class,
+                IntakeTime.class,
+                Medicament.class,
+                Medication.class,
+                Patient.class,
+                Role.class,
+                Symptom.class,
+                SymptomTime.class);
 	}
 
 }

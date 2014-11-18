@@ -1,8 +1,11 @@
 package org.aliensource.symptommanagement.cloud.auth;
 
+import org.aliensource.symptommanagement.cloud.repository.PatientRepository;
 import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11NioProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
@@ -16,6 +19,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -27,6 +31,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
@@ -56,10 +61,14 @@ import java.util.Arrays;
 @Configuration
 public class OAuth2SecurityConfiguration {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2SecurityConfiguration.class);
+
 	// This first section of the configuration just makes sure that Spring Security picks
 	// up the UserDetailsService that we create below. 
 	@Configuration
 	@EnableWebSecurity
+    // enable for using @PreAuthorize
+    @EnableGlobalMethodSecurity(prePostEnabled = true)
 	protected static class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		
 		@Autowired
@@ -70,6 +79,18 @@ public class OAuth2SecurityConfiguration {
 				final AuthenticationManagerBuilder auth) throws Exception {
 			auth.userDetailsService(userDetailsService);
 		}
+
+        /** Makes available the {@link AuthenticationManager} built in {@link #registerAuthentication(AuthenticationManagerBuilder)}. */
+        @Override
+        //override and make available as a bean with id 'authenticationManager'
+        //this is needed below in OAuth2Config for autowiring
+        //otherwise a HTTP 400 Bad Request occurs during login
+        @Bean
+        public AuthenticationManager authenticationManagerBean() throws Exception {
+            return super.authenticationManagerBean();
+        }
+
+
 	}
 	
 	/**
@@ -81,13 +102,19 @@ public class OAuth2SecurityConfiguration {
 	protected static class ResourceServer extends
 			ResourceServerConfigurerAdapter {
 
-		// This method configures the OAuth scopes required by clients to access
+        @Override
+        public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+            resources.resourceId("video");
+            super.configure(resources);
+        }
+
+        // This method configures the OAuth scopes required by clients to access
 		// all of the paths in the video service.
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
 			
 			http.csrf().disable();
-			
+
 			http
 			.authorizeRequests()
 				.antMatchers("/oauth/token").anonymous();
@@ -96,7 +123,7 @@ public class OAuth2SecurityConfiguration {
 			// If you were going to reuse this class in another
 			// application, this is one of the key sections that you
 			// would want to change
-			
+
 			// Require all GET requests to have client "read" scope
 			http
 			.authorizeRequests()
@@ -122,10 +149,19 @@ public class OAuth2SecurityConfiguration {
 	protected static class OAuth2Config extends
 			AuthorizationServerConfigurerAdapter {
 
-		// Delegate the processing of Authentication requests to the framework
-		@Autowired
-		private AuthenticationManager authenticationManager;
+        @Autowired
+        private PatientRepository patientRepository;
 
+        @Autowired
+        private AuthenticationManager authenticationManager;
+
+/*		private AuthenticationManager authenticationManager = new AuthenticationManager() {
+            @Override
+            public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+                return auth.getOrBuild().authenticate(authentication);
+            }
+        };
+*/
 		// A data structure used to store both a ClientDetailsService and a UserDetailsService
 		private ClientAndUserDetailsService combinedService_;
 
@@ -146,19 +182,19 @@ public class OAuth2SecurityConfiguration {
 			// application, this is one of the key sections that you
 			// would want to change
 
-			
+
 			// Create a service that has the credentials for all our clients
 			ClientDetailsService csvc = new InMemoryClientDetailsServiceBuilder()
 					// Create a client that has "read" and "write" access to the
 			        // video service
 					.withClient("mobile").authorizedGrantTypes("password")
-					.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+					.authorities("ROLE_PATIENT2", "ROLE_TRUSTED_CLIENT")
 					.scopes("read","write").resourceIds("video")
 					.and()
 					// Create a second client that only has "read" access to the
 					// video service
 					.withClient("mobileReader").authorizedGrantTypes("password")
-					.authorities("ROLE_CLIENT")
+					.authorities("ROLE_PATIENT2")
 					.scopes("read").resourceIds("video")
 					.accessTokenValiditySeconds(3600).and().build();
 
@@ -203,7 +239,10 @@ public class OAuth2SecurityConfiguration {
 		@Override
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints)
 				throws Exception {
-			endpoints.authenticationManager(authenticationManager);
+            LOGGER.info(">>>>> patientRepository: " + patientRepository);
+            LOGGER.info(">>>>> authenticationManager: " + authenticationManager);
+
+            endpoints.authenticationManager(authenticationManager);
 		}
 
 		/**

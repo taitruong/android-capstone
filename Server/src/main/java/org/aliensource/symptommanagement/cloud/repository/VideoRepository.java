@@ -7,8 +7,11 @@ import org.aliensource.symptommanagement.cloud.repository.Video;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 // This @RepositoryRestResource annotation tells Spring Data Rest to
 // expose the VideoRepository through a controller and map it to the 
@@ -22,13 +25,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 //    (e.g., /video/search/findByName?title=Foo)
 //
 @RepositoryRestResource(path = VideoSvcApi.VIDEO_SVC_PATH)
+@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, produces = {"application/json"})
 public interface VideoRepository extends CrudRepository<Video, Long>{
 
     @Override
-    //@PreAuthorize("hasRole('Doctor')")
-    @PreAuthorize("principal.name.equals('xxx')")
+    //@PreAuthorize("hasAnyRole('ROLE_PATIENT', 'ROLE_TRUSTED_CLIENT')")
+    //@PreAuthorize("principal.name.equals('xxx')")
     //@PostFilter("hasPermission(filterObject, xxxx)")
-    public Iterable<Video> findAll();
+    public @ResponseBody Iterable<Video> findAll();
 
     // Find all videos with a matching title (e.g., Video.name)
 	public Collection<Video> findByName(

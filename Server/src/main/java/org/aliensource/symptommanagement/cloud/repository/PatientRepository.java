@@ -13,6 +13,8 @@ import java.util.Collection;
 // svc path.
 //
 @RepositoryRestResource(path = PatientSvcApi.SVC_PATH)
-public interface PatientRepository extends CrudRepository<Video, Long>{
+public interface PatientRepository extends CrudRepository<Patient, Long>{
 
+    public Patient findByUsername(
+            @Param(PatientSvcApi.PARAMETER_USERNAME) String username);
 }

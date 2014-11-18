@@ -7,9 +7,7 @@ import java.util.Collection;
 
 public interface PatientSvcApi {
 
-	public static final String TITLE_PARAMETER = "title";
-	
-	public static final String DURATION_PARAMETER = "duration";
+	public static final String PARAMETER_USERNAME = "username";
 
     public static final String TOKEN_PATH = "/oauth/token";
 
@@ -17,11 +15,8 @@ public interface PatientSvcApi {
 	public static final String SVC_PATH = "/patient";
 
 	// The path to search videos by title
-	public static final String VIDEO_TITLE_SEARCH_PATH = SVC_PATH + "/search/findByName";
+	public static final String SEARCH_PATH_USERNAME = SVC_PATH + "/search/findByUsername";
 	
-	// The path to search videos by title
-	public static final String VIDEO_DURATION_SEARCH_PATH = SVC_PATH + "/search/findByDurationLessThan";
-
 	@GET(SVC_PATH)
 	public Collection<Video> getVideoList();
 	
@@ -31,10 +26,7 @@ public interface PatientSvcApi {
 	@DELETE(SVC_PATH + "/{id}")
 	public Void deleteVideo(@Path("id") long id);
 	
-	@GET(VIDEO_TITLE_SEARCH_PATH)
-	public Collection<Video> findByTitle(@Query(TITLE_PARAMETER) String title);
-	
-	@GET(VIDEO_DURATION_SEARCH_PATH)
-	public Collection<Video> findByDurationLessThan(@Query(DURATION_PARAMETER) long duration);
+	@GET(SEARCH_PATH_USERNAME)
+	public Collection<Video> findByTitle(@Query(PARAMETER_USERNAME) String title);
 	
 }
