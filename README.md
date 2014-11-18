@@ -36,6 +36,10 @@ Create the folder D:\development\android_capstone and start the command prompt i
 ```
  git clone https://github.com/taitruong/android-capstone git
 ```
+## Set JAVA_HOME variable
+
+- Name: JAVA_HOME
+- Value: C:\Program Files\Java\jdk1.8.0_25
 
 ## Install Android Studio
 
@@ -45,6 +49,9 @@ Start Genymotion and click 'Add' to create a new Android device:
 - select 'Google Nexus 5-4.4.4-API19-1080x1920' > next > next > finish
 
 Now you can start the emulator / device by double-clicking on the virtual device list.
+
+### Download stand-alone Android SDK
+Similar to Java JDK you need the SDK. Download: https://developer.android.com/sdk/installing/index.html?pkg=tools
 
 ### Download and install the development environment: https://developer.android.com/sdk/installing/studio.html#download
 
