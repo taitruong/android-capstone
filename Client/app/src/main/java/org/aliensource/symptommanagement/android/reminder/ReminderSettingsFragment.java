@@ -52,7 +52,7 @@ public class ReminderSettingsFragment extends AbstractFragment {
         ButterKnife.inject(this, view);
 
         prefs = ReminderPreferencesUtils.getPreferences(getActivity());
-        updateReminderTextView(ReminderPreferencesUtils.getReminderAlarms(prefs));
+        updateReminderTextViews(ReminderPreferencesUtils.getReminderAlarms(prefs));
         return view;
     }
 
@@ -61,7 +61,7 @@ public class ReminderSettingsFragment extends AbstractFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    protected void updateReminderTextView(Set<String> reminderAlarms) {
+    protected void updateReminderTextViews(Set<String> reminderAlarms) {
 
         //since the set is unsorted we needed to sort it by the time (of type long):
         //1. convert a list of reminder text into a list of reminder of type long
@@ -188,7 +188,7 @@ public class ReminderSettingsFragment extends AbstractFragment {
             reminderAlarms.add(newTime);
 
             ReminderPreferencesUtils.saveReminderPreferences(prefs, reminderAlarms);
-            updateReminderTextView(reminderAlarms);
+            updateReminderTextViews(reminderAlarms);
             ((MainActivity) getActivity()).initAlarms();
         }
 
