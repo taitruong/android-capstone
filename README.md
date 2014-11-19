@@ -81,6 +81,18 @@ Attach project to Git and GitHub
 
 Import the client project
 - see above to import build.gradle file in the Client folder
+- select Android SDK folder
+- Tools>Android>SDK Manager
+ - For the first time you need to install at least one (the latest) android version (e.g. Android L, version 5, API Level 21)
+ - Select the following packages:
+  - Tools:
+   - Android SDK Tools
+   - Android SDK Platform-tools
+   - Android SDK Build-tools with the Latest (current Revision: 21.1.1) and oldest (Rev.17) Android SDK Build Tools
+  - Select Android versions
+   - Android 5.0 (API 21): select all packages
+   - Select only "SDK Platform" package for Android 4.4.2 (API 19), Android 4.3.1 (API 18), Android 4.2.2 (API 17), Android 4.1.2 (API 16), and Android 4.0 (API 14)
+  - Extras: Android Support Repository, Android Support Library, Google USB Driver
 
 Starting the app on Genymotion
 Assuming you have the server in den Android Studio environment and the Android device in Genymotion started, you can install and run the app. Click in the menu Run>Run 'app'. For the first time this takes some time.
