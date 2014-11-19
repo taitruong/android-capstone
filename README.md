@@ -70,7 +70,19 @@ Open in the Project view (tab on the left side):
 - If there is an error showing "Project SDK is not defined" then click on "Setup SDK" and set to the JDK (and not to Android SDK!)
 - NOTE: in the project tab on the left you should switch from "Android" to "Project" view. This shows you all files including hidden files
 
-VCS>Update Project>leave default selection for "Branch Default" and "Using Stash">OK>Enter master password to save your GitHub password in Android Studio
+"Update project" to get the latest file from the repository
+ - VCS>Update Project
+ - leave default selection for "Branch Default" and "Using Stash">OK>Enter master password to save your GitHub password in Android Studio
+ - Log shows how many files were updated or if everything is up to date
+
+If project has changed, start the build process with Gradle
+Possible Gradle tasks:
+- build: build all main and test classes and execute test classes. If build fails only because of test classes, you can use the task "assemble".
+- assemble: build all main classes. this must be at least successful to start the server.
+- clean: delete all files. If you have a weird behaviour when starting the server, then do a clean before build or assemble.
+- bootRun: starts the server within Gradle.
+ - When stopping the application the Java process is not correctly stopped. You have to stop all java processes in the task manager
+ - Another possibility to start the server in the IDE: select the Application.java in the project view >right-click>Run 'Application.main()'
 
 Starting and stopping the Server
 - right-click on the file>Run 'Application.main()'
@@ -87,6 +99,7 @@ Attach project to Git and GitHub
 - Open menu File>Settings>Version Control>GitHub
 - Enter user username and password
 - Go one up to Version Control and press "Add root" for the "Unregistered Git root: D:\development\android_capstone\git"
+
 
 ### Client Project
 Import the client project
