@@ -64,7 +64,7 @@ It takes some time since some libraries will be downloaded. Once it is finished 
 - File > Settings
  - Version Control>GitHub: enter login name and password
  - Version Control: "Add root" for "D:\development\android_capstone\git"
- - Gradle: if selectable select "Use default gradle wrapper"; if not then select "Use customizable gradle wrapper"; press OK; then re-open and now you can select "Use default gradle wrapper"
+ - Gradle: if selectable select "Use default gradle wrapper"; if not then select "Use customizable gradle wrapper"; press OK; wait until gradle build is finished (see status bar below); then re-open and now you can select "Use default gradle wrapper"
 Open in the Project view (tab on the left side):
 - open file Application.java in folder java/org.aliensource.symptommanagement.cloud.video
 - If there is an error showing "Project SDK is not defined" then click on "Setup SDK" and set to the JDK (and not to Android SDK!)
