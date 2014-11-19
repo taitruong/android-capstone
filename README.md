@@ -55,11 +55,17 @@ Similar to Java JDK you need the SDK. Download: https://developer.android.com/sd
 
 ### Download and install the development environment: https://developer.android.com/sdk/installing/studio.html#download
 
+### Server Project
 Start Android Studio and import the server project via the menu:
 - File>Import Project
 - Select the build.gradle file (and NOT the directory) in D:\development\android_capstone\git\Server
 
-It takes some time since some libraries will be downloaded. Once it is finished you need to check whether everything is compile correctly. Open in the Project view (tab on the left side):
+It takes some time since some libraries will be downloaded. Once it is finished you need to check whether everything is compile correctly.
+- File > Settings
+ - Version Control>GitHub: enter login name and password
+ - Version Control: "Add root" for "D:\development\android_capstone\git"
+ - Gradle: if selectable select "Use default gradle wrapper"; if not then select "Use customizable gradle wrapper"; press OK; then re-open and now you can select "Use default gradle wrapper"
+Open in the Project view (tab on the left side):
 - open file Application.java in folder java/org.aliensource.symptommanagement.cloud.video
 - If there is an error showing "Project SDK is not defined" then click on "Setup SDK" and set to the JDK (and not to Android SDK!)
 
@@ -79,20 +85,19 @@ Attach project to Git and GitHub
 - Enter user username and password
 - Go one up to Version Control and press "Add root" for the "Unregistered Git root: D:\development\android_capstone\git"
 
+### Client Project
 Import the client project
-- see above to import build.gradle file in the Client folder
-- select Android SDK folder
-- Tools>Android>SDK Manager
- - For the first time you need to install at least one (the latest) android version (e.g. Android L, version 5, API Level 21)
- - Select the following packages:
-  - Tools:
-   - Android SDK Tools
-   - Android SDK Platform-tools
-   - Android SDK Build-tools with the Latest (current Revision: 21.1.1) and oldest (Rev.17) Android SDK Build Tools
-  - Select Android versions
-   - Android 5.0 (API 21): select all packages
-   - Select only "SDK Platform" package for Android 4.4.2 (API 19), Android 4.3.1 (API 18), Android 4.2.2 (API 17), Android 4.1.2 (API 16), and Android 4.0 (API 14)
-  - Extras: Android Support Repository, Android Support Library, Google USB Driver
+See above to import build.gradle file in the Client folder and select Android SDK folder.
+
+Go to Tools>Android>SDK Manager and select the followin packages:
+- Tools:
+ - Android SDK Tools
+ - Android SDK Platform-tools
+ - Android SDK Build-tools with the Latest (current Revision: 21.1.1) and oldest (Rev.17) Android SDK Build Tools
+- Select packages for Android versions
+ - Android 5.0 (API 21): select all packages
+ - Select only "SDK Platform" package for Android 4.4.2 (API 19), Android 4.3.1 (API 18), Android 4.2.2 (API 17), Android 4.1.2 (API 16), and Android 4.0 (API 14)
+- Extras: Android Support Repository, Android Support Library, Google USB Driver
 
 Starting the app on Genymotion
 Assuming you have the server in den Android Studio environment and the Android device in Genymotion started, you can install and run the app. Click in the menu Run>Run 'app'. For the first time this takes some time.
