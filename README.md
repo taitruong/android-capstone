@@ -68,6 +68,9 @@ It takes some time since some libraries will be downloaded. Once it is finished 
 Open in the Project view (tab on the left side):
 - open file Application.java in folder java/org.aliensource.symptommanagement.cloud.video
 - If there is an error showing "Project SDK is not defined" then click on "Setup SDK" and set to the JDK (and not to Android SDK!)
+- NOTE: in the project tab on the left you should switch from "Android" to "Project" view. This shows you all files including hidden files
+
+VCS>Update Project>leave default selection for "Branch Default" and "Using Stash">OK>Enter master password to save your GitHub password in Android Studio
 
 Starting and stopping the Server
 - right-click on the file>Run 'Application.main()'
@@ -96,7 +99,7 @@ Go to Tools>Android>SDK Manager and select the followin packages:
  - Android SDK Build-tools with the Latest (current Revision: 21.1.1) and oldest (Rev.17) Android SDK Build Tools
 - Select packages for Android versions
  - Android 5.0 (API 21): select all packages
- - Select only "SDK Platform" package for Android 4.4.2 (API 19), Android 4.3.1 (API 18), Android 4.2.2 (API 17), Android 4.1.2 (API 16), and Android 4.0 (API 14)
+ - Select only "SDK Platform" package for Android 4.4W.2 (API 20), Android 4.4.2 (API 19), Android 4.3.1 (API 18), Android 4.2.2 (API 17), Android 4.1.2 (API 16), and Android 4.0 (API 14)
 - Extras: Android Support Repository, Android Support Library, Google USB Driver
 
 Starting the app on Genymotion
