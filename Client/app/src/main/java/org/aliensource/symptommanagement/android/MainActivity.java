@@ -12,25 +12,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
 import org.aliensource.symptommanagement.android.patient.PatientListFragment;
@@ -45,7 +44,7 @@ import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends SherlockFragmentActivity {
 
     @InjectView(R.id.main_layout)
     protected DrawerLayout mDrawerLayout;
@@ -80,13 +79,17 @@ public class MainActivity extends Activity {
 
 		ButterKnife.inject(this);
 
-        initDrawerMenu();
+        initDrawerMenu(savedInstanceState);
 
         initAlarms();
     }
 
-    private void initDrawerMenu() {
+    private void initDrawerMenu(Bundle savedInstanceState) {
         mTitle = mDrawerTitle = getTitle();
+
+        mTitle = mDrawerTitle = getTitle();
+        initMenus();
+
         // set up the drawer's list view with items and click listener
         mainMenuList.setAdapter(new ArrayAdapter<String>(MainActivity.this,
                 R.layout.drawer_list_item, menuTitles));
@@ -106,44 +109,42 @@ public class MainActivity extends Activity {
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                getSupportActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to
+                // onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                getSupportActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to
+                // onPrepareOptionsMenu()
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
     }
 
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         //TODO - not ideal to always call initMenus but I don't know yet how to remove the init logic in the onCreate()-method
         initMenus();
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mainMenuList);
-        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
+        if (item.getItemId() == android.R.id.home) {
+            if (mDrawerLayout.isDrawerOpen(mainMenuList)) {
+                mDrawerLayout.closeDrawer(mainMenuList);
+            } else {
+                mDrawerLayout.openDrawer(mainMenuList);
+            }
         }
-        // Handle action buttons
-        switch(item.getItemId()) {
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
-    /* The click listner for ListView in the navigation drawer */
+    /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -153,10 +154,10 @@ public class MainActivity extends Activity {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.content_frame, fragments[position])
+                .add(R.id.content_frame, fragments[position])
                 .commit();
 
         // update selected item and title, then close the drawer
@@ -187,14 +188,14 @@ public class MainActivity extends Activity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
+        // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		refreshVideos();
 	}
 

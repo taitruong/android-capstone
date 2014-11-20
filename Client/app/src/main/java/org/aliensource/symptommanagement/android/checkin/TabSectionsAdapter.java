@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 /**
  * Created by ttruong on 19-Nov-14.
  */
@@ -13,8 +15,10 @@ public class TabSectionsAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
+    private final String[] TITLES = { "Symptom", "Medication"};
+
     @Override
-    public Fragment getItem(int i) {
+    public SherlockFragment getItem(int i) {
         Bundle args = new Bundle();
         switch (i) {
             case 0:
@@ -29,12 +33,13 @@ public class TabSectionsAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public int getCount() {
-        return 2;
+    public CharSequence getPageTitle(int position) {
+        return TITLES[position];
     }
 
     @Override
-    public CharSequence getPageTitle(int position) {
-        return "Section " + (position + 1);
+    public int getCount() {
+        return TITLES.length;
     }
+
 }

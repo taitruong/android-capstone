@@ -24,6 +24,8 @@ dependencies {
     compile project(":Common")
 
     compile 'com.android.support:support-v4:21.+'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
 // not working for some reason...
 //    compile 'com.android.support:appcompat-v7:21.+'
 

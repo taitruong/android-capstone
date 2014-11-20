@@ -1,22 +1,22 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_check_in"
-    style="@style/Patient">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000000"
-        android:gravity="top|left"
-        android:padding="32dp"
-        android:text="@string/check_in"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:background="@color/PatientBackground" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:background="@color/PatientBackground"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#000000"
-        android:gravity="top|right"
-        android:padding="32dp"
-        android:text="test"/>
+        android:layout_below="@+id/tabs"
+        tools:context=".MainActivity" />
 
 </RelativeLayout>

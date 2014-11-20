@@ -1,10 +1,10 @@
 package org.aliensource.symptommanagement.android.reminder;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +49,6 @@ public class ReminderSettingsFragment extends AbstractFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.inject(this, view);
 
         prefs = ReminderPreferencesUtils.getPreferences(getActivity());
         updateReminderTextViews(ReminderPreferencesUtils.getReminderAlarms(prefs));
