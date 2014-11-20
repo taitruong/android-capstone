@@ -4,4 +4,25 @@
     <dimen name="margin_left_and_right">16dp</dimen>
     <dimen name="margin_top_and_bottom">8dp</dimen>
 
+    <dimen name="padding_top_bottom_small">8dp</dimen>
+    <dimen name="padding_top_bottom_medium">16dp</dimen>
+
+    <dimen name="text_size_small">14dp</dimen>
+    <dimen name="text_size_medium">18dp</dimen>
+    <dimen name="text_size_large">22dp</dimen>
+    <dimen name="text_size_xxlarge">44dp</dimen>
+
+    <dimen name="widget_height_medium">40dp</dimen>
+    <dimen name="widget_height_large">48dp</dimen>
+
+    <dimen name="row_height_small">48dp</dimen>
+    <dimen name="row_height_medium">56dp</dimen>
+    <dimen name="row_height_large">72dp</dimen>
+
+    <dimen name="column_width_medium">72dp</dimen>
+
+    <dimen name="icon_size_small">25dp</dimen>
+    <dimen name="icon_size_medium">40dp</dimen>
+    <dimen name="icon_size_large">48dp</dimen>
+
 </resources>

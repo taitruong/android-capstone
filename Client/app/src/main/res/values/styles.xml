@@ -1,20 +1,19 @@
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+    <style name="Login" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/background_light</item>
+        <item name="android:paddingTop">@dimen/margin_top_and_bottom</item>
+        <item name="android:paddingBottom">@dimen/margin_top_and_bottom</item>
+        <item name="android:paddingLeft">@dimen/margin_left_and_right</item>
+        <item name="android:paddingRight">@dimen/margin_left_and_right</item>
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <style name="Patient" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/holo_blue_bright</item>
     </style>
-
+    <color name="PatientBackground">@android:color/holo_blue_bright</color>
 </resources>

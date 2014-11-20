@@ -19,6 +19,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -28,8 +29,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
 import org.aliensource.symptommanagement.android.patient.PatientListFragment;
 import org.aliensource.symptommanagement.android.patient.PatientReportFragment;
 import org.aliensource.symptommanagement.android.reminder.AlarmNotificationReceiver;
@@ -44,7 +47,7 @@ import butterknife.InjectView;
 
 public class MainActivity extends Activity {
 
-    @InjectView(R.id.drawer_layout)
+    @InjectView(R.id.main_layout)
     protected DrawerLayout mDrawerLayout;
 
     @InjectView(R.id.main_menu)
@@ -70,6 +73,10 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+        //TODO: adjust to check background for patient or doctor user
+        View layout = (View) findViewById(R.id.main_layout);
+        layout.setBackgroundColor(getResources().getColor(R.color.PatientBackground));
 
 		ButterKnife.inject(this);
 
