@@ -1,5 +1,7 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.google.common.base.Objects;
+
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -64,4 +66,28 @@ public class Patient extends Person {
         this.medications = medications;
     }
 
+    @Override
+    public int hashCode() {
+        // Google Guava provides great utilities for hashing
+        return Objects.hashCode(medicalRecordNumber, doctors, checkIn, medications);
+    }
+
+    /**
+     * Two Videos are considered equal if they have exactly the same values for
+     * their name, url, and duration.
+     *
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Patient) {
+            Patient other = (Patient) obj;
+            // Google Guava provides great utilities for equals too!
+            return Objects.equal(medicalRecordNumber, other.medicalRecordNumber)
+                    && Objects.equal(doctors, other.doctors)
+                    && Objects.equal(checkIn, other.checkIn)
+                    && Objects.equal(medications, other.medications);
+        } else {
+            return false;
+        }
+    }
 }

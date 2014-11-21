@@ -37,14 +37,16 @@ import org.aliensource.symptommanagement.android.patient.PatientReportFragment;
 import org.aliensource.symptommanagement.android.reminder.AlarmNotificationReceiver;
 import org.aliensource.symptommanagement.android.reminder.ReminderPreferencesUtils;
 import org.aliensource.symptommanagement.android.reminder.ReminderSettingsFragment;
-import org.aliensource.symptommanagement.cloud.repository.Video;
 import org.aliensource.symptommanagement.cloud.service.SecurityService;
-import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivity extends SherlockFragmentActivity {
+
+    public static final String ARGUMENT_USERNAME = "username";
+
+    protected String username;
 
     @InjectView(R.id.main_layout)
     protected DrawerLayout mDrawerLayout;
@@ -65,9 +67,6 @@ public class MainActivity extends SherlockFragmentActivity {
     private AlarmManager mAlarmManager;
     private int alarmId = 0;
 
-	@InjectView(R.id.videoList)
-	protected ListView videoList_;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,6 +77,10 @@ public class MainActivity extends SherlockFragmentActivity {
         layout.setBackgroundColor(getResources().getColor(R.color.PatientBackground));
 
 		ButterKnife.inject(this);
+
+        Bundle args = getIntent().getExtras();
+        username = args.getString(ARGUMENT_USERNAME);
+        System.out.println(">>>>>> welcome " + username);
 
         initDrawerMenu(savedInstanceState);
 
@@ -195,12 +198,10 @@ public class MainActivity extends SherlockFragmentActivity {
     @Override
 	protected void onResume() {
 		super.onResume();
-
-		refreshVideos();
 	}
 
     private void initMenus() {
-        final SecurityService svc = VideoSvc.getSecurityServiceOrShowLogin(this);
+        final SecurityService svc = SecuritySvc.getSecurityServiceOrShowLogin(this);
         if (svc != null) {
             CallableTask.invoke(new Callable<Boolean>() {
 
@@ -328,42 +329,5 @@ public class MainActivity extends SherlockFragmentActivity {
         PendingIntent mReminderNotificationReceiverPendingIntent = mReminderNotificationReceiverPendingIntentMap.remove(oldTime);
 
     }
-
-	private void refreshVideos() {
-		final VideoSvcApi svc = VideoSvc.getOrShowLogin(this);
-
-		if (svc != null) {
-			CallableTask.invoke(new Callable<Collection<Video>>() {
-
-				@Override
-				public Collection<Video> call() throws Exception {
-					return svc.getVideoList();
-				}
-			}, new TaskCallback<Collection<Video>>() {
-
-				@Override
-				public void success(Collection<Video> result) {
-					List<String> names = new ArrayList<String>();
-					for (Video v : result) {
-						names.add(v.getName());
-					}
-					videoList_.setAdapter(new ArrayAdapter<String>(
-							MainActivity.this,
-							android.R.layout.simple_list_item_1, names));
-				}
-
-				@Override
-				public void error(Exception e) {
-					Toast.makeText(
-							MainActivity.this,
-							"Unable to fetch the video list, please login again.",
-							Toast.LENGTH_SHORT).show();
-
-					startActivity(new Intent(MainActivity.this,
-							LoginScreenActivity.class));
-				}
-			});
-		}
-	}
 
 }

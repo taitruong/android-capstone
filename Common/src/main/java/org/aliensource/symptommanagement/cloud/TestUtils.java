@@ -1,7 +1,13 @@
 package org.aliensource.symptommanagement.cloud;
 
-import org.aliensource.symptommanagement.cloud.repository.Video;
+import org.aliensource.symptommanagement.cloud.repository.CheckIn;
+import org.aliensource.symptommanagement.cloud.repository.Doctor;
+import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.Role;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 public class TestUtils {
@@ -43,18 +49,55 @@ public class TestUtils {
 
     }
 
-    public static long randomVideoDuration(){
-        return (long)Math.rint(Math.random() * 1000);
+    public static Patient randomPatient() {
+        Patient patient = randomPatientWithoutDoctors();
+        return patient;
     }
 
-    public static Video randomVideo() {
-        return new Video(
-                randomVideoName(),
-                "http://" + randomVideoName(),
-                randomVideoDuration());
+    public static Patient randomPatientWithoutDoctors() {
+        Patient patient = new Patient();
+        patient.setFirstName(randomString());
+        patient.setLastName(randomString());
+        patient.setUsername(randomString());
+        patient.setPassword(randomString());
+        patient.setRoles(randomRoles());
+        patient.setDateOfBirth(new GregorianCalendar());
+        patient.setMedicalRecordNumber(randomString());
+
+        return patient;
     }
 
-    public static String randomVideoName() {
+    public static Doctor randomDoctor() {
+        Doctor doctor = randomDoctorWithoutPatient();
+        return doctor;
+    }
+
+    public static Doctor randomDoctorWithoutPatient() {
+        Doctor doctor = new Doctor();
+        doctor.setFirstName(randomString());
+        doctor.setLastName(randomString());
+        doctor.setUsername(randomString());
+        doctor.setPassword(randomString());
+        doctor.setRoles(randomRoles());
+        doctor.setDateOfBirth(new GregorianCalendar());
+        return doctor;
+    }
+
+    public static Collection<Role> randomRoles() {
+        Role role = new Role();
+        Collection<Role> roles = new ArrayList<Role>();
+        roles.add(role);
+        role.setName(randomString());
+        return roles;
+    }
+
+    public static CheckIn randomCheckIn() {
+        CheckIn checkIn = new CheckIn();
+
+        return checkIn;
+    }
+
+    public static String randomString() {
         return UUID.randomUUID().toString();
     }
 

@@ -7,7 +7,7 @@ import java.util.Collection;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
-public interface DoctorSvcApi {
+public interface DoctorSvcApi extends BaseSvcApi {
 
 	// The path where we expect the VideoSvc to live
 	public static final String SVC_PATH = "/doctor";

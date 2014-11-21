@@ -1,35 +1,5 @@
 package org.aliensource.symptommanagement.cloud;
 
-import org.aliensource.symptommanagement.cloud.auth.OAuth2SecurityConfiguration;
-import org.aliensource.symptommanagement.cloud.repository.CheckIn;
-import org.aliensource.symptommanagement.cloud.repository.Doctor;
-import org.aliensource.symptommanagement.cloud.repository.IntakeTime;
-import org.aliensource.symptommanagement.cloud.repository.Medicament;
-import org.aliensource.symptommanagement.cloud.repository.Medication;
-import org.aliensource.symptommanagement.cloud.repository.Patient;
-import org.aliensource.symptommanagement.cloud.repository.Role;
-import org.aliensource.symptommanagement.cloud.repository.Symptom;
-import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
-import org.aliensource.symptommanagement.cloud.repository.Video;
-import org.aliensource.symptommanagement.cloud.repository.VideoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -37,15 +7,38 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import org.aliensource.symptommanagement.cloud.auth.OAuth2SecurityConfiguration;
+import org.aliensource.symptommanagement.cloud.repository.CheckIn;
+import org.aliensource.symptommanagement.cloud.repository.Doctor;
+import org.aliensource.symptommanagement.cloud.repository.IntakeTime;
+import org.aliensource.symptommanagement.cloud.repository.Medicament;
+import org.aliensource.symptommanagement.cloud.repository.Medication;
+import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.PatientRepository;
+import org.aliensource.symptommanagement.cloud.repository.Role;
+import org.aliensource.symptommanagement.cloud.repository.Symptom;
+import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
+import org.springframework.hateoas.Resources;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
 import java.io.IOException;
-import java.util.List;
 
 //Tell Spring to automatically inject any dependencies that are marked in
 //our classes with @Autowired
 @EnableAutoConfiguration
 // Tell Spring to automatically create a JPA implementation of our
 // VideoRepository
-@EnableJpaRepositories(basePackageClasses = {VideoRepository.class})
+@EnableJpaRepositories(basePackageClasses = {PatientRepository.class})
 // Tell Spring to turn on WebMVC (e.g., it should enable the DispatcherServlet
 // so that requests can be routed to our Controllers)
 @EnableWebMvc
@@ -122,7 +115,7 @@ public class Application extends RepositoryRestMvcConfiguration {
 	@Override
 	protected void configureRepositoryRestConfiguration(
 			RepositoryRestConfiguration config) {
-		config.exposeIdsFor(Video.class,
+		config.exposeIdsFor(
                 CheckIn.class,
                 Doctor.class,
                 IntakeTime.class,

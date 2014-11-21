@@ -6,7 +6,7 @@ import android.widget.ListView;
 
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.MainActivity;
-import org.aliensource.symptommanagement.android.VideoSvc;
+import org.aliensource.symptommanagement.android.PatientSvc;
 import org.aliensource.symptommanagement.cloud.TestUtils;
 import org.aliensource.symptommanagement.cloud.repository.Video;
 import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
@@ -44,7 +44,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         String localhost = TestUtils.findTheRealLocalhostAddress();
         assertNotNull(localhost);
 
-        videoSvc_ = VideoSvc.init(TestUtils.PROTOCOL + "://"+localhost+":" + TestUtils.PORT, TestUtils.USER_DOCTOR1, TestUtils.USER_DOCTOR1_PASS);
+        videoSvc_ = PatientSvc.init(TestUtils.PROTOCOL + "://" + localhost + ":" + TestUtils.PORT, TestUtils.USER_DOCTOR1, TestUtils.USER_DOCTOR1_PASS);
         assertNotNull(videoSvc_);
 
         activity_ = getActivity();

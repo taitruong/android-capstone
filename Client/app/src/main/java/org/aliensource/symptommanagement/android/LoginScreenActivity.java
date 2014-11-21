@@ -1,8 +1,5 @@
 package org.aliensource.symptommanagement.android;
 
-import java.util.Collection;
-import java.util.concurrent.Callable;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +7,9 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.aliensource.symptommanagement.cloud.repository.Video;
-import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
+import org.aliensource.symptommanagement.cloud.service.SecurityService;
+
+import java.util.concurrent.Callable;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -47,27 +45,30 @@ public class LoginScreenActivity extends Activity {
 
 	@OnClick(R.id.loginButton)
 	protected void login() {
-		String user = userName_.getText().toString();
+		final String user = userName_.getText().toString();
 		String pass = password_.getText().toString();
 		String server = server_.getText().toString();
 
-		final VideoSvcApi svc = VideoSvc.init(server, user, pass);
+		final SecurityService svc = SecuritySvc.init(server, user, pass);
 
-		CallableTask.invoke(new Callable<Collection<Video>>() {
+		CallableTask.invoke(new Callable<Boolean>() {
 
 			@Override
-			public Collection<Video> call() throws Exception {
-				return svc.getVideoList();
+			public Boolean call() throws Exception {
+				return svc.hasRole("doesnotmatter");
 			}
-		}, new TaskCallback<Collection<Video>>() {
+		}, new TaskCallback<Boolean>() {
 
 			@Override
-			public void success(Collection<Video> result) {
+			public void success(Boolean result) {
 				// OAuth 2.0 grant was successful and we
 				// can talk to the server, open up the video listing
-				startActivity(new Intent(
-						LoginScreenActivity.this,
-						MainActivity.class));
+                Intent intent = new Intent(LoginScreenActivity.this, MainActivity.class);
+                Bundle args = new Bundle();
+                args.putString(MainActivity.ARGUMENT_USERNAME, user);
+                intent.putExtras(args);
+
+				startActivity(intent);
 			}
 
 			@Override

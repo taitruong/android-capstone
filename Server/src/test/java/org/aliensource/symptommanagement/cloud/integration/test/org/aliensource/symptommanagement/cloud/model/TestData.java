@@ -2,8 +2,6 @@ package org.aliensource.symptommanagement.cloud.integration.test.org.aliensource
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.aliensource.symptommanagement.cloud.repository.Video;
-
 import java.util.UUID;
 
 /**
@@ -20,22 +18,6 @@ import java.util.UUID;
 public class TestData {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
-	
-	/**
-	 * Construct and return a Video object with a
-	 * rnadom name, url, and duration.
-	 * 
-	 * @return
-	 */
-	public static Video randomVideo() {
-		// Information about the video
-		// Construct a random identifier using Java's UUID class
-		String id = UUID.randomUUID().toString();
-		String title = "Video-"+id;
-		String url = "http://coursera.org/some/video-"+id;
-		long duration = 60 * (int)Math.rint(Math.random() * 60) * 1000; // random time up to 1hr
-		return new Video(title, url, duration);
-	}
 	
 	/**
 	 *  Convert an object to JSON using Jackson's ObjectMapper

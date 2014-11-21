@@ -2,12 +2,12 @@ package org.aliensource.symptommanagement.cloud.integration.test;
 
 import com.google.gson.JsonObject;
 
+import org.aliensource.symptommanagement.client.EasyHttpClient;
 import org.aliensource.symptommanagement.client.oauth.SecuredRestBuilder;
 import org.aliensource.symptommanagement.client.oauth.SecuredRestException;
-import org.aliensource.symptommanagement.cloud.integration.test.org.aliensource.symptommanagement.cloud.model.TestData;
-import org.aliensource.symptommanagement.client.EasyHttpClient;
-import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
-import org.aliensource.symptommanagement.cloud.repository.Video;
+import org.aliensource.symptommanagement.cloud.TestUtils;
+import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -16,89 +16,65 @@ import java.util.UUID;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.RetrofitError;
 import retrofit.client.ApacheClient;
-import retrofit.client.Client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-/**
- * 
- * This integration test sends a POST request to the VideoServlet to add a new
- * video and then sends a second GET request to check that the video showed up
- * in the list of videos. Actual network communication using HTTP is performed
- * with this test.
- * 
- * The test requires that the VideoSvc be running first (see the directions in
- * the README.md file for how to launch the Application).
- * 
- * To run this test, right-click on it in Eclipse and select
- * "Run As"->"JUnit Test"
- * 
- * Pay attention to how this test that actually uses HTTP and the test that just
- * directly makes method calls on a VideoSvc object are essentially identical.
- * All that changes is the setup of the videoService variable. Yes, this could
- * be refactored to eliminate code duplication...but the goal was to show how
- * much Retrofit simplifies interaction with our service!
- * 
- * @author jules
- *
- */
-public class VideoSvcClientApiTest {
+public class PatientSvcApiIntegrationTest {
 
-	private final String USERNAME = "doctor1";
+	private final String USERNAME = "patient1";
 	private final String PASSWORD = "pass";
 	private final String CLIENT_ID = "mobile";
 	private final String READ_ONLY_CLIENT_ID = "mobileReader";
 
 	private final String TEST_URL = "https://localhost:8443";
 
-	private VideoSvcApi videoService = new SecuredRestBuilder()
-			.setLoginEndpoint(TEST_URL + VideoSvcApi.TOKEN_PATH)
+	private PatientSvcApi patientService = new SecuredRestBuilder()
+			.setLoginEndpoint(TEST_URL + PatientSvcApi.TOKEN_PATH)
 			.setUsername(USERNAME)
 			.setPassword(PASSWORD)
 			.setClientId(CLIENT_ID)
 			.setClient(new ApacheClient(new EasyHttpClient()))
 			.setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
-			.create(VideoSvcApi.class);
+			.create(PatientSvcApi.class);
 
-	private VideoSvcApi readOnlyVideoService = new SecuredRestBuilder()
-			.setLoginEndpoint(TEST_URL + VideoSvcApi.TOKEN_PATH)
+	private PatientSvcApi readOnlyPatientService = new SecuredRestBuilder()
+			.setLoginEndpoint(TEST_URL + PatientSvcApi.TOKEN_PATH)
 			.setUsername(USERNAME)
 			.setPassword(PASSWORD)
 			.setClientId(READ_ONLY_CLIENT_ID)
 			.setClient(new ApacheClient(new EasyHttpClient()))
 			.setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
-			.create(VideoSvcApi.class);
+			.create(PatientSvcApi.class);
 
-	private VideoSvcApi invalidClientVideoService = new SecuredRestBuilder()
-			.setLoginEndpoint(TEST_URL + VideoSvcApi.TOKEN_PATH)
+	private PatientSvcApi invalidClientPatientService = new SecuredRestBuilder()
+			.setLoginEndpoint(TEST_URL + PatientSvcApi.TOKEN_PATH)
 			.setUsername(UUID.randomUUID().toString())
 			.setPassword(UUID.randomUUID().toString())
 			.setClientId(UUID.randomUUID().toString())
 			.setClient(new ApacheClient(new EasyHttpClient()))
 			.setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
-			.create(VideoSvcApi.class);
+			.create(PatientSvcApi.class);
 
-	private Video video = TestData.randomVideo();
+	private Patient model = TestUtils.randomPatient();
 
 	/**
-	 * This test creates a Video, adds the Video to the VideoSvc, and then
+	 * This test creates and adds, adds the Video to the VideoSvc, and then
 	 * checks that the Video is included in the list when getVideoList() is
 	 * called.
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void testVideoAddAndList() throws Exception {
+	public void testAdd() throws Exception {
 		// Add the video
-		videoService.addVideo(video);
+		patientService.add(model);
 
 		// We should get back the video that we added above
-		Collection<Video> videos = videoService.getVideoList();
-        System.out.println(">>>>> videos: " + videos.size());
-		assertTrue(videos.contains(video));
+		Collection<Patient> data = patientService.findAll();
+		assertTrue(data.contains(model));
 	}
 
 	/**
@@ -112,7 +88,7 @@ public class VideoSvcClientApiTest {
 
 		try {
 			// Add the video
-			invalidClientVideoService.addVideo(video);
+			invalidClientPatientService.add(model);
 
 			fail("The server should have prevented the client from adding a video"
 					+ " because it presented invalid client/user credentials");
@@ -130,12 +106,12 @@ public class VideoSvcClientApiTest {
 	@Test
 	public void testReadOnlyClientAccess() throws Exception {
 
-		Collection<Video> videos = readOnlyVideoService.getVideoList();
-		assertNotNull(videos);
+		Collection<Patient> data = readOnlyPatientService.findAll();
+		assertNotNull(data);
 		
 		try {
 			// Add the video
-			readOnlyVideoService.addVideo(video);
+			readOnlyPatientService.add(model);
 
 			fail("The server should have prevented the client from adding a video"
 					+ " because it is using a read-only client ID");

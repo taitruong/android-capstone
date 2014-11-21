@@ -6,9 +6,8 @@ import retrofit.http.*;
 
 import java.util.Collection;
 
-public interface PatientSvcApi {
+public interface PatientSvcApi extends BaseSvcApi {
 
-	// The path where we expect the VideoSvc to live
 	public static final String SVC_PATH = "/patient";
 
 	// The path to search videos by title
@@ -16,5 +15,14 @@ public interface PatientSvcApi {
 	
 	@GET(SEARCH_PATH_USERNAME)
 	public Collection<Patient> findByUsername(@Query(ServiceUtils.PARAMETER_USERNAME) String title);
-	
+
+    @GET(SVC_PATH)
+    public Collection<Patient> findAll();
+
+    @GET(SVC_PATH)
+    public Void add(@Body Patient v);
+
+    @DELETE(SVC_PATH + "/{id}")
+    public Void delete(@Path("id") long id);
+
 }
