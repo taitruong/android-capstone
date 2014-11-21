@@ -16,7 +16,8 @@ import javax.persistence.OneToOne;
  * Created by ttruong on 13-Nov-14.
  */
 @Entity
-public class Patient extends Person {
+public class
+        Patient extends Person {
 
     private String medicalRecordNumber;
 

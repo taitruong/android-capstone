@@ -2,7 +2,6 @@ package org.aliensource.symptommanagement.android.reminder;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import org.aliensource.symptommanagement.DateTimeUtils;
 import org.aliensource.symptommanagement.android.AbstractFragment;
 import org.aliensource.symptommanagement.android.MainActivity;
 import org.aliensource.symptommanagement.android.R;
-import org.aliensource.symptommanagement.android.ViewUtils;
+import org.aliensource.symptommanagement.android.MainUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,14 +42,11 @@ public class ReminderSettingsFragment extends AbstractFragment {
     @InjectView(R.id.reminderTime4)
     protected TextView reminder4;
 
-    private SharedPreferences prefs;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        prefs = ReminderPreferencesUtils.getPreferences(getActivity());
-        updateReminderTextViews(ReminderPreferencesUtils.getReminderAlarms(prefs));
+        updateReminderTextViews(ReminderPreferencesUtils.getReminderAlarms(getActivity()));
         return view;
     }
 
@@ -130,7 +126,7 @@ public class ReminderSettingsFragment extends AbstractFragment {
         // Create a new DatePickerFragment
         DialogFragment fragment = new TimePickerFragment();
         Bundle args = new Bundle();
-        args.putInt(ViewUtils.ARG_TIME, reminderId);
+        args.putInt(MainUtils.ARG_TIME, reminderId);
         fragment.setArguments(args);
         fragment.setTargetFragment(this, 0);
 
@@ -146,7 +142,7 @@ public class ReminderSettingsFragment extends AbstractFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-            int id = getArguments().getInt(ViewUtils.ARG_TIME);
+            int id = getArguments().getInt(MainUtils.ARG_TIME);
             timeView = (TextView) getActivity().findViewById(id);
 
             int[] hourAndMinute = DateTimeUtils.getHourAndMinute(timeView.getText());
@@ -179,13 +175,13 @@ public class ReminderSettingsFragment extends AbstractFragment {
     }
 
     private void saveReminderPreferences(String oldTime, String newTime) {
-        Set<String> reminderAlarms = ReminderPreferencesUtils.getReminderAlarms(prefs);
+        Set<String> reminderAlarms = ReminderPreferencesUtils.getReminderAlarms(getActivity());
         //save only when new time is not already set
         if (!reminderAlarms.contains(newTime)) {
             reminderAlarms.remove(oldTime);
             reminderAlarms.add(newTime);
 
-            ReminderPreferencesUtils.saveReminderPreferences(prefs, reminderAlarms);
+            ReminderPreferencesUtils.saveReminderAlarms(getActivity(), reminderAlarms);
             updateReminderTextViews(reminderAlarms);
             ((MainActivity) getActivity()).initAlarms();
         }

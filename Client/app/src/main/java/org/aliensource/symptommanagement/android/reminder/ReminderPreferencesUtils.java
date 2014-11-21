@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import org.aliensource.symptommanagement.DateTimeUtils;
+import org.aliensource.symptommanagement.android.MainUtils;
 
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -15,8 +15,6 @@ import java.util.Set;
  * Created by ttruong on 11-Nov-14.
  */
 public final class ReminderPreferencesUtils {
-
-    protected static final String PREFERENCES_KEY_REMINDERS = "reminders";
 
     private static final Set<String> DEFAULT_REMINDERS;
 
@@ -30,22 +28,20 @@ public final class ReminderPreferencesUtils {
 
     /////// preferences
 
-    public static SharedPreferences getPreferences(Activity activity) {
-        return activity.getPreferences(Context.MODE_PRIVATE);
-    }
-
-    public static Set<String> getReminderAlarms(SharedPreferences prefs) {
+    public static Set<String> getReminderAlarms(Activity activity) {
+        SharedPreferences prefs = MainUtils.getPreferences(activity);
         //we have to create a NEW set
         //otherwise the preferences are saved only for the first time and than not anymore!!
         //see: http://stackoverflow.com/questions/12528836/shared-preferences-only-saved-first-time
-        HashSet<String> reminders = new HashSet<String>(prefs.getStringSet(PREFERENCES_KEY_REMINDERS, DEFAULT_REMINDERS));
+        HashSet<String> reminders = new HashSet<String>(prefs.getStringSet(MainUtils.PREF_REMINDERS, DEFAULT_REMINDERS));
         return reminders;
     }
 
-    public static void saveReminderPreferences(SharedPreferences prefs, Set<String> reminders) {
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putStringSet(PREFERENCES_KEY_REMINDERS, reminders);
-            editor.commit();
+    public static void saveReminderAlarms(Activity activity, Set<String> reminders) {
+        SharedPreferences prefs = MainUtils.getPreferences(activity);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putStringSet(MainUtils.PREF_REMINDERS, reminders);
+        editor.commit();
     }
 
 }

@@ -6,7 +6,7 @@ import retrofit.http.*;
 
 import java.util.Collection;
 
-public interface PatientSvcApi extends BaseSvcApi {
+public interface PatientSvcApi {
 
 	public static final String SVC_PATH = "/patient";
 

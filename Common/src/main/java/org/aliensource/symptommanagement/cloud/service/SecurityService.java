@@ -10,6 +10,8 @@ import retrofit.http.Query;
  */
 public interface SecurityService {
 
+    public static final String TOKEN_PATH = "/oauth/token";
+
     public static final String ROLE_DOCTOR = "Doctor";
     public static final String ROLE_PATIENT = "Patient";
 

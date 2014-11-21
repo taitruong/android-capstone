@@ -37,13 +37,13 @@ public class SecuritySvc {
 			String pass) {
 
         securityService = new SecuredRestBuilder()
-                .setLoginEndpoint(server + PatientSvcApi.TOKEN_PATH)
+                .setLoginEndpoint(server + SecurityService.TOKEN_PATH)
                 .setUsername(user)
                 .setPassword(pass)
                 .setClientId(CLIENT_ID)
-                .setClient(
-                        new ApacheClient(new EasyHttpClient()))
-                .setEndpoint(server).setLogLevel(LogLevel.FULL).build()
+                .setClient(new ApacheClient(new EasyHttpClient()))
+                .setEndpoint(server)
+                .setLogLevel(LogLevel.FULL).build()
                 .create(SecurityService.class);
 
 		return securityService;

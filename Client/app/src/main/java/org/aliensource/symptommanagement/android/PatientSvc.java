@@ -14,6 +14,7 @@ import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.client.ApacheClient;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -33,17 +34,22 @@ public class PatientSvc {
 		}
 	}
 
+    public static synchronized PatientSvcApi init(Activity activity) {
+        String[] credentials = MainUtils.getCredentials(activity);
+        return init(credentials[0], credentials[1], credentials[2]);
+    }
+
     public static synchronized PatientSvcApi init(String server, String user,
 			String pass) {
 
         patientService = new SecuredRestBuilder()
-                .setLoginEndpoint(server + PatientSvcApi.TOKEN_PATH)
+                .setLoginEndpoint(server + SecurityService.TOKEN_PATH)
                 .setUsername(user)
                 .setPassword(pass)
                 .setClientId(CLIENT_ID)
-                .setClient(
-                        new ApacheClient(new EasyHttpClient()))
-                .setEndpoint(server).setLogLevel(LogLevel.FULL).build()
+                .setClient(new ApacheClient(new EasyHttpClient()))
+                .setEndpoint(server)
+                .setLogLevel(LogLevel.FULL).build()
                 .create(PatientSvcApi.class);
 
 		return patientService;

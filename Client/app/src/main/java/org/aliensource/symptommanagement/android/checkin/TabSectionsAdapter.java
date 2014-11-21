@@ -1,14 +1,13 @@
 package org.aliensource.symptommanagement.android.checkin;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.aliensource.symptommanagement.android.R;
-import org.aliensource.symptommanagement.android.ViewUtils;
+import org.aliensource.symptommanagement.android.MainUtils;
 
 /**
  * Created by ttruong on 19-Nov-14.
@@ -27,17 +26,17 @@ public class TabSectionsAdapter extends FragmentPagerAdapter {
         switch (i) {
             case 0:
                 SymptomFragment symptomFragment1 = new SymptomFragment();
-                args.putInt(ViewUtils.ARG_LAYOUT, R.layout.fragment_check_in_symptom1);
+                args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_symptom1);
                 symptomFragment1.setArguments(args);
                 return symptomFragment1;
             case 1:
                 SymptomFragment symptomFragment2 = new SymptomFragment();
-                args.putInt(ViewUtils.ARG_LAYOUT, R.layout.fragment_check_in_symptom2);
+                args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_symptom2);
                 symptomFragment2.setArguments(args);
                 return symptomFragment2;
             default:
                 MedicationFragment medicationFragment = new MedicationFragment();
-                args.putInt(ViewUtils.ARG_LAYOUT, R.layout.fragment_check_in_medication);
+                args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_medication);
                 medicationFragment.setArguments(args);
                 return medicationFragment;
         }

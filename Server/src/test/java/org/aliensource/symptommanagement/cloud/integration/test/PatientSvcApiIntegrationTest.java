@@ -8,6 +8,7 @@ import org.aliensource.symptommanagement.client.oauth.SecuredRestException;
 import org.aliensource.symptommanagement.cloud.TestUtils;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
+import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -32,7 +33,7 @@ public class PatientSvcApiIntegrationTest {
 	private final String TEST_URL = "https://localhost:8443";
 
 	private PatientSvcApi patientService = new SecuredRestBuilder()
-			.setLoginEndpoint(TEST_URL + PatientSvcApi.TOKEN_PATH)
+			.setLoginEndpoint(TEST_URL + SecurityService.TOKEN_PATH)
 			.setUsername(USERNAME)
 			.setPassword(PASSWORD)
 			.setClientId(CLIENT_ID)
@@ -41,7 +42,7 @@ public class PatientSvcApiIntegrationTest {
 			.create(PatientSvcApi.class);
 
 	private PatientSvcApi readOnlyPatientService = new SecuredRestBuilder()
-			.setLoginEndpoint(TEST_URL + PatientSvcApi.TOKEN_PATH)
+			.setLoginEndpoint(TEST_URL + SecurityService.TOKEN_PATH)
 			.setUsername(USERNAME)
 			.setPassword(PASSWORD)
 			.setClientId(READ_ONLY_CLIENT_ID)
@@ -50,7 +51,7 @@ public class PatientSvcApiIntegrationTest {
 			.create(PatientSvcApi.class);
 
 	private PatientSvcApi invalidClientPatientService = new SecuredRestBuilder()
-			.setLoginEndpoint(TEST_URL + PatientSvcApi.TOKEN_PATH)
+			.setLoginEndpoint(TEST_URL + SecurityService.TOKEN_PATH)
 			.setUsername(UUID.randomUUID().toString())
 			.setPassword(UUID.randomUUID().toString())
 			.setClientId(UUID.randomUUID().toString())

@@ -1,22 +1,8 @@
 package org.aliensource.symptommanagement.android.checkin;
 
-import android.app.Dialog;
-import android.app.TimePickerDialog;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.TimePicker;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-import org.aliensource.symptommanagement.android.AbstractFragment;
 import org.aliensource.symptommanagement.android.R;
-import org.aliensource.symptommanagement.android.ViewUtils;
-import org.aliensource.symptommanagement.android.reminder.ReminderPreferencesUtils;
 
 import butterknife.InjectView;
 import butterknife.OnClick;

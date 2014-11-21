@@ -12,7 +12,15 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 
 import org.aliensource.symptommanagement.android.AbstractFragment;
+import org.aliensource.symptommanagement.android.CallableTask;
+import org.aliensource.symptommanagement.android.PatientSvc;
 import org.aliensource.symptommanagement.android.R;
+import org.aliensource.symptommanagement.android.TaskCallback;
+import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
+
+import java.util.Collection;
+import java.util.concurrent.Callable;
 
 import butterknife.InjectView;
 
@@ -43,6 +51,29 @@ public class CheckInFragment extends AbstractFragment<ViewPager> {
                 getString(R.string.check_in_symptom1_tab_title),
                 getString(R.string.check_in_symptom2_tab_title),
                 "Medication"};
+        System.out.println(">>>> activity " + getActivity());
+        final PatientSvcApi patientService = PatientSvc.init(getActivity());
+
+        CallableTask.invoke(new Callable<Collection<Patient>>() {
+            @Override
+            public Collection<Patient> call() throws Exception {
+                return patientService.findAll();
+            }
+        }, new TaskCallback<Collection<Patient>>() {
+            @Override
+            public void success(Collection<Patient> result) {
+                System.out.println(">>>> data " + result);
+                for (Patient model: result) {
+                    System.out.println(">>>>> model " + model.getUsername());
+                }
+            }
+
+            @Override
+            public void error(Exception e) {
+
+            }
+        });
+
         tabSectionsAdapter = new TabSectionsAdapter(getChildFragmentManager(), titles);
         pager.setAdapter(tabSectionsAdapter);
         tabs.setViewPager(pager);

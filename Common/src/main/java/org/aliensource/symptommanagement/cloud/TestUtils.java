@@ -30,7 +30,7 @@ public class TestUtils {
         for(String localhost : POSSIBLE_LOCALHOSTS) {
             try {
                 System.out.println(">>>>> " + localhost);
-                URL url = new URL("https://"+localhost+":8443" + VideoSvcApi.TOKEN_PATH);
+                URL url = new URL("https://"+localhost+":8443" + SecurityService.TOKEN_PATH);
                 URLConnection con = url.openConnection();
                 con.setConnectTimeout(500);
                 con.setReadTimeout(500);

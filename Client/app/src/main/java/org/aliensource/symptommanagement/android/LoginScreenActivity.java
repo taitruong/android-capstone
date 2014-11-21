@@ -50,6 +50,7 @@ public class LoginScreenActivity extends Activity {
 		String server = server_.getText().toString();
 
 		final SecurityService svc = SecuritySvc.init(server, user, pass);
+        MainUtils.saveCredentials(this, server, user, pass);
 
 		CallableTask.invoke(new Callable<Boolean>() {
 
@@ -65,7 +66,9 @@ public class LoginScreenActivity extends Activity {
 				// can talk to the server, open up the video listing
                 Intent intent = new Intent(LoginScreenActivity.this, MainActivity.class);
                 Bundle args = new Bundle();
-                args.putString(MainActivity.ARGUMENT_USERNAME, user);
+                args.putString(MainUtils.ARG_SERVER, user);
+                args.putString(MainUtils.ARG_USERNAME, user);
+                args.putString(MainUtils.ARG_PASSWORD, user);
                 intent.putExtras(args);
 
 				startActivity(intent);

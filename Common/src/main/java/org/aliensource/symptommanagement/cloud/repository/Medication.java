@@ -15,9 +15,6 @@ public class Medication extends BaseModel {
     @OneToOne
     private Medicament medicament;
 
-    @OneToMany
-    private Collection<IntakeTime> intakeTimes;
-
     public Medicament getMedicament() {
         return medicament;
     }
@@ -25,14 +22,5 @@ public class Medication extends BaseModel {
     public void setMedicament(Medicament medicament) {
         this.medicament = medicament;
     }
-
-    public Collection<IntakeTime> getIntakeTimes() {
-        return intakeTimes;
-    }
-
-    public void setIntakeTimes(Collection<IntakeTime> intakeTimes) {
-        this.intakeTimes = intakeTimes;
-    }
-
 
 }

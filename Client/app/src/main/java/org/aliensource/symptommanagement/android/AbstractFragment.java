@@ -1,7 +1,6 @@
 package org.aliensource.symptommanagement.android;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ public abstract class AbstractFragment<T extends View> extends SherlockFragment 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int layout = getArguments().getInt(ViewUtils.ARG_LAYOUT);
+        int layout = getArguments().getInt(MainUtils.ARG_LAYOUT);
         fragmentView = (T) inflater.inflate(layout, container, false);
         ButterKnife.inject(this, fragmentView);
         return fragmentView;

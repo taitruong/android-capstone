@@ -10,10 +10,10 @@ import javax.persistence.*;
 @Entity
 public class CheckIn extends BaseModel {
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private Collection<SymptomTime> symptomTimes;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     //define join table with the Patient entity being the owner
     @JoinTable(
             name = "CHECKIN_INTAKETIME",
