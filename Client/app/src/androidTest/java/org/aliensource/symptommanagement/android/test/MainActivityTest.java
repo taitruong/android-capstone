@@ -8,8 +8,8 @@ import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.MainActivity;
 import org.aliensource.symptommanagement.android.PatientSvc;
 import org.aliensource.symptommanagement.cloud.TestUtils;
-import org.aliensource.symptommanagement.cloud.repository.Video;
-import org.aliensource.symptommanagement.cloud.service.VideoSvcApi;
+import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 
 import java.util.Collection;
 
@@ -25,13 +25,13 @@ import java.util.Collection;
  */
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
-    private VideoSvcApi videoSvc_;
+    private PatientSvcApi patientSvc;
 
     private MainActivity activity_;
 
-    private ListView videoList_;
+    private ListView patientList;
 
-    private final Video video_ = TestUtils.randomVideo();
+    private final Patient model = TestUtils.randomPatient();
 
     public MainActivityTest() {
         super(MainActivity.class);
@@ -44,18 +44,18 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         String localhost = TestUtils.findTheRealLocalhostAddress();
         assertNotNull(localhost);
 
-        videoSvc_ = PatientSvc.init(TestUtils.PROTOCOL + "://" + localhost + ":" + TestUtils.PORT, TestUtils.USER_DOCTOR1, TestUtils.USER_DOCTOR1_PASS);
-        assertNotNull(videoSvc_);
+        patientSvc = PatientSvc.init(TestUtils.PROTOCOL + "://" + localhost + ":" + TestUtils.PORT, TestUtils.USER_DOCTOR1, TestUtils.USER_DOCTOR1_PASS);
+        assertNotNull(patientSvc);
 
         activity_ = getActivity();
         assertNotNull(activity_);
 
-        videoList_ = (ListView)activity_.findViewById(R.id.videoList);
-        assertNotNull(videoList_);
+        patientList = (ListView)activity_.findViewById(R.id.videoList);
+        assertNotNull(patientList);
     }
 
     public void testVideoListIsPopulatedCorrectly() throws Exception {
-        videoSvc_.addVideo(video_);
+        patientSvc.add(model);
 
         getInstrumentation().callActivityOnResume(activity_);
 
@@ -67,21 +67,21 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         // with a hack!
         Thread.currentThread().sleep(1000);
 
-        ListAdapter videoAdapter = videoList_.getAdapter();
+        ListAdapter modelAdapter = patientList.getAdapter();
 
         boolean foundExpectedVideo = false;
-        for(int i = 0; i < videoAdapter.getCount(); i++){
-            assertTrue(videoAdapter.getItem(i) instanceof String);
+        for(int i = 0; i < modelAdapter.getCount(); i++){
+            assertTrue(modelAdapter.getItem(i) instanceof String);
 
-            String name = (String)videoAdapter.getItem(i);
-            foundExpectedVideo = foundExpectedVideo || video_.getName().equals(name);
+            String name = (String) modelAdapter.getItem(i);
+            foundExpectedVideo = foundExpectedVideo || model.getUsername().equals(name);
         }
 
         assertTrue(foundExpectedVideo);
 
-        Collection<Video> videos = videoSvc_.getVideoList();
-        for(Video v : videos){
-            videoSvc_.deleteVideo(v.getId());
+        Collection<Patient> data = patientSvc.findAll();
+        for(Patient m : data){
+            patientSvc.delete(m.getId());
         }
 
         getInstrumentation().callActivityOnResume(activity_);
@@ -89,7 +89,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         // Repeat timing hack
         Thread.currentThread().sleep(1000);
 
-        videoAdapter = videoList_.getAdapter();
-        assertEquals(0, videoAdapter.getCount());
+        modelAdapter = patientList.getAdapter();
+        assertEquals(0, modelAdapter.getCount());
     }
 }
