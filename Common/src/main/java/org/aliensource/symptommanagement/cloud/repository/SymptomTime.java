@@ -12,7 +12,7 @@ public class SymptomTime extends BaseModel {
 
     private Calendar timestamp;
 
-    private String severity;
+    private int severity;
 
     @OneToOne(optional = false)
     private Symptom symptom;
@@ -25,11 +25,11 @@ public class SymptomTime extends BaseModel {
         this.timestamp = timestamp;
     }
 
-    public String getSeverity() {
+    public int getSeverity() {
         return severity;
     }
 
-    public void setSeverity(String severity) {
+    public void setSeverity(int severity) {
         this.severity = severity;
     }
 

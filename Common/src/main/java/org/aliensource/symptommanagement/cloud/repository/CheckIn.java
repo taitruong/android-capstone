@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class CheckIn extends BaseModel {
 
     @OneToMany
-    private Collection<Symptom> symptomTimes;
+    private Collection<SymptomTime> symptomTimes;
 
     @ManyToMany
     //define join table with the Patient entity being the owner
@@ -22,11 +22,11 @@ public class CheckIn extends BaseModel {
     )
     private Collection<IntakeTime> intakeTimes;
 
-    public Collection<Symptom> getSymptomTimes() {
+    public Collection<SymptomTime> getSymptomTimes() {
         return symptomTimes;
     }
 
-    public void setSymptomTimes(Collection<Symptom> symptomTimes) {
+    public void setSymptomTimes(Collection<SymptomTime> symptomTimes) {
         this.symptomTimes = symptomTimes;
     }
 

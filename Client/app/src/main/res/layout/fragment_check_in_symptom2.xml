@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/row_height_large"
         android:height="@dimen/row_height_large"
-        android:text="@string/check_in_medication_title"
+        android:text="@string/check_in_symptom2_title"
         android:textSize="@dimen/text_size_large"
         android:gravity="left|center_vertical"/>
 
@@ -26,16 +26,22 @@
             android:id="@+id/choice1"
             android:layout_width="match_parent"
             android:layout_height="@dimen/row_height_large"
-            android:text="@string/check_in_medication_value1"
+            android:text="@string/check_in_symptom2_value1"
             android:textSize="@dimen/text_size_large"/>
 
         <RadioButton
             android:id="@+id/choice2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/row_height_large"
-            android:text="@string/check_in_medication_value2"
+            android:text="@string/check_in_symptom2_value2"
             android:textSize="@dimen/text_size_large"/>
 
+        <RadioButton
+            android:id="@+id/choice3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_height_large"
+            android:text="@string/check_in_symptom2_value3"
+            android:textSize="@dimen/text_size_large"/>
     </RadioGroup>
 
     <TextView

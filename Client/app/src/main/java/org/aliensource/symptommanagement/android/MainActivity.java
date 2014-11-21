@@ -31,6 +31,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.aliensource.symptommanagement.DateTimeUtils;
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
 import org.aliensource.symptommanagement.android.patient.PatientListFragment;
 import org.aliensource.symptommanagement.android.patient.PatientReportFragment;
@@ -81,6 +82,7 @@ public class MainActivity extends SherlockFragmentActivity {
         Bundle args = getIntent().getExtras();
         username = args.getString(ARGUMENT_USERNAME);
         System.out.println(">>>>>> welcome " + username);
+
 
         initDrawerMenu(savedInstanceState);
 
@@ -220,12 +222,12 @@ public class MainActivity extends SherlockFragmentActivity {
 
                         AbstractFragment fragment1 = new PatientListFragment();
                         Bundle args1 = new Bundle();
-                        args1.putInt(AbstractFragment.ARG_LAYOUT, R.layout.fragment_patient_list);
+                        args1.putInt(ViewUtils.ARG_LAYOUT, R.layout.fragment_patient_list);
                         fragment1.setArguments(args1);
 
                         AbstractFragment fragment2 = new PatientReportFragment();
                         Bundle args2 = new Bundle();
-                        args2.putInt(AbstractFragment.ARG_LAYOUT, R.layout.fragment_patient_report);
+                        args2.putInt(ViewUtils.ARG_LAYOUT, R.layout.fragment_patient_report);
                         fragment2.setArguments(args2);
 
                         fragments = new AbstractFragment[] {fragment1, fragment2};
@@ -236,12 +238,12 @@ public class MainActivity extends SherlockFragmentActivity {
 
                         AbstractFragment fragment1 = new CheckInFragment();
                         Bundle args1 = new Bundle();
-                        args1.putInt(AbstractFragment.ARG_LAYOUT, R.layout.fragment_check_in);
+                        args1.putInt(ViewUtils.ARG_LAYOUT, R.layout.fragment_check_in);
                         fragment1.setArguments(args1);
 
                         AbstractFragment fragment2 = new ReminderSettingsFragment();
                         Bundle args2 = new Bundle();
-                        args2.putInt(AbstractFragment.ARG_LAYOUT, R.layout.fragment_reminder_settings);
+                        args2.putInt(ViewUtils.ARG_LAYOUT, R.layout.fragment_reminder_settings);
                         fragment2.setArguments(args2);
 
                         fragments = new AbstractFragment[] {fragment1, fragment2};
@@ -284,7 +286,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:sss");
         for (String reminderTime: reminderAlarms) {
-            int[] hourAndMinute = ReminderPreferencesUtils.getHourAndMinute(reminderTime);
+            int[] hourAndMinute = DateTimeUtils.getHourAndMinute(reminderTime);
             //always create a new calendar
             GregorianCalendar cal = new GregorianCalendar();
             cal.setTimeInMillis(now.getTimeInMillis());

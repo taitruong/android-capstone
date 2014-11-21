@@ -29,4 +29,26 @@
     <string name="reminder_ticker_text">Symptom Management: Your check-in at %s o\'clock is required!</string>
     <string name="reminder_notification_title">Symptom Management</string>
     <string name="reminder_notification_text">Your check-in is required</string>
+
+    <!-- Others -->
+    <string name="enter_date_and_time">Please enter date and Time:</string>
+
+    <!-- Check-In Symptom-->
+    <string name="check_in_symptom1_tab_title">Sore Throat and Mouth Pain</string>
+    <string name="check_in_symptom1_title">How bad is your mouth pain and sore throat?</string>
+    <string name="check_in_symptom1_value1">Well-Controlled</string>
+    <string name="check_in_symptom1_value2">Moderate</string>
+    <string name="check_in_symptom1_value3">Severe</string>
+
+    <string name="check_in_symptom2_tab_title">Eat/Drink</string>
+    <string name="check_in_symptom2_title">Does your pain stop you from eating or drinking?</string>
+    <string name="check_in_symptom2_value1">No</string>
+    <string name="check_in_symptom2_value2">Some</string>
+    <string name="check_in_symptom2_value3">I can\'t eat</string>
+
+    <!-- Check-In Medication -->
+    <string name="check_in_medication_tab_title">Sore Throat and Mouth Pain</string>
+    <string name="check_in_medication_title">Did you take your %s?</string>
+    <string name="check_in_medication_value1">Yes</string>
+    <string name="check_in_medication_value2">No</string>
 </resources>

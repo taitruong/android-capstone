@@ -5,6 +5,7 @@ import com.google.common.base.Objects;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -31,7 +32,7 @@ public class Patient extends Person {
     @OneToOne
     private CheckIn checkIn;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private Collection<Medication> medications;
 
     public String getMedicalRecordNumber() {
