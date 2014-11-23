@@ -268,7 +268,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
         //cancel old alarms
         if (!mReminderNotificationReceiverPendingIntentMap.isEmpty()) {
-            // System.out.println(">>>>> remove old alarms <<<<<");
             for (PendingIntent alarm: mReminderNotificationReceiverPendingIntentMap.values()) {
                 mAlarmManager.cancel(alarm);
             }
@@ -291,11 +290,9 @@ public class MainActivity extends SherlockFragmentActivity {
             //otherwise the alarm notification is shown right away
             String calS = formatter.format(new Date(cal.getTimeInMillis()));
             String nowS = formatter.format(new Date(now.getTimeInMillis()));
-            // System.out.println(">>> " + cal.before(now) + ": " + calS + " before " + nowS);
             if (cal.before(now)) {
                 cal.add(Calendar.DAY_OF_MONTH, 1);
             }
-            // System.out.println(">>> alarm at: " + reminderTime + " - " + formatter.format(new Date(cal.getTimeInMillis())));
 
             //create the intent for the AlarmNotificationReceiver and then wrap it in a PendingIntent
             Intent mAlarmNotificationReceiverIntent = new Intent(MainActivity.this, AlarmNotificationReceiver.class);

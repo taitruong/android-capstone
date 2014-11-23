@@ -61,57 +61,11 @@ public class Application extends RepositoryRestMvcConfiguration {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
-    // We are overriding the bean that RepositoryRestMvcConfiguration
-    // is using to convert our objects into JSON so that we can control
-    // the format. The Spring dependency injection will inject our instance
-    // of ObjectMapper in all of the spring data rest classes that rely
-    // on the ObjectMapper. This is an example of how Spring dependency
-    // injection allows us to easily configure dependencies in code that
-    // we don't have easy control over otherwise.
-    //
-    // Normally, we would not override this object mapping. However, in this
-    // case, we are overriding the JSON conversion so that we can easily
-    // extract a list of patients, doctors, etc. using Retrofit. You can remove this
-    // method from the class to see what the default HATEOAS-based responses
-    // from Spring Data Rest look like. You will need to access the server
-    // from your browser as removing this method will break the Retrofit
-    // client.
-    private JsonSerializer<Resources> serializer = new JsonSerializer<Resources>() {
-
-        // We are going to register this class to handle all instances of type
-        // Resources
-        @Override
-        public Class<Resources> handledType() {
-            return Resources.class;
-        }
-
-        @Override
-        public void serialize(Resources value, JsonGenerator jgen,
-                              SerializerProvider provider) throws IOException,
-                JsonProcessingException {
-            // Extracted the actual data inside of the Resources object
-            // that we care about (e.g., the list of Video objects)
-            Object content = value.getContent();
-            // Instead of all of the Resources member variables, etc.
-            // Just mashall the actual content (Videos) into the JSON
-            JsonSerializer<Object> s = provider.findValueSerializer(
-                    content.getClass(), null);
-            s.serialize(content, jgen, provider);
-        }
-    };
-
 	// Tell Spring to launch our app!
 	public static void main(String[] args) {
         LOGGER.info("Starting Symptom Management");
 		SpringApplication.run(Application.class, args);
 	}
-
-    @Override
-    protected void configureJacksonObjectMapper(ObjectMapper objectMapper) {
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(serializer);
-        objectMapper.registerModule(module);
-    }
 
 	@Override
 	protected void configureRepositoryRestConfiguration(

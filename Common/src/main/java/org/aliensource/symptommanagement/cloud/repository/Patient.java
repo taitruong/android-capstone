@@ -2,6 +2,7 @@ package org.aliensource.symptommanagement.cloud.repository;
 
 import com.google.common.base.Objects;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -16,8 +17,7 @@ import javax.persistence.OneToOne;
  * Created by ttruong on 13-Nov-14.
  */
 @Entity
-public class
-        Patient extends Person {
+public class Patient extends Person {
 
     private String medicalRecordNumber;
 
@@ -28,13 +28,13 @@ public class
             joinColumns = @JoinColumn(name="patient_id"),
             inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
-    private Collection<Doctor> doctors;
+    private Collection<Doctor> doctors = new ArrayList<Doctor>();
 
     @OneToOne
     private CheckIn checkIn;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Collection<Medication> medications;
+    private Collection<Medication> medications = new ArrayList<Medication>();
 
     public String getMedicalRecordNumber() {
         return medicalRecordNumber;
@@ -71,7 +71,16 @@ public class
     @Override
     public int hashCode() {
         // Google Guava provides great utilities for hashing
-        return Objects.hashCode(medicalRecordNumber, doctors, checkIn, medications);
+        return Objects.hashCode(
+                firstName,
+                lastName,
+                username,
+                password,
+                dateOfBirth,
+                medicalRecordNumber,
+                doctors,
+                checkIn,
+                medications);
     }
 
     /**
@@ -84,10 +93,15 @@ public class
         if (obj instanceof Patient) {
             Patient other = (Patient) obj;
             // Google Guava provides great utilities for equals too!
-            return Objects.equal(medicalRecordNumber, other.medicalRecordNumber)
-                    && Objects.equal(doctors, other.doctors)
-                    && Objects.equal(checkIn, other.checkIn)
-                    && Objects.equal(medications, other.medications);
+            return Objects.equal(firstName, other.firstName)
+                && Objects.equal(lastName, other.lastName)
+                && Objects.equal(username, other.username)
+                && Objects.equal(password, other.password)
+                && Objects.equal(dateOfBirth, other.dateOfBirth)
+                && Objects.equal(medicalRecordNumber, other.medicalRecordNumber)
+                && Objects.equal(doctors, other.doctors)
+                && Objects.equal(checkIn, other.checkIn)
+                && Objects.equal(medications, other.medications);
         } else {
             return false;
         }

@@ -1,5 +1,7 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -24,16 +26,19 @@ import javax.persistence.OneToMany;
 @MappedSuperclass
 public abstract class Person extends BaseModel {
 
-    private String firstName;
-    private String lastName;
+    protected String firstName;
 
-    private String username;
-    private String password;
+    protected String lastName;
 
-    private Calendar dateOfBirth;
+    protected String username;
+
+    protected String password;
+
+    //cannot be a Calendar otherwise Retrofit cannot convert a String into an Object (Calendar)
+    protected long dateOfBirth;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles;
+    protected Collection<Role> roles;
 
     public String getUsername() {
         return username;
@@ -67,11 +72,11 @@ public abstract class Person extends BaseModel {
         this.lastName = lastName;
     }
 
-    public Calendar getDateOfBirth() {
+    public long getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Calendar dateOfBirth) {
+    public void setDateOfBirth(long dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

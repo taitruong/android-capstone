@@ -49,7 +49,5 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         int alarmId = intent.getIntExtra(ARGS_ALARM_ID, 0);
         mNotificationManager.notify(ALARM_ID_OFFSET + alarmId, builder.build());
-
-        // System.out.println(">>>>> alarm " + alarmId + " with " + time + " - " + " - " + intent.getExtras() + " - " + intent);
     }
 }

@@ -16,6 +16,6 @@ public interface DoctorSvcApi {
 	public static final String SEARCH_PATH_USERNAME = SVC_PATH + "/search/findByUsername";
 	
 	@GET(SEARCH_PATH_USERNAME)
-	public Collection<Doctor> findByUsername(@Query(ServiceUtils.PARAMETER_USERNAME) String title);
+	public Doctor findByUsername(@Query(ServiceUtils.PARAMETER_USERNAME) String title);
 	
 }

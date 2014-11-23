@@ -7,11 +7,12 @@ import org.aliensource.symptommanagement.client.oauth.SecuredRestBuilder;
 import org.aliensource.symptommanagement.client.oauth.SecuredRestException;
 import org.aliensource.symptommanagement.cloud.TestUtils;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.dto.PatientDTO;
+import org.aliensource.symptommanagement.cloud.repository.dto.SpringDataRestDTO;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import org.junit.Test;
 
-import java.util.Collection;
 import java.util.UUID;
 
 import retrofit.RestAdapter.LogLevel;
@@ -59,7 +60,7 @@ public class PatientSvcApiIntegrationTest {
 			.setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
 			.create(PatientSvcApi.class);
 
-	private Patient model = TestUtils.randomPatient();
+	private Patient model = TestUtils.randomPatientWithoutDoctorsAndRoles();
 
 	/**
 	 * This test creates and adds, adds the Video to the VideoSvc, and then
@@ -74,8 +75,11 @@ public class PatientSvcApiIntegrationTest {
 		patientService.add(model);
 
 		// We should get back the video that we added above
-		Collection<Patient> data = patientService.findAll();
-		assertTrue(data.contains(model));
+		SpringDataRestDTO<PatientDTO> data = patientService.findAll();
+        assertNotNull(data);
+        assertNotNull(data.getEmbedded());
+        assertNotNull(data.getEmbedded().getModels());
+		assertTrue(data.getEmbedded().getModels().contains(model));
 	}
 
 	/**
@@ -107,14 +111,13 @@ public class PatientSvcApiIntegrationTest {
 	@Test
 	public void testReadOnlyClientAccess() throws Exception {
 
-		Collection<Patient> data = readOnlyPatientService.findAll();
+		SpringDataRestDTO data = readOnlyPatientService.findAll();
 		assertNotNull(data);
-		
+
 		try {
-			// Add the video
 			readOnlyPatientService.add(model);
 
-			fail("The server should have prevented the client from adding a video"
+			fail("The server should have prevented the client from adding a model"
 					+ " because it is using a read-only client ID");
 		} catch (RetrofitError e) {
 			JsonObject body = (JsonObject)e.getBodyAs(JsonObject.class);
@@ -122,5 +125,10 @@ public class PatientSvcApiIntegrationTest {
 		}
 	}
 
+    @Test
+    public void testFindByUsername() {
+        Patient model = readOnlyPatientService.findByUsername(TestUtils.USER_PATIENT1);
+        assertNotNull(model);
+    }
 
 }

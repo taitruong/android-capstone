@@ -17,6 +17,8 @@ import org.aliensource.symptommanagement.android.PatientSvc;
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.TaskCallback;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.dto.PatientDTO;
+import org.aliensource.symptommanagement.cloud.repository.dto.SpringDataRestDTO;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 
 import java.util.Collection;
@@ -51,21 +53,16 @@ public class CheckInFragment extends AbstractFragment<ViewPager> {
                 getString(R.string.check_in_symptom1_tab_title),
                 getString(R.string.check_in_symptom2_tab_title),
                 "Medication"};
-        System.out.println(">>>> activity " + getActivity());
         final PatientSvcApi patientService = PatientSvc.init(getActivity());
 
-        CallableTask.invoke(new Callable<Collection<Patient>>() {
+        CallableTask.invoke(new Callable<SpringDataRestDTO<PatientDTO>>() {
             @Override
-            public Collection<Patient> call() throws Exception {
+            public SpringDataRestDTO<PatientDTO> call() throws Exception {
                 return patientService.findAll();
             }
-        }, new TaskCallback<Collection<Patient>>() {
+        }, new TaskCallback<SpringDataRestDTO<PatientDTO>>() {
             @Override
-            public void success(Collection<Patient> result) {
-                System.out.println(">>>> data " + result);
-                for (Patient model: result) {
-                    System.out.println(">>>>> model " + model.getUsername());
-                }
+            public void success(SpringDataRestDTO<PatientDTO> result) {
             }
 
             @Override

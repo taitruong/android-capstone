@@ -132,7 +132,6 @@ public class BaseCheckInFragment extends AbstractFragment<View> {
 
             try {
                 String newTime = DateTimeUtils.getDate(year, month, dayOfMonth);
-                System.out.println(">>>>> " + year + "." + month + "." + dayOfMonth);
                 dateView.setText(newTime);
             } catch (ParseException ex) {
                 throw new RuntimeException(ex);

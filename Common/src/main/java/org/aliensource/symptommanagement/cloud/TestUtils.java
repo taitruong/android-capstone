@@ -7,13 +7,13 @@ import org.aliensource.symptommanagement.cloud.repository.Role;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.UUID;
 
 public class TestUtils {
 
     public static final String PROTOCOL = "https";
     public static final String PORT = "8443";
+    public static final String USER_PATIENT1 = "patient1";
     public static final String USER_DOCTOR1 = "doctor1";
     public static final String USER_DOCTOR1_PASS = "pass";
 
@@ -29,7 +29,6 @@ public class TestUtils {
 
         for(String localhost : POSSIBLE_LOCALHOSTS) {
             try {
-                System.out.println(">>>>> " + localhost);
                 URL url = new URL("https://"+localhost+":8443" + SecurityService.TOKEN_PATH);
                 URLConnection con = url.openConnection();
                 con.setConnectTimeout(500);
@@ -50,18 +49,18 @@ public class TestUtils {
     }
 
     public static Patient randomPatient() {
-        Patient patient = randomPatientWithoutDoctors();
+        Patient patient = randomPatientWithoutDoctorsAndRoles();
+        patient.setRoles(randomRoles());
         return patient;
     }
 
-    public static Patient randomPatientWithoutDoctors() {
+    public static Patient randomPatientWithoutDoctorsAndRoles() {
         Patient patient = new Patient();
         patient.setFirstName(randomString());
         patient.setLastName(randomString());
         patient.setUsername(randomString());
         patient.setPassword(randomString());
-        patient.setRoles(randomRoles());
-        patient.setDateOfBirth(new GregorianCalendar());
+        patient.setDateOfBirth(0);
         patient.setMedicalRecordNumber(randomString());
 
         return patient;
@@ -79,7 +78,7 @@ public class TestUtils {
         doctor.setUsername(randomString());
         doctor.setPassword(randomString());
         doctor.setRoles(randomRoles());
-        doctor.setDateOfBirth(new GregorianCalendar());
+        doctor.setDateOfBirth(0);
         return doctor;
     }
 

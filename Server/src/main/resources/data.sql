@@ -1,12 +1,12 @@
 /* Doctors */
 INSERT INTO doctor VALUES (
-    1, timestamp(1980-01-11), 'John', 'Gastro', 'pass', 'doctor1'
+    1, 0, 'John', 'Gastro', 'pass', 'doctor1'
 );
 INSERT INTO doctor VALUES (
-    2, timestamp(1981-02-12), 'Hans', 'Klempner', 'pass', 'doctor2'
+    2, 0, 'Hans', 'Klempner', 'pass', 'doctor2'
 );
 INSERT INTO doctor VALUES (
-    3, timestamp(1982-03-13), 'Peter', 'Spritze', 'pass', 'doctor3'
+    3, 0, 'Peter', 'Spritze', 'pass', 'doctor3'
 );
 
 /* Check-Ins */
@@ -23,13 +23,13 @@ INSERT INTO check_in VALUES (
 
 /* Patients */
 INSERT INTO patient VALUES (
-    1, timestamp(1990-10-11), 'Heul', 'Suse', 'pass', 'patient1', 'privat-001', 1
+    1, 0, 'Heul', 'Suse', 'pass', 'patient1', 'privat-001', 1
 );
 INSERT INTO patient VALUES (
-    2, timestamp(1991-11-12), 'Mala', 'Ria', 'pass', 'patient2', 'AOK-0123', 2
+    2, 0, 'Mala', 'Ria', 'pass', 'patient2', 'AOK-0123', 2
 );
 INSERT INTO patient VALUES (
-    3, timestamp(1992-12-13), 'Weich', 'Ei', 'pass', 'patient3', 'privat-121344', 3
+    3, 0, 'Weich', 'Ei', 'pass', 'patient3', 'privat-121344', 3
 );
 
 /* Relations between patients and doctors */

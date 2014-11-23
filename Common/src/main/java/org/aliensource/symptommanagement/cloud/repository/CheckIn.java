@@ -1,5 +1,8 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.google.common.base.Objects;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.*;
@@ -11,7 +14,7 @@ import javax.persistence.*;
 public class CheckIn extends BaseModel {
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Collection<SymptomTime> symptomTimes;
+    protected Collection<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     //define join table with the Patient entity being the owner
@@ -20,7 +23,7 @@ public class CheckIn extends BaseModel {
             joinColumns = @JoinColumn(name="checkin_id"),
             inverseJoinColumns = @JoinColumn(name = "intaketime_id")
     )
-    private Collection<IntakeTime> intakeTimes;
+    protected Collection<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();
 
     public Collection<SymptomTime> getSymptomTimes() {
         return symptomTimes;
@@ -36,5 +39,30 @@ public class CheckIn extends BaseModel {
 
     public void setIntakeTimes(Collection<IntakeTime> intakeTimes) {
         this.intakeTimes = intakeTimes;
+    }
+
+    @Override
+    public int hashCode() {
+        // Google Guava provides great utilities for hashing
+        return Objects.hashCode(
+                symptomTimes,
+                intakeTimes);
+    }
+
+    /**
+     * Two Videos are considered equal if they have exactly the same values for
+     * their name, url, and duration.
+     *
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CheckIn) {
+            CheckIn other = (CheckIn) obj;
+            // Google Guava provides great utilities for equals too!
+            return Objects.equal(symptomTimes, other.symptomTimes)
+                    && Objects.equal(intakeTimes, other.intakeTimes);
+        } else {
+            return false;
+        }
     }
 }
