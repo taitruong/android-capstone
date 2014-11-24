@@ -7,6 +7,7 @@ import org.aliensource.symptommanagement.cloud.repository.Role;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class TestUtils {
@@ -82,9 +83,9 @@ public class TestUtils {
         return doctor;
     }
 
-    public static Collection<Role> randomRoles() {
+    public static List<Role> randomRoles() {
         Role role = new Role();
-        Collection<Role> roles = new ArrayList<Role>();
+        List<Role> roles = new ArrayList<Role>();
         roles.add(role);
         role.setName(randomString());
         return roles;

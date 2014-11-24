@@ -1,22 +1,16 @@
 package org.aliensource.symptommanagement.android.checkin;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
 import org.aliensource.symptommanagement.android.AbstractFragment;
-import org.aliensource.symptommanagement.android.CallableTask;
-import org.aliensource.symptommanagement.android.MainUtils;
-import org.aliensource.symptommanagement.android.PatientSvc;
+import org.aliensource.symptommanagement.client.service.CallableTask;
+import org.aliensource.symptommanagement.android.main.MainUtils;
+import org.aliensource.symptommanagement.client.service.PatientSvc;
 import org.aliensource.symptommanagement.android.R;
-import org.aliensource.symptommanagement.android.TaskCallback;
+import org.aliensource.symptommanagement.client.service.TaskCallback;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.dto.PatientDTO;
@@ -24,7 +18,6 @@ import org.aliensource.symptommanagement.cloud.repository.dto.SpringDataRestDTO;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -49,7 +42,7 @@ public class CheckInFragment extends AbstractFragment<ViewPager> {
         setRetainInstance(true);
 
         final String username = MainUtils.getCredentials(getActivity())[1];
-        final PatientSvcApi patientService = PatientSvc.init(getActivity());
+        final PatientSvcApi patientService = PatientSvc.getInstance().init(getActivity());
 
         CallableTask.invoke(new Callable<SpringDataRestDTO<PatientDTO>>() {
             @Override
@@ -73,6 +66,10 @@ public class CheckInFragment extends AbstractFragment<ViewPager> {
                 throw new RuntimeException("Patient " + username + " not found!");
             }
         });
+        String date = getArguments().getString(CheckInUtils.PREF_DATE);
+        String time = getArguments().getString(CheckInUtils.PREF_TIME);
+        String title = getResources().getString(R.string.check_in_title, date, time);
+        getActivity().setTitle(title);
     }
 
 }

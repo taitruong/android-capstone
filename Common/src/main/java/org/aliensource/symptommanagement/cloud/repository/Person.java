@@ -1,24 +1,10 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
 
 /**
  * Created by ttruong on 13-Nov-14.
@@ -38,7 +24,7 @@ public abstract class Person extends BaseModel {
     protected long dateOfBirth;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    protected Collection<Role> roles;
+    protected List<Role> roles;
 
     public String getUsername() {
         return username;
@@ -80,11 +66,11 @@ public abstract class Person extends BaseModel {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Collection<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 

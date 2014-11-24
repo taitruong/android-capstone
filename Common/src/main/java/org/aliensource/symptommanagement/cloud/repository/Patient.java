@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,13 +29,13 @@ public class Patient extends Person {
             joinColumns = @JoinColumn(name="patient_id"),
             inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
-    private Collection<Doctor> doctors = new ArrayList<Doctor>();
+    private List<Doctor> doctors = new ArrayList<Doctor>();
 
     @OneToOne
     private CheckIn checkIn;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Collection<Medication> medications = new ArrayList<Medication>();
+    private List<Medication> medications = new ArrayList<Medication>();
 
     public String getMedicalRecordNumber() {
         return medicalRecordNumber;
@@ -44,11 +45,11 @@ public class Patient extends Person {
         this.medicalRecordNumber = medicalRecordNumber;
     }
 
-    public Collection<Doctor> getDoctors() {
+    public List<Doctor> getDoctors() {
         return doctors;
     }
 
-    public void setDoctors(Collection<Doctor> doctors) {
+    public void setDoctors(List<Doctor> doctors) {
         this.doctors = doctors;
     }
 
@@ -60,11 +61,11 @@ public class Patient extends Person {
         this.checkIn = checkIn;
     }
 
-    public Collection<Medication> getMedications() {
+    public List<Medication> getMedications() {
         return medications;
     }
 
-    public void setMedications(Collection<Medication> medications) {
+    public void setMedications(List<Medication> medications) {
         this.medications = medications;
     }
 

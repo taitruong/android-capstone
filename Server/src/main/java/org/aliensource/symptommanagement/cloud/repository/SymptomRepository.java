@@ -1,7 +1,7 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
-import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
+import org.aliensource.symptommanagement.cloud.service.SymptomSvcApi;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -13,9 +13,10 @@ import java.util.List;
 // expose the repository through a controller and map it to the
 // svc path.
 //
-@RepositoryRestResource(path = PatientSvcApi.SVC_PATH)
-public interface PatientRepository extends CrudRepository<Patient, Long>{
+@RepositoryRestResource(path = SymptomSvcApi.SVC_PATH)
+public interface SymptomRepository extends CrudRepository<Symptom, Long>{
 
-    public List<Patient> findByUsername(
-            @Param(ServiceUtils.PARAMETER_USERNAME) String username);
+    public List<Symptom> findByType(
+            @Param(ServiceUtils.PARAMETER_TYPE) String type);
+
 }

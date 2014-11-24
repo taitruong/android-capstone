@@ -28,23 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class RoleSvcApiIntegrationTest {
-
-	private final String USERNAME = "patient1";
-	private final String PASSWORD = "pass";
-	private final String CLIENT_ID = "mobile";
-	private final String READ_ONLY_CLIENT_ID = "mobileReader";
-
-	private final String TEST_URL = "https://localhost:8443";
-
-	private RoleSvcApi readOnlyService = new SecuredRestBuilder()
-			.setLoginEndpoint(TEST_URL + SecurityService.TOKEN_PATH)
-			.setUsername(USERNAME)
-			.setPassword(PASSWORD)
-			.setClientId(READ_ONLY_CLIENT_ID)
-			.setClient(new ApacheClient(new EasyHttpClient()))
-			.setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
-			.create(RoleSvcApi.class);
+public class RoleSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<RoleSvcApi> {
 
     @Test
     public void testFindAll() {
@@ -52,10 +36,11 @@ public class RoleSvcApiIntegrationTest {
         assertNotNull(models);
         assertNotNull(models.getEmbedded());
         assertNotNull(models.getEmbedded().getModels());
-        for (Role role: models.getEmbedded().getModels()) {
-            System.out.println(">>>>" + role.getId() + " " + role.getName());
-        }
-
+        assertTrue(models.getEmbedded().getModels().size() > 0);
     }
 
+    @Override
+    public Class<RoleSvcApi> getApiClass() {
+        return RoleSvcApi.class;
+    }
 }

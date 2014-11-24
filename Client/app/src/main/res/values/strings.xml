@@ -23,7 +23,7 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="server">Server IP or Hostname</string>
-    <string name="localhost" translatable="false">https://192.168.1.5:8443</string>
+    <string name="localhost" translatable="false">https://192.168.56.1:8443</string>
 
     <!-- Reminder translations-->
     <string name="reminder_ticker_text">Symptom Management: Your check-in at %s o\'clock is required!</string>
@@ -34,6 +34,8 @@
     <string name="enter_date_and_time">Please enter date and Time:</string>
 
     <!-- Check-In Symptom-->
+    <string name="check_in_title">Check-In [%1$s - %2$s]</string>
+
     <string name="check_in_symptom1_tab_title">Sore Throat and Mouth Pain</string>
     <string name="check_in_symptom1_title">How bad is your mouth pain and sore throat?</string>
     <string name="check_in_symptom1_value1">Well-Controlled</string>

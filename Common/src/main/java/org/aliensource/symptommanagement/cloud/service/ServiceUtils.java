@@ -15,6 +15,12 @@ public class ServiceUtils {
     //----- Model service definitions
     public static final String PARAMETER_USERNAME = "username";
 
+    //----- Symptom service definitions
+    public static final String PARAMETER_TYPE = "type";
+    public static final String SYMPTOM_TYPE_SORE_THROAT = "SORE_THROAT";
+    public static final String SYMPTOM_TYPE_EAT_DRINK = "EAT_DRINK";
+
+
     //-----------------------------
     //-----
 }

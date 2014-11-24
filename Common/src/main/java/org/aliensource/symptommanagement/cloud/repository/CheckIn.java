@@ -3,7 +3,7 @@ package org.aliensource.symptommanagement.cloud.repository;
 import com.google.common.base.Objects;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class CheckIn extends BaseModel {
 
     @OneToMany(fetch = FetchType.EAGER)
-    protected Collection<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
+    protected List<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     //define join table with the Patient entity being the owner
@@ -23,21 +23,21 @@ public class CheckIn extends BaseModel {
             joinColumns = @JoinColumn(name="checkin_id"),
             inverseJoinColumns = @JoinColumn(name = "intaketime_id")
     )
-    protected Collection<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();
+    protected List<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();
 
-    public Collection<SymptomTime> getSymptomTimes() {
+    public List<SymptomTime> getSymptomTimes() {
         return symptomTimes;
     }
 
-    public void setSymptomTimes(Collection<SymptomTime> symptomTimes) {
+    public void setSymptomTimes(List<SymptomTime> symptomTimes) {
         this.symptomTimes = symptomTimes;
     }
 
-    public Collection<IntakeTime> getIntakeTimes() {
+    public List<IntakeTime> getIntakeTimes() {
         return intakeTimes;
     }
 
-    public void setIntakeTimes(Collection<IntakeTime> intakeTimes) {
+    public void setIntakeTimes(List<IntakeTime> intakeTimes) {
         this.intakeTimes = intakeTimes;
     }
 

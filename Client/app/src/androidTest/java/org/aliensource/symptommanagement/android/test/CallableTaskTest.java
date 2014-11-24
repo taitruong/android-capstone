@@ -4,8 +4,8 @@ import android.os.Looper;
 
 import junit.framework.TestCase;
 
-import org.aliensource.symptommanagement.android.CallableTask;
-import org.aliensource.symptommanagement.android.TaskCallback;
+import org.aliensource.symptommanagement.client.service.CallableTask;
+import org.aliensource.symptommanagement.client.service.TaskCallback;
 
 import java.util.concurrent.Callable;
 

@@ -4,29 +4,32 @@
  **
  ** 
  */
-package org.aliensource.symptommanagement.android;
-
-import org.aliensource.symptommanagement.client.oauth.SecuredRestBuilder;
-import org.aliensource.symptommanagement.client.EasyHttpClient;
-import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
-import org.aliensource.symptommanagement.cloud.service.SecurityService;
-
-import retrofit.RestAdapter.LogLevel;
-import retrofit.client.ApacheClient;
+package org.aliensource.symptommanagement.client.service;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-public class PatientSvc {
+import org.aliensource.symptommanagement.android.LoginScreenActivity;
+import org.aliensource.symptommanagement.android.main.MainUtils;
+import org.aliensource.symptommanagement.client.EasyHttpClient;
+import org.aliensource.symptommanagement.client.oauth.SecuredRestBuilder;
+import org.aliensource.symptommanagement.cloud.service.SecurityService;
+
+import retrofit.RestAdapter.LogLevel;
+import retrofit.client.ApacheClient;
+
+public abstract class BaseSvc<API> {
 
     public static final String CLIENT_ID = "mobile";
 
-	private static PatientSvcApi patientService;
+	protected API service;
 
-	public static synchronized PatientSvcApi getOrShowLogin(Context ctx) {
-		if (patientService != null) {
-			return patientService;
+    public abstract Class<API> getApiClass();
+
+	public synchronized API getOrShowLogin(Context ctx) {
+		if (service != null) {
+			return service;
 		} else {
 			Intent i = new Intent(ctx, LoginScreenActivity.class);
 			ctx.startActivity(i);
@@ -34,15 +37,15 @@ public class PatientSvc {
 		}
 	}
 
-    public static synchronized PatientSvcApi init(Activity activity) {
+    public synchronized API init(Activity activity) {
         String[] credentials = MainUtils.getCredentials(activity);
         return init(credentials[0], credentials[1], credentials[2]);
     }
 
-    public static synchronized PatientSvcApi init(String server, String user,
+    public synchronized API init(String server, String user,
 			String pass) {
 
-        patientService = new SecuredRestBuilder()
+        service = new SecuredRestBuilder()
                 .setLoginEndpoint(server + SecurityService.TOKEN_PATH)
                 .setUsername(user)
                 .setPassword(pass)
@@ -50,8 +53,8 @@ public class PatientSvc {
                 .setClient(new ApacheClient(new EasyHttpClient()))
                 .setEndpoint(server)
                 .setLogLevel(LogLevel.FULL).build()
-                .create(PatientSvcApi.class);
+                .create(getApiClass());
 
-		return patientService;
+		return service;
 	}
 }

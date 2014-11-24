@@ -3,9 +3,12 @@ package org.aliensource.symptommanagement.android.checkin;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -18,6 +21,9 @@ import org.aliensource.symptommanagement.android.reminder.ReminderPreferencesUti
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Map;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -25,7 +31,7 @@ import butterknife.OnClick;
 /**
  * Created by ttruong on 19-Nov-14.
  */
-public class BaseCheckInFragment extends AbstractFragment<View> {
+public abstract class BaseCheckInFragment extends AbstractFragment<View> {
 
     @InjectView(R.id.date_time_title)
     protected TextView dateTimeTitle;
@@ -34,7 +40,56 @@ public class BaseCheckInFragment extends AbstractFragment<View> {
     @InjectView(R.id.time)
     protected TextView time;
 
-    protected int severityLevel = -1;
+    protected int pos;
+
+    protected abstract String getPrefPrefix();
+
+    protected String getSelectionKey() {
+        return getPrefPrefix() + CheckInUtils.PREF_SELECTION + pos;
+    }
+
+    protected String getDateTimeKey() {
+        return getPrefPrefix() + CheckInUtils.PREF_DATE_TIME + pos;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        pos = getArguments().getInt(CheckInUtils.ARG_POS);
+        //it is possible that when calling the fragment the preferences are not saved yet.
+        if (CheckInUtils.initCheckIn(getActivity())) {
+            initFromPrefs();
+        }
+        return view;
+    }
+
+    protected void initFromPrefs() {
+        SharedPreferences prefs =  CheckInUtils.getPreferences(getActivity());
+        int selection = prefs.getInt(getSelectionKey(), -1);
+        initSelection(selection);
+        String dateTimeS = prefs.getString(
+                getDateTimeKey(),
+                DateTimeUtils.FORMAT_DDMMYYYY_HHMM.format(new Date()));
+        Calendar dateTime = new GregorianCalendar();
+        try {
+            Date tmp = DateTimeUtils.FORMAT_DDMMYYYY_HHMM.parse(dateTimeS);
+            date.setText(DateTimeUtils.FORMAT_DDMMYYYY.format(tmp));
+            time.setText(DateTimeUtils.FORMAT_HHMM.format(tmp));
+        } catch (ParseException ex) {
+            throw new RuntimeException("Cannot parse " + dateTimeS);
+        }
+    }
+
+    protected abstract void initSelection(int selection);
+
+    protected void saveSelection(int selection) {
+        CheckInUtils.saveSelection(getActivity(), pos, getPrefPrefix(), selection);
+        initSelection(selection);
+    }
+
+    protected void saveDateTime() throws ParseException {
+        CheckInUtils.saveDateTime(getActivity(), pos, getPrefPrefix(), date.getText() + " " + time.getText());
+    }
 
     protected void enableDateAndTime() {
         dateTimeTitle.setVisibility(View.VISIBLE);
@@ -86,6 +141,11 @@ public class BaseCheckInFragment extends AbstractFragment<View> {
             String oldTime = timeView.getText().toString();
             String newTime = DateTimeUtils.getTimeAsString(hourOfDay, minute).toString();
             timeView.setText(newTime);
+            try {
+                ((BaseCheckInFragment) getTargetFragment()).saveDateTime();
+            } catch (ParseException ex) {
+                throw new RuntimeException("Cannot parse " + newTime);
+            }
         }
 
     }
@@ -133,6 +193,7 @@ public class BaseCheckInFragment extends AbstractFragment<View> {
             try {
                 String newTime = DateTimeUtils.getDate(year, month, dayOfMonth);
                 dateView.setText(newTime);
+                ((BaseCheckInFragment) getTargetFragment()).saveDateTime();
             } catch (ParseException ex) {
                 throw new RuntimeException(ex);
             }

@@ -4,7 +4,7 @@
 **
 ** 
 */
-package org.aliensource.symptommanagement.android;
+package org.aliensource.symptommanagement.client.service;
 
 import java.util.concurrent.Callable;
 

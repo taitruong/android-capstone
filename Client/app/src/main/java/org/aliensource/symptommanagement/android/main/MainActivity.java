@@ -1,14 +1,6 @@
-package org.aliensource.symptommanagement.android;
+package org.aliensource.symptommanagement.android.main;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -19,7 +11,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,16 +20,46 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.aliensource.symptommanagement.DateTimeUtils;
+import org.aliensource.symptommanagement.android.AbstractFragment;
+import org.aliensource.symptommanagement.android.LoginScreenActivity;
+import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
+import org.aliensource.symptommanagement.android.checkin.CheckInUtils;
 import org.aliensource.symptommanagement.android.patient.PatientListFragment;
 import org.aliensource.symptommanagement.android.patient.PatientReportFragment;
 import org.aliensource.symptommanagement.android.reminder.AlarmNotificationReceiver;
 import org.aliensource.symptommanagement.android.reminder.ReminderPreferencesUtils;
 import org.aliensource.symptommanagement.android.reminder.ReminderSettingsFragment;
+import org.aliensource.symptommanagement.client.service.CallableTask;
+import org.aliensource.symptommanagement.client.service.PatientSvc;
+import org.aliensource.symptommanagement.client.service.SecuritySvc;
+import org.aliensource.symptommanagement.client.service.SymptomSvc;
+import org.aliensource.symptommanagement.client.service.TaskCallback;
+import org.aliensource.symptommanagement.cloud.repository.Medication;
+import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.Symptom;
+import org.aliensource.symptommanagement.cloud.repository.dto.PatientDTO;
+import org.aliensource.symptommanagement.cloud.repository.dto.SpringDataRestDTO;
+import org.aliensource.symptommanagement.cloud.repository.dto.SymptomDTO;
+import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.SecurityService;
+import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
+import org.aliensource.symptommanagement.cloud.service.SymptomSvcApi;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Callable;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnItemClick;
 
 public class MainActivity extends SherlockFragmentActivity {
 
@@ -63,7 +84,7 @@ public class MainActivity extends SherlockFragmentActivity {
     private AlarmManager mAlarmManager;
     private int alarmId = 0;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -89,9 +110,9 @@ public class MainActivity extends SherlockFragmentActivity {
         initMenus();
 
         // set up the drawer's list view with items and click listener
-        mainMenuList.setAdapter(new ArrayAdapter<String>(MainActivity.this,
-                R.layout.drawer_list_item, menuTitles));
-        mainMenuList.setOnItemClickListener(new DrawerItemClickListener());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+                R.layout.drawer_list_item, menuTitles);
+        mainMenuList.setAdapter(adapter);
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -142,16 +163,12 @@ public class MainActivity extends SherlockFragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /* The click listener for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-    private void selectItem(int position) {
+    @OnItemClick(R.id.main_menu)
+    protected void selectItem(int position) {
         // update the main content by replacing fragments
+        if (fragments[position] instanceof CheckInFragment) {
+            initCheckIn((CheckInFragment) fragments[position]);
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
@@ -162,6 +179,72 @@ public class MainActivity extends SherlockFragmentActivity {
         mainMenuList.setItemChecked(position, true);
         setTitle(menuTitles[position]);
         mDrawerLayout.closeDrawer(mainMenuList);
+    }
+
+    protected void initCheckIn(CheckInFragment fragment) {
+        //save default values in preferences
+        Date checkInTime = new Date();
+        final String date = DateTimeUtils.FORMAT_DDMMYYYY.format(checkInTime);
+        final String time = DateTimeUtils.FORMAT_HHMM.format(checkInTime);
+
+        Bundle args = fragment.getArguments();
+        args.putString(CheckInUtils.PREF_DATE, date);
+        args.putString(CheckInUtils.PREF_TIME, time);
+
+        //symptom values
+        final Activity activity = this;
+        initSymptom(0, date, time, ServiceUtils.SYMPTOM_TYPE_SORE_THROAT);
+        initSymptom(1, date, time, ServiceUtils.SYMPTOM_TYPE_EAT_DRINK);
+
+        final PatientSvcApi patientService = PatientSvc.getInstance().init(this);
+
+        CallableTask.invoke(new Callable<SpringDataRestDTO<PatientDTO>>() {
+            @Override
+            public SpringDataRestDTO<PatientDTO> call() throws Exception {
+                return patientService.findByUsername(username);
+            }
+        }, new TaskCallback<SpringDataRestDTO<PatientDTO>>() {
+            @Override
+            public void success(SpringDataRestDTO<PatientDTO> result) {
+                List<Medication> medications = new ArrayList<Medication>();
+                for (Patient patient : result.getEmbedded().getModels()) {
+                    medications.addAll(patient.getMedications());
+                }
+                int pos = 0;
+                for (Medication medication: medications) {
+                    CheckInUtils.saveEditor(activity, pos, CheckInUtils.PREF_MEDICATION_PREFIX, medication.getId(), date, time, -1);
+                    pos++;
+                }
+            }
+
+            @Override
+            public void error(Exception e) {
+                throw new RuntimeException("Patient " + username + " not found!");
+            }
+        });
+
+    }
+
+    protected void initSymptom(final int pos, final String date, final String time, final String type) {
+        final SymptomSvcApi api = SymptomSvc.getInstance().init(this);
+        final Activity activity = this;
+        CallableTask.invoke(new Callable<SpringDataRestDTO<SymptomDTO>>() {
+            @Override
+            public SpringDataRestDTO<SymptomDTO> call() throws Exception {
+                return api.findByType(type);
+            }
+        }, new TaskCallback<SpringDataRestDTO<SymptomDTO>>() {
+            @Override
+            public void success(SpringDataRestDTO<SymptomDTO> result) {
+                Symptom symptomEatDrink = result.getEmbedded().getModels().get(0);
+                CheckInUtils.saveEditor(activity, pos, CheckInUtils.PREF_SYMPTOM_PREFIX, symptomEatDrink.getId(), date, time, -1);
+            }
+
+            @Override
+            public void error(Exception e) {
+                throw new RuntimeException("Symptom " + type + " not found!");
+            }
+        });
     }
 
     @Override
@@ -196,7 +279,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
     private void initMenus() {
-        final SecurityService svc = SecuritySvc.getSecurityServiceOrShowLogin(this);
+        final SecurityService svc = SecuritySvc.getInstance().getOrShowLogin(this);
         if (svc != null) {
             CallableTask.invoke(new Callable<Boolean>() {
 
@@ -223,7 +306,7 @@ public class MainActivity extends SherlockFragmentActivity {
                         args2.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patient_report);
                         fragment2.setArguments(args2);
 
-                        fragments = new AbstractFragment[] {fragment1, fragment2};
+                        fragments = new AbstractFragment[]{fragment1, fragment2};
                     } else {
                         String menu1 = getString(R.string.check_in);
                         String menu2 = getString(R.string.reminder_settings);
@@ -239,7 +322,7 @@ public class MainActivity extends SherlockFragmentActivity {
                         args2.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_reminder_settings);
                         fragment2.setArguments(args2);
 
-                        fragments = new AbstractFragment[] {fragment1, fragment2};
+                        fragments = new AbstractFragment[]{fragment1, fragment2};
                     }
 
                     // set up the drawer's list view with items and click listener
@@ -276,7 +359,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
         GregorianCalendar now = new GregorianCalendar();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:sss");
         for (String reminderTime: reminderAlarms) {
             int[] hourAndMinute = DateTimeUtils.getHourAndMinute(reminderTime);
             //always create a new calendar
@@ -288,8 +370,8 @@ public class MainActivity extends SherlockFragmentActivity {
             cal.set(Calendar.MINUTE, hourAndMinute[1]);
             // in case the reminderTime time the date needs to move to the next day
             //otherwise the alarm notification is shown right away
-            String calS = formatter.format(new Date(cal.getTimeInMillis()));
-            String nowS = formatter.format(new Date(now.getTimeInMillis()));
+            String calS = DateTimeUtils.FORMAT_DDMMYYYY_HHMMSS.format(new Date(cal.getTimeInMillis()));
+            String nowS = DateTimeUtils.FORMAT_DDMMYYYY_HHMMSS.format(new Date(now.getTimeInMillis()));
             if (cal.before(now)) {
                 cal.add(Calendar.DAY_OF_MONTH, 1);
             }

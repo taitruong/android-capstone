@@ -1,11 +1,10 @@
 package org.aliensource.symptommanagement.android.reminder;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import org.aliensource.symptommanagement.DateTimeUtils;
-import org.aliensource.symptommanagement.android.MainUtils;
+import org.aliensource.symptommanagement.android.main.MainUtils;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;

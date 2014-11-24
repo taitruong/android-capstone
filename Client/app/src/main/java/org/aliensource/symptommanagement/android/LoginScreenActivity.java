@@ -7,6 +7,11 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.aliensource.symptommanagement.android.main.MainActivity;
+import org.aliensource.symptommanagement.android.main.MainUtils;
+import org.aliensource.symptommanagement.client.service.CallableTask;
+import org.aliensource.symptommanagement.client.service.SecuritySvc;
+import org.aliensource.symptommanagement.client.service.TaskCallback;
 import org.aliensource.symptommanagement.cloud.service.SecurityService;
 
 import java.util.concurrent.Callable;
@@ -49,21 +54,21 @@ public class LoginScreenActivity extends Activity {
 		String pass = password_.getText().toString();
 		String server = server_.getText().toString();
 
-		final SecurityService svc = SecuritySvc.init(server, user, pass);
+		final SecurityService svc = SecuritySvc.getInstance().init(server, user, pass);
         MainUtils.saveCredentials(this, server, user, pass);
 
 		CallableTask.invoke(new Callable<Boolean>() {
 
-			@Override
-			public Boolean call() throws Exception {
-				return svc.hasRole("doesnotmatter");
-			}
-		}, new TaskCallback<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return svc.hasRole("doesnotmatter");
+            }
+        }, new TaskCallback<Boolean>() {
 
-			@Override
-			public void success(Boolean result) {
-				// OAuth 2.0 grant was successful and we
-				// can talk to the server, open up the video listing
+            @Override
+            public void success(Boolean result) {
+                // OAuth 2.0 grant was successful and we
+                // can talk to the server, open up the video listing
                 Intent intent = new Intent(LoginScreenActivity.this, MainActivity.class);
                 Bundle args = new Bundle();
                 args.putString(MainUtils.ARG_SERVER, user);
@@ -71,19 +76,19 @@ public class LoginScreenActivity extends Activity {
                 args.putString(MainUtils.ARG_PASSWORD, user);
                 intent.putExtras(args);
 
-				startActivity(intent);
-			}
+                startActivity(intent);
+            }
 
-			@Override
-			public void error(Exception e) {
-				Log.e(LoginScreenActivity.class.getName(), "Error logging in via OAuth.", e);
-				
-				Toast.makeText(
-						LoginScreenActivity.this,
-						"Login failed, check your Internet connection and credentials.",
-						Toast.LENGTH_SHORT).show();
-			}
-		});
+            @Override
+            public void error(Exception e) {
+                Log.e(LoginScreenActivity.class.getName(), "Error logging in via OAuth.", e);
+
+                Toast.makeText(
+                        LoginScreenActivity.this,
+                        "Login failed, check your Internet connection and credentials.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 	}
 
 }

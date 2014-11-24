@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import org.aliensource.symptommanagement.android.main.MainUtils;
+
 import butterknife.ButterKnife;
 
 /**
- * Fragment as part of the content frame in the {@link MainActivity}
+ * Fragment as part of the content frame in the {@link org.aliensource.symptommanagement.android.main.MainActivity}
  * Created by ttruong on 06-Nov-14.
  */
 public abstract class AbstractFragment<T extends View> extends SherlockFragment {

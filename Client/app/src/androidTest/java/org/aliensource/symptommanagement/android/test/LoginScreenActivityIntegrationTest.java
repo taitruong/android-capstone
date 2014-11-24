@@ -10,7 +10,7 @@ import android.widget.EditText;
 import org.aliensource.symptommanagement.android.R;
 
 import org.aliensource.symptommanagement.android.LoginScreenActivity;
-import org.aliensource.symptommanagement.android.MainActivity;
+import org.aliensource.symptommanagement.android.main.MainActivity;
 import org.aliensource.symptommanagement.cloud.TestUtils;
 
 public class LoginScreenActivityIntegrationTest extends ActivityInstrumentationTestCase2 {

@@ -5,8 +5,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.aliensource.symptommanagement.android.R;
-import org.aliensource.symptommanagement.android.MainActivity;
-import org.aliensource.symptommanagement.android.PatientSvc;
+import org.aliensource.symptommanagement.android.main.MainActivity;
+import org.aliensource.symptommanagement.client.service.PatientSvc;
 import org.aliensource.symptommanagement.cloud.TestUtils;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;

@@ -1,17 +1,13 @@
-package org.aliensource.symptommanagement.android;
+package org.aliensource.symptommanagement.android.main;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.Set;
-
 /**
  * Created by ttruong on 21-Nov-14.
  */
-public final class MainUtils {
-
-    private static final String SHARED_PREFERENCES_MAIN = "main-shared-preferences";
+public final class MainUtils extends BaseUtils {
 
     public static final String PREF_REMINDERS = "reminders";
     public static final String PREF_MAIN_SERVER = "server";
@@ -29,13 +25,8 @@ public final class MainUtils {
 
     public static final String ARG_TIME = "time";
 
-    //pref utils
-    public static SharedPreferences getPreferences(Activity activity) {
-        return activity.getSharedPreferences(SHARED_PREFERENCES_MAIN, Context.MODE_PRIVATE);
-    }
-
     public static String[] getCredentials(Activity activity) {
-        SharedPreferences prefs = activity.getSharedPreferences(SHARED_PREFERENCES_MAIN, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getPreferences(activity);
         String server = prefs.getString(MainUtils.PREF_MAIN_SERVER, "");
         String username = prefs.getString(MainUtils.PREF_MAIN_USERNAME, "");
         String password = prefs.getString(MainUtils.PREF_MAIN_PASSWORD, "");

@@ -11,6 +11,16 @@ import java.util.GregorianCalendar;
  */
 public final class DateTimeUtils {
 
+    /// date and time
+    public static final SimpleDateFormat FORMAT_DDMMYYYY_HHMMSS = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    public static final SimpleDateFormat FORMAT_DDMMYYYY_HHMM = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+    //time
+    public static final SimpleDateFormat FORMAT_HHMM = new SimpleDateFormat("HH:mm");
+
+    //date
+    public static final SimpleDateFormat FORMAT_DDMMYYYY = new SimpleDateFormat("dd.MM.yyyy");
+
     /////// time manipulation
     public static CharSequence getTimeAsString(int hourOfDay, int minute) {
         return new StringBuilder().append(pad(hourOfDay)).append(":")
@@ -51,11 +61,9 @@ public final class DateTimeUtils {
         return cal.getTimeInMillis();
     }
 
-    public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-
     //// date manipulation
     public static Calendar getDate(String dateS) throws ParseException {
-        Date date = formatter.parse(dateS);
+        Date date = FORMAT_DDMMYYYY.parse(dateS);
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(date.getTime());
         return cal;
@@ -66,7 +74,7 @@ public final class DateTimeUtils {
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        return formatter.format(new Date(cal.getTimeInMillis()));
+        return FORMAT_DDMMYYYY.format(new Date(cal.getTimeInMillis()));
     }
 
 }

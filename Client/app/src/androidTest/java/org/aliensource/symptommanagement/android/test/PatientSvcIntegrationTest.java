@@ -2,7 +2,7 @@ package org.aliensource.symptommanagement.android.test;
 
 import junit.framework.TestCase;
 
-import org.aliensource.symptommanagement.android.PatientSvc;
+import org.aliensource.symptommanagement.client.service.PatientSvc;
 import org.aliensource.symptommanagement.cloud.TestUtils;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;

@@ -12,9 +12,9 @@ import android.widget.TimePicker;
 
 import org.aliensource.symptommanagement.DateTimeUtils;
 import org.aliensource.symptommanagement.android.AbstractFragment;
-import org.aliensource.symptommanagement.android.MainActivity;
+import org.aliensource.symptommanagement.android.main.MainActivity;
 import org.aliensource.symptommanagement.android.R;
-import org.aliensource.symptommanagement.android.MainUtils;
+import org.aliensource.symptommanagement.android.main.MainUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
