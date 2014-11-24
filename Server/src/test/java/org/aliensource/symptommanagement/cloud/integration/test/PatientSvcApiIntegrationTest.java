@@ -154,10 +154,7 @@ public class PatientSvcApiIntegrationTest {
         assertNotNull(models);
         assertNotNull(models.getEmbedded());
         assertNotNull(models.getEmbedded().getModels());
-        for (Patient model: models.getEmbedded().getModels()) {
-            System.out.println(">>>>" + model);
-        }
-
+        assertTrue(models.getEmbedded().getModels().size() > 0);
     }
 
 }
