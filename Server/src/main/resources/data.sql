@@ -20,7 +20,6 @@ INSERT INTO check_in VALUES (
     3
 );
 
-
 /* Patients */
 INSERT INTO patient VALUES (
     1, 0, 'Heul', 'Suse', 'pass', 'patient1', 'privat-001', 1

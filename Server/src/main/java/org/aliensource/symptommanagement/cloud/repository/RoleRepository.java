@@ -1,20 +1,17 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
-import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
+import org.aliensource.symptommanagement.cloud.service.DoctorSvcApi;
+import org.aliensource.symptommanagement.cloud.service.RoleSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import java.util.Collection;
-
 // This @RepositoryRestResource annotation tells Spring Data Rest to
 // expose the repository through a controller and map it to the
 // svc path.
 //
-@RepositoryRestResource(path = PatientSvcApi.SVC_PATH)
-public interface PatientRepository extends CrudRepository<Patient, Long>{
+@RepositoryRestResource(path = RoleSvcApi.SVC_PATH)
+public interface RoleRepository extends CrudRepository<Role, Long>{
 
-    public Collection<Patient> findByUsername(
-            @Param(ServiceUtils.PARAMETER_USERNAME) String username);
 }

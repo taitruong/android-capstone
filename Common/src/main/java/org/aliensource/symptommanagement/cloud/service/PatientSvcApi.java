@@ -4,6 +4,8 @@ import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.dto.PatientDTO;
 import org.aliensource.symptommanagement.cloud.repository.dto.SpringDataRestDTO;
 
+import java.util.Collection;
+
 import retrofit.http.*;
 
 public interface PatientSvcApi {
@@ -14,7 +16,7 @@ public interface PatientSvcApi {
 	public static final String SEARCH_PATH_USERNAME = SVC_PATH + "/search/findByUsername";
 	
 	@GET(SEARCH_PATH_USERNAME)
-	public Patient findByUsername(@Query(ServiceUtils.PARAMETER_USERNAME) String username);
+	public SpringDataRestDTO<PatientDTO> findByUsername(@Query(ServiceUtils.PARAMETER_USERNAME) String username);
 
     @GET(SVC_PATH)
     public SpringDataRestDTO<PatientDTO> findAll();

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.aliensource.symptommanagement.android.R;
+import org.aliensource.symptommanagement.cloud.repository.Medication;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -23,10 +24,14 @@ import butterknife.OnClick;
  */
 public class MedicationFragment extends BaseCheckInFragment {
 
+    public static final String ARG_MEDICATION = "medication";
+
     @InjectView(R.id.choice1)
     protected RadioButton choice1;
     @InjectView(R.id.choice2)
     protected RadioButton choice2;
+    @InjectView(R.id.title)
+    protected TextView title;
 
     protected boolean taken;
 
@@ -40,4 +45,15 @@ public class MedicationFragment extends BaseCheckInFragment {
         }
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        Medication medication = (Medication) getArguments().getSerializable(ARG_MEDICATION);
+
+        String titleText = getResources().getString(
+                R.string.check_in_medication_title,
+                medication.getMedicament().getName());
+        title.setText(titleText);
+        return view;
+    }
 }

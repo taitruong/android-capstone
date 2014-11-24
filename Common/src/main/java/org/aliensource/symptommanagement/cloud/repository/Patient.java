@@ -83,11 +83,6 @@ public class Patient extends Person {
                 medications);
     }
 
-    /**
-     * Two Videos are considered equal if they have exactly the same values for
-     * their name, url, and duration.
-     *
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Patient) {

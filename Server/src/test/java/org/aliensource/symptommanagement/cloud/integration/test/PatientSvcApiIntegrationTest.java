@@ -7,12 +7,15 @@ import org.aliensource.symptommanagement.client.oauth.SecuredRestBuilder;
 import org.aliensource.symptommanagement.client.oauth.SecuredRestException;
 import org.aliensource.symptommanagement.cloud.TestUtils;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.Role;
 import org.aliensource.symptommanagement.cloud.repository.dto.PatientDTO;
+import org.aliensource.symptommanagement.cloud.repository.dto.RoleDTO;
 import org.aliensource.symptommanagement.cloud.repository.dto.SpringDataRestDTO;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import retrofit.RestAdapter.LogLevel;
@@ -71,16 +74,26 @@ public class PatientSvcApiIntegrationTest {
 	 */
 	@Test
 	public void testAdd() throws Exception {
+        SpringDataRestDTO<PatientDTO> data = patientService.findAll();
+        for (Patient patient: data.getEmbedded().getModels()) {
+            System.out.println(">>>> user " + model);
+        }
 		// Add the video
+        System.out.println(">>> adding " + model);
 		patientService.add(model);
 
 		// We should get back the video that we added above
-		SpringDataRestDTO<PatientDTO> data = patientService.findAll();
+		data = patientService.findAll();
         assertNotNull(data);
         assertNotNull(data.getEmbedded());
         assertNotNull(data.getEmbedded().getModels());
 		assertTrue(data.getEmbedded().getModels().contains(model));
-	}
+        for (Patient patient: data.getEmbedded().getModels()) {
+            System.out.println(">>>> user " + model);
+        }
+
+
+    }
 
 	/**
 	 * This test ensures that clients with invalid credentials cannot get
@@ -111,7 +124,7 @@ public class PatientSvcApiIntegrationTest {
 	@Test
 	public void testReadOnlyClientAccess() throws Exception {
 
-		SpringDataRestDTO data = readOnlyPatientService.findAll();
+		SpringDataRestDTO<PatientDTO> data = readOnlyPatientService.findAll();
 		assertNotNull(data);
 
 		try {
@@ -127,8 +140,24 @@ public class PatientSvcApiIntegrationTest {
 
     @Test
     public void testFindByUsername() {
-        Patient model = readOnlyPatientService.findByUsername(TestUtils.USER_PATIENT1);
+        SpringDataRestDTO<PatientDTO> model = readOnlyPatientService.findByUsername("patient1");
         assertNotNull(model);
+        assertNotNull(model.getEmbedded());
+        assertNotNull(model.getEmbedded().getModels());
+        assertTrue(model.getEmbedded().getModels().size() == 1);
+        assertEquals("patient1", model.getEmbedded().getModels().get(0).getUsername());
+    }
+
+    @Test
+    public void testFindAll() {
+        SpringDataRestDTO<PatientDTO> models = readOnlyPatientService.findAll();
+        assertNotNull(models);
+        assertNotNull(models.getEmbedded());
+        assertNotNull(models.getEmbedded().getModels());
+        for (Patient model: models.getEmbedded().getModels()) {
+            System.out.println(">>>>" + model);
+        }
+
     }
 
 }

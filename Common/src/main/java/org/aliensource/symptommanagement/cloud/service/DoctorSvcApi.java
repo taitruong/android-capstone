@@ -9,7 +9,6 @@ import retrofit.http.Query;
 
 public interface DoctorSvcApi {
 
-	// The path where we expect the VideoSvc to live
 	public static final String SVC_PATH = "/doctor";
 
 	// The path to search videos by title

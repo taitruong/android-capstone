@@ -88,4 +88,8 @@ public abstract class Person extends BaseModel {
         this.roles = roles;
     }
 
+    @Override
+    public String toString() {
+        return getId() + ", " + firstName + ", " + lastName + ", " + username;
+    }
 }
