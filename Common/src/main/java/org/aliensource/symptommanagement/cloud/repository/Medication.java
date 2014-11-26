@@ -1,10 +1,9 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
 /**
@@ -13,9 +12,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Medication extends BaseModel {
 
-//    @RestResource(exported =  false, rel = "medicationMedicament")
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JsonProperty(value = "medicationMedicament")
+    @ManyToOne(fetch = FetchType.EAGER)
     protected Medicament medicament;
 
     public Medicament getMedicament() {

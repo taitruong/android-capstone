@@ -18,6 +18,10 @@ public class MedicationSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<M
         List<Medication> models = readOnlyService.findAll();
         assertNotNull(models);
         assertTrue(models.size() > 0);
+        //make sure the medicaments are eagerly fetched
+        for (Medication model: models) {
+            assertNotNull(model.getMedicament());
+        }
     }
 
     @Test
