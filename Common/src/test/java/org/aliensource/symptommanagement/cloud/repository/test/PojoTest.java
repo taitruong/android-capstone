@@ -1,4 +1,4 @@
-package org.aliensource.symptommanagement.cloud.video.repository.test;
+package org.aliensource.symptommanagement.cloud.repository.test;
 
 import java.util.List;
 
