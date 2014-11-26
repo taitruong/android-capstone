@@ -9,26 +9,15 @@ INSERT INTO doctor VALUES (
     3, 0, 'Peter', 'Spritze', 'pass', 'doctor3'
 );
 
-/* Check-Ins */
-INSERT INTO check_in VALUES (
-    1
-);
-INSERT INTO check_in VALUES (
-    2
-);
-INSERT INTO check_in VALUES (
-    3
-);
-
 /* Patients */
 INSERT INTO patient VALUES (
-    1, 0, 'Heul', 'Suse', 'pass', 'patient1', 'privat-001', 1
+    1, 0, 'Heul', 'Suse', 'pass', 'patient1', 'privat-001'
 );
 INSERT INTO patient VALUES (
-    2, 0, 'Mala', 'Ria', 'pass', 'patient2', 'AOK-0123', 2
+    2, 0, 'Mala', 'Ria', 'pass', 'patient2', 'AOK-0123'
 );
 INSERT INTO patient VALUES (
-    3, 0, 'Weich', 'Ei', 'pass', 'patient3', 'privat-121344', 3
+    3, 0, 'Weich', 'Ei', 'pass', 'patient3', 'privat-121344'
 );
 
 /* Relations between patients and doctors */

@@ -12,30 +12,39 @@ import retrofit.client.ApacheClient;
 
 public abstract class BaseSvcApiIntegrationTest<API> {
 
-    protected final String USERNAME = "patient1";
-    protected final String PASSWORD = "pass";
-    protected final String CLIENT_ID = "mobile";
-    protected final String READ_ONLY_CLIENT_ID = "mobileReader";
+    protected static final String USERNAME = "patient1";
+    protected static final String PASSWORD = "pass";
+    protected static final String CLIENT_ID = "mobile";
+    protected static final String READ_ONLY_CLIENT_ID = "mobileReader";
 
-    protected final String TEST_URL = "https://localhost:8443";
+    protected static final String TEST_URL = "https://localhost:8443";
 
-    protected API service = new SecuredRestBuilder()
-            .setLoginEndpoint(TEST_URL + SecurityService.TOKEN_PATH)
-            .setUsername(USERNAME)
-            .setPassword(PASSWORD)
-            .setClientId(CLIENT_ID)
-            .setClient(new ApacheClient(new EasyHttpClient()))
-            .setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
-            .create(getApiClass());
+    public static <T> T getService(Class<T> apiClass) {
+        T service = new SecuredRestBuilder()
+                .setLoginEndpoint(TEST_URL + SecurityService.TOKEN_PATH)
+                .setUsername(USERNAME)
+                .setPassword(PASSWORD)
+                .setClientId(CLIENT_ID)
+                .setClient(new ApacheClient(new EasyHttpClient()))
+                .setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
+                .create(apiClass);
+        return service;
+    }
 
-    protected API readOnlyService = new SecuredRestBuilder()
-            .setLoginEndpoint(TEST_URL + SecurityService.TOKEN_PATH)
-            .setUsername(USERNAME)
-            .setPassword(PASSWORD)
-            .setClientId(READ_ONLY_CLIENT_ID)
-            .setClient(new ApacheClient(new EasyHttpClient()))
-            .setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
-            .create(getApiClass());
+    protected API service = getService(getApiClass());
+
+    public static <T> T getReadOnlyService(Class<T> apiClass) {
+        return new SecuredRestBuilder()
+                .setLoginEndpoint(TEST_URL + SecurityService.TOKEN_PATH)
+                .setUsername(USERNAME)
+                .setPassword(PASSWORD)
+                .setClientId(READ_ONLY_CLIENT_ID)
+                .setClient(new ApacheClient(new EasyHttpClient()))
+                .setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
+                .create(apiClass);
+    }
+
+    protected API readOnlyService = getReadOnlyService(getApiClass());
 
     protected API invalidClientService = new SecuredRestBuilder()
             .setLoginEndpoint(TEST_URL + SecurityService.TOKEN_PATH)

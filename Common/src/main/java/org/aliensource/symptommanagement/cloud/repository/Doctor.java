@@ -1,9 +1,11 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,15 +18,23 @@ import javax.persistence.ManyToMany;
 public class Doctor extends Person {
 
     //many-to-many relationship mapped by the owner's / Patient's attribute doctors
-    @ManyToMany(mappedBy = "doctors", fetch = FetchType.EAGER)
-    protected Collection<Patient> patients = new ArrayList<Patient>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    protected List<Patient> patients = new ArrayList<Patient>();
 
-    public Collection<Patient> getPatients() {
+    public List<Patient> getPatients() {
         return patients;
     }
 
-    public void setPatients(Collection<Patient> patients) {
+    public void setPatients(List<Patient> patients) {
         this.patients = patients;
+    }
+
+    @Override
+    //workaround otherwise JSON conversion complaints
+    //override roles and define attribute for conversion
+    @JsonProperty(value = "doctorRoles")
+    public List<Role> getRoles() {
+        return roles;
     }
 
     @Override
@@ -39,11 +49,6 @@ public class Doctor extends Person {
                 patients);
     }
 
-    /**
-     * Two Videos are considered equal if they have exactly the same values for
-     * their name, url, and duration.
-     *
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Doctor) {

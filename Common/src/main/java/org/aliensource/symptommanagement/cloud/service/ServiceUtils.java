@@ -10,10 +10,10 @@ public class ServiceUtils {
     public static final String PARAMETER_ROLE = "role";
 
     //-----------------------------
-
-
     //----- Model service definitions
     public static final String PARAMETER_USERNAME = "username";
+    //----- Base Model service definitions
+    public static final String PARAMETER_ID = "id";
 
     //----- Symptom service definitions
     public static final String PARAMETER_TYPE = "type";

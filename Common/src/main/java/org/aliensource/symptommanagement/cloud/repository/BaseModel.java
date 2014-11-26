@@ -1,5 +1,8 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.io.Serializable;
 
 import javax.persistence.GeneratedValue;
@@ -23,6 +26,8 @@ import javax.persistence.MappedSuperclass;
 //  FULLTIMEEMPLOYEE and PARTTIMEEMPLOYEE, but there is no EMPLOYEE table."
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//https://class.coursera.org/androidcapstone-001/forum/thread?thread_id=266#post-1250
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public abstract class BaseModel implements Serializable {
 
     @Id

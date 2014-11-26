@@ -53,7 +53,7 @@ import java.util.Map;
 /**
  *	Configure this web application to use OAuth 2.0.
  *
- * 	The resource server is located at "/video", and can be accessed only by retrieving a token from "/oauth/token"
+ * 	The resource server is located at /patient, /doctor, etc., and can be accessed only by retrieving a token from "/oauth/token"
  *  using the Password Grant Flow as specified by OAuth 2.0.
  *  
  *  Most of this code can be reused in other applications. The key methods that would definitely need to
@@ -96,7 +96,7 @@ public class OAuth2SecurityConfiguration {
 	
 	/**
 	 *	This method is used to configure who is allowed to access which parts of our
-	 *	resource server (i.e. the "/video" endpoint) 
+	 *	resource server (i.e. the "/patient" endpoint)
 	 */
 	@Configuration
 	@EnableResourceServer
@@ -169,7 +169,7 @@ public class OAuth2SecurityConfiguration {
 		 * passwords and should never be used for anything other than local testing
 		 * on a machine that is not accessible via the Internet. Even if you use
 		 * this code for testing, at the bare minimum, you should consider changing the
-		 * passwords listed below and updating the VideoSvcClientApiTest.
+		 * passwords listed below and updating the api tests.
 		 * 
 		 * @throws Exception
 		 */
@@ -190,7 +190,7 @@ public class OAuth2SecurityConfiguration {
                         .scopes("read", "write").resourceIds("symptom-management")
                         .and()
                                 // Create a second client that only has "read" access to the
-                                // video service
+                                // service
                         .withClient("mobileReader").authorizedGrantTypes("password")
                         //.authorities("ROLE_CLIENT")
                         .scopes("read").resourceIds("symptom-management")

@@ -1,18 +1,18 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 /**
  * Created by ttruong on 13-Nov-14.
@@ -20,22 +20,33 @@ import javax.persistence.OneToOne;
 @Entity
 public class Patient extends Person {
 
-    private String medicalRecordNumber;
+    protected String medicalRecordNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST})
     //define join table with the Patient entity being the owner
     @JoinTable(
             name = "PATIENT_DOCTOR",
             joinColumns = @JoinColumn(name="patient_id"),
             inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
-    private List<Doctor> doctors = new ArrayList<Doctor>();
+    protected List<Doctor> doctors = new ArrayList<Doctor>();
 
-    @OneToOne
-    private CheckIn checkIn;
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "patient",
+            cascade = CascadeType.ALL)
+    protected List<CheckIn> checkIns = new ArrayList<CheckIn>();
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Medication> medications = new ArrayList<Medication>();
+    protected List<Medication> medications = new ArrayList<Medication>();
+
+    @Override
+    //workaround otherwise JSON conversion complaints
+    //override roles and define attribute for conversion
+    @JsonProperty(value = "patientRoles")
+    public List<Role> getRoles() {
+        return roles;
+    }
 
     public String getMedicalRecordNumber() {
         return medicalRecordNumber;
@@ -53,12 +64,12 @@ public class Patient extends Person {
         this.doctors = doctors;
     }
 
-    public CheckIn getCheckIn() {
-        return checkIn;
+    public List<CheckIn> getCheckIns() {
+        return checkIns;
     }
 
-    public void setCheckIn(CheckIn checkIn) {
-        this.checkIn = checkIn;
+    public void setCheckIns(List<CheckIn> checkIns) {
+        this.checkIns = checkIns;
     }
 
     public List<Medication> getMedications() {
@@ -80,7 +91,7 @@ public class Patient extends Person {
                 dateOfBirth,
                 medicalRecordNumber,
                 doctors,
-                checkIn,
+                checkIns,
                 medications);
     }
 
@@ -96,7 +107,7 @@ public class Patient extends Person {
                 && Objects.equal(dateOfBirth, other.dateOfBirth)
                 && Objects.equal(medicalRecordNumber, other.medicalRecordNumber)
                 && Objects.equal(doctors, other.doctors)
-                && Objects.equal(checkIn, other.checkIn)
+                && Objects.equal(checkIns, other.checkIns)
                 && Objects.equal(medications, other.medications);
         } else {
             return false;

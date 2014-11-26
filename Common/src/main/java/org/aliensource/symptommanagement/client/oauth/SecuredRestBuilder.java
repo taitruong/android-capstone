@@ -37,18 +37,18 @@ import retrofit.mime.FormUrlEncodedTypedOutput;
  * handle an OAuth 2.0 password grant login flow. The RestAdapter that it produces uses an interceptor
  * to automatically obtain a bearer token from the authorization server and insert it into all client
  * requests.
- * 
+ *
  * You can use it like this:
- * 
-  	private VideoSvcApi videoService = new SecuredRestBuilder()
+ *
+  	private PatientSvcApi patientService = new SecuredRestBuilder()
 			.setLoginEndpoint(TEST_URL + VideoSvcApi.TOKEN_PATH)
 			.setUsername(USERNAME)
 			.setPassword(PASSWORD)
 			.setClientId(CLIENT_ID)
 			.setClient(new ApacheClient(UnsafeHttpsClient.createUnsafeClient()))
 			.setEndpoint(TEST_URL).setLogLevel(LogLevel.FULL).build()
-			.create(VideoSvcApi.class);
- * 
+			.create(PatientSvcApi.class);
+ *
  * @author Jules, Mitchell
  *
  */
@@ -136,7 +136,7 @@ public class SecuredRestBuilder extends RestAdapter.Builder {
 				        String body = IOUtils.toString(resp.getBody().in());
 						
 						// Extract the access_token (bearer token) from the response so that we
-				        // can add it to future requests.
+				        // can save it to future requests.
 						accessToken = new Gson().fromJson(body, JsonObject.class).get("access_token").getAsString();
 						
 						// Add the access_token to this request as the "Authorization"

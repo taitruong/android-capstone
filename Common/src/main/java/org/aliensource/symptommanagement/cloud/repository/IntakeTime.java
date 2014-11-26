@@ -2,11 +2,9 @@ package org.aliensource.symptommanagement.cloud.repository;
 
 import com.google.common.base.Objects;
 
-import java.util.Calendar;
-import java.util.Date;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by ttruong on 14-Nov-14.
@@ -14,25 +12,25 @@ import javax.persistence.OneToOne;
 @Entity
 public class IntakeTime extends BaseModel {
 
-    protected Calendar timestamp;
+    protected long timestamp;
 
-    @OneToOne(optional = false)
-    protected Medication medication;
+    @ManyToOne
+    protected Medicament medicament;
 
-    public Calendar getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Calendar timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
-    public Medication getMedication() {
-        return medication;
+    public Medicament getMedicament() {
+        return medicament;
     }
 
-    public void setMedication(Medication medication) {
-        this.medication = medication;
+    public void setMedicament(Medicament medicament) {
+        this.medicament = medicament;
     }
 
     @Override
@@ -40,21 +38,16 @@ public class IntakeTime extends BaseModel {
         // Google Guava provides great utilities for hashing
         return Objects.hashCode(
                 timestamp,
-                medication);
+                medicament);
     }
 
-    /**
-     * Two Videos are considered equal if they have exactly the same values for
-     * their name, url, and duration.
-     *
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof IntakeTime) {
             IntakeTime other = (IntakeTime) obj;
             // Google Guava provides great utilities for equals too!
             return Objects.equal(timestamp, other.timestamp)
-                    && Objects.equal(medication, other.medication);
+                    && Objects.equal(medicament, other.medicament);
         } else {
             return false;
         }

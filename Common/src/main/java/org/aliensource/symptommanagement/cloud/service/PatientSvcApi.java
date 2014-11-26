@@ -1,30 +1,40 @@
 package org.aliensource.symptommanagement.cloud.service;
 
 import org.aliensource.symptommanagement.cloud.repository.Patient;
-import org.aliensource.symptommanagement.cloud.repository.dto.PatientDTO;
-import org.aliensource.symptommanagement.cloud.repository.dto.SpringDataRestDTO;
 
-import java.util.Collection;
+import java.util.List;
 
-import retrofit.http.*;
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
+import retrofit.http.Query;
 
 public interface PatientSvcApi {
 
 	public static final String SVC_PATH = "/patient";
+    public static final String SVC_PATH_ID = SVC_PATH + "/{" + ServiceUtils.PARAMETER_ID + "}";
 
-	// The path to search videos by title
 	public static final String SEARCH_PATH_USERNAME = SVC_PATH + "/search/findByUsername";
 	
 	@GET(SEARCH_PATH_USERNAME)
-	public SpringDataRestDTO<PatientDTO> findByUsername(@Query(ServiceUtils.PARAMETER_USERNAME) String username);
+	public List<Patient> findByUsername(@Query(ServiceUtils.PARAMETER_USERNAME) String username);
 
     @GET(SVC_PATH)
-    public SpringDataRestDTO<PatientDTO> findAll();
+    public List<Patient> findAll();
 
     @POST(SVC_PATH)
-    public Void add(@Body Patient v);
+    public Patient save(@Body Patient patient);
 
-    @DELETE(SVC_PATH + "/{id}")
-    public Void delete(@Path("id") long id);
+    @PUT(SVC_PATH_ID)
+    public Patient update(@Path(ServiceUtils.PARAMETER_ID) long id, @Body Patient patient);
+
+    @DELETE(SVC_PATH_ID)
+    public Void delete(@Path(ServiceUtils.PARAMETER_ID) long id);
+
+    @GET(SVC_PATH_ID)
+    public Patient findOne(@Path(ServiceUtils.PARAMETER_ID) long id);
 
 }

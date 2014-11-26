@@ -26,11 +26,6 @@ public class Medicament extends BaseModel {
         return Objects.hashCode(name);
     }
 
-    /**
-     * Two Videos are considered equal if they have exactly the same values for
-     * their name, url, and duration.
-     *
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Medicament) {

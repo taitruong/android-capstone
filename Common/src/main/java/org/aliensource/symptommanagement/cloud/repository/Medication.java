@@ -1,12 +1,11 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
-import java.util.Collection;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by ttruong on 14-Nov-14.
@@ -14,8 +13,10 @@ import javax.persistence.OneToOne;
 @Entity
 public class Medication extends BaseModel {
 
-    @OneToOne
-    private Medicament medicament;
+//    @RestResource(exported =  false, rel = "medicationMedicament")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JsonProperty(value = "medicationMedicament")
+    protected Medicament medicament;
 
     public Medicament getMedicament() {
         return medicament;
@@ -31,11 +32,6 @@ public class Medication extends BaseModel {
         return Objects.hashCode(medicament);
     }
 
-    /**
-     * Two Videos are considered equal if they have exactly the same values for
-     * their name, url, and duration.
-     *
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof IntakeTime) {

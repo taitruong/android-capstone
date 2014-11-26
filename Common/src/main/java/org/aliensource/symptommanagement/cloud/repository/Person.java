@@ -1,5 +1,7 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 import javax.persistence.FetchType;
@@ -10,6 +12,8 @@ import javax.persistence.MappedSuperclass;
  * Created by ttruong on 13-Nov-14.
  */
 @MappedSuperclass
+//ignore role attribute since the sub classes overrides the get method and tells JSON another attribute name than "roles"
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Person extends BaseModel {
 
     protected String firstName;

@@ -5,7 +5,11 @@ import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * Created by ttruong on 14-Nov-14.
@@ -13,17 +17,40 @@ import javax.persistence.*;
 @Entity
 public class CheckIn extends BaseModel {
 
-    @OneToMany(fetch = FetchType.EAGER)
+    protected long timestamp;
+
+    /**
+     * WORKAROUND (otherwise we can a StackOverflowError
+     * This workaround is needed for PatientSvcApiIntegrationTest.testCheckIn().
+     * Otherwise when a new check-in is created and attached to the patient we get two references
+     * of the same check-in in the Patient.checkins-list.
+     */
+    @ManyToOne
+    protected Patient patient;
+
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH, CascadeType.REFRESH})
     protected List<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    //define join table with the Patient entity being the owner
-    @JoinTable(
-            name = "CHECKIN_INTAKETIME",
-            joinColumns = @JoinColumn(name="checkin_id"),
-            inverseJoinColumns = @JoinColumn(name = "intaketime_id")
-    )
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH, CascadeType.REFRESH})
     protected List<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public List<SymptomTime> getSymptomTimes() {
         return symptomTimes;
@@ -49,11 +76,6 @@ public class CheckIn extends BaseModel {
                 intakeTimes);
     }
 
-    /**
-     * Two Videos are considered equal if they have exactly the same values for
-     * their name, url, and duration.
-     *
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof CheckIn) {

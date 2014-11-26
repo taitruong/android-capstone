@@ -2,8 +2,6 @@ package org.aliensource.symptommanagement.cloud.repository;
 
 import com.google.common.base.Objects;
 
-import java.util.Calendar;
-
 import javax.persistence.Entity;
 
 /**
@@ -12,7 +10,7 @@ import javax.persistence.Entity;
 @Entity
 public class Symptom extends BaseModel {
 
-    private String type;
+    protected String type;
 
     public String getType() {
         return type;
@@ -28,11 +26,6 @@ public class Symptom extends BaseModel {
         return Objects.hashCode(type);
     }
 
-    /**
-     * Two Videos are considered equal if they have exactly the same values for
-     * their name, url, and duration.
-     *
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Role) {

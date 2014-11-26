@@ -3,8 +3,7 @@ package org.aliensource.symptommanagement.cloud.repository;
 import com.google.common.base.Objects;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import java.util.Calendar;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by ttruong on 14-Nov-14.
@@ -12,18 +11,20 @@ import java.util.Calendar;
 @Entity
 public class SymptomTime extends BaseModel {
 
-    private Calendar timestamp;
+    protected long timestamp;
 
-    private int severity;
+    protected int severity;
 
-    @OneToOne(optional = false)
-    private Symptom symptom;
+    //do not use ManyToOne otherwise Gson complains "Expected BEGIN_OBJECT but was NUMBER"
+    // when calling e.g. CheckInController.findAll
+    @ManyToOne
+    protected Symptom symptom;
 
-    public Calendar getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Calendar timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -52,11 +53,6 @@ public class SymptomTime extends BaseModel {
                 symptom);
     }
 
-    /**
-     * Two Videos are considered equal if they have exactly the same values for
-     * their name, url, and duration.
-     *
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof SymptomTime) {
