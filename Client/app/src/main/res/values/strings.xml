@@ -4,6 +4,9 @@
     <string name="app_name" translatable="false">Symptom Management</string>
     <string name="title_activity_main">Symptom Management</string>
 
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
     <!-- doctor menu items-->
     <string name="patient_list">Patient Medications</string>
     <string name="patient_report">Patient Reports</string>
@@ -34,6 +37,7 @@
     <string name="enter_date_and_time">Please enter date and Time:</string>
 
     <!-- Check-In Symptom-->
+    <string name="finish_check_in">Finish Check-In</string>
     <string name="check_in_title">Check-In [%1$s - %2$s]</string>
 
     <string name="check_in_symptom1_tab_title">Sore Throat and Mouth Pain</string>

@@ -30,29 +30,38 @@ public class TabSectionsAdapter extends FragmentPagerAdapter {
         for (Medication medication: medications) {
             titles.add(medication.getMedicament().getName());
         }
+        titles.add(activity.getString(R.string.finish_check_in));
     }
 
     @Override
     public SherlockFragment getItem(int i) {
         Bundle args = new Bundle();
+        if (i == titles.size() - 1) {
+            SaveFragment fragment = new SaveFragment();
+            args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_save);
+            //use the medication size as key suffix to get all medication data
+            args.putInt(CheckInUtils.ARG_PREF_SUFFIX, medications.size() - 1);
+            fragment.setArguments(args);
+            return fragment;
+        }
         switch (i) {
             case 0:
                 SymptomFragment symptomFragment1 = new SymptomFragment();
                 args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_symptom1);
-                args.putInt(CheckInUtils.ARG_POS, i);
+                args.putInt(CheckInUtils.ARG_PREF_SUFFIX, i);
                 symptomFragment1.setArguments(args);
                 return symptomFragment1;
             case 1:
                 SymptomFragment symptomFragment2 = new SymptomFragment();
                 args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_symptom2);
-                args.putInt(CheckInUtils.ARG_POS, i);
+                args.putInt(CheckInUtils.ARG_PREF_SUFFIX, i);
                 symptomFragment2.setArguments(args);
                 return symptomFragment2;
             default:
                 MedicationFragment medicationFragment = new MedicationFragment();
                 args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_medication);
                 args.putSerializable(MedicationFragment.ARG_MEDICATION, medications.get(i - 2));
-                args.putInt(CheckInUtils.ARG_POS, i - 2);
+                args.putInt(CheckInUtils.ARG_PREF_SUFFIX, i - 2);
                 medicationFragment.setArguments(args);
                 return medicationFragment;
         }

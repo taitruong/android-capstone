@@ -9,21 +9,17 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import org.aliensource.symptommanagement.DateTimeUtils;
 import org.aliensource.symptommanagement.android.AbstractFragment;
 import org.aliensource.symptommanagement.android.R;
-import org.aliensource.symptommanagement.android.reminder.ReminderPreferencesUtils;
 
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -40,22 +36,22 @@ public abstract class BaseCheckInFragment extends AbstractFragment<View> {
     @InjectView(R.id.time)
     protected TextView time;
 
-    protected int pos;
+    protected int prefSuffix;
 
     protected abstract String getPrefPrefix();
 
     protected String getSelectionKey() {
-        return getPrefPrefix() + CheckInUtils.PREF_SELECTION + pos;
+        return getPrefPrefix() + CheckInUtils.PREF_SELECTION + prefSuffix;
     }
 
     protected String getDateTimeKey() {
-        return getPrefPrefix() + CheckInUtils.PREF_DATE_TIME + pos;
+        return getPrefPrefix() + CheckInUtils.PREF_DATE_TIME + prefSuffix;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        pos = getArguments().getInt(CheckInUtils.ARG_POS);
+        prefSuffix = getArguments().getInt(CheckInUtils.ARG_PREF_SUFFIX);
         //it is possible that when calling the fragment the preferences are not saved yet.
         if (CheckInUtils.initCheckIn(getActivity())) {
             initFromPrefs();
@@ -67,28 +63,24 @@ public abstract class BaseCheckInFragment extends AbstractFragment<View> {
         SharedPreferences prefs =  CheckInUtils.getPreferences(getActivity());
         int selection = prefs.getInt(getSelectionKey(), -1);
         initSelection(selection);
-        String dateTimeS = prefs.getString(
-                getDateTimeKey(),
-                DateTimeUtils.FORMAT_DDMMYYYY_HHMM.format(new Date()));
+        long dateTimeL = prefs.getLong(
+                getDateTimeKey(),new GregorianCalendar().getTimeInMillis());
         Calendar dateTime = new GregorianCalendar();
-        try {
-            Date tmp = DateTimeUtils.FORMAT_DDMMYYYY_HHMM.parse(dateTimeS);
-            date.setText(DateTimeUtils.FORMAT_DDMMYYYY.format(tmp));
-            time.setText(DateTimeUtils.FORMAT_HHMM.format(tmp));
-        } catch (ParseException ex) {
-            throw new RuntimeException("Cannot parse " + dateTimeS);
-        }
+        dateTime.setTimeInMillis(dateTimeL);
+        Date tmp = dateTime.getTime();
+        date.setText(DateTimeUtils.FORMAT_DDMMYYYY.format(tmp));
+        time.setText(DateTimeUtils.FORMAT_HHMM.format(tmp));
     }
 
     protected abstract void initSelection(int selection);
 
     protected void saveSelection(int selection) {
-        CheckInUtils.saveSelection(getActivity(), pos, getPrefPrefix(), selection);
+        CheckInUtils.saveSelection(getActivity(), prefSuffix, getPrefPrefix(), selection);
         initSelection(selection);
     }
 
     protected void saveDateTime() throws ParseException {
-        CheckInUtils.saveDateTime(getActivity(), pos, getPrefPrefix(), date.getText() + " " + time.getText());
+        CheckInUtils.saveDateTime(getActivity(), prefSuffix, getPrefPrefix(), date.getText() + " " + time.getText());
     }
 
     protected void enableDateAndTime() {

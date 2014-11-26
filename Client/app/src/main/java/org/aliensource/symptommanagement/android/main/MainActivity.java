@@ -38,15 +38,11 @@ import org.aliensource.symptommanagement.client.service.TaskCallback;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.Symptom;
-import org.aliensource.symptommanagement.cloud.repository.dto.PatientDTO;
-import org.aliensource.symptommanagement.cloud.repository.dto.SpringDataRestDTO;
-import org.aliensource.symptommanagement.cloud.repository.dto.SymptomDTO;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
 import org.aliensource.symptommanagement.cloud.service.SymptomSvcApi;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -183,9 +179,10 @@ public class MainActivity extends SherlockFragmentActivity {
 
     protected void initCheckIn(CheckInFragment fragment) {
         //save default values in preferences
-        Date checkInTime = new Date();
-        final String date = DateTimeUtils.FORMAT_DDMMYYYY.format(checkInTime);
-        final String time = DateTimeUtils.FORMAT_HHMM.format(checkInTime);
+        //use by default current  time for checkin time, symptom time and intake time
+        final GregorianCalendar checkInTime = new GregorianCalendar();
+        final String date = DateTimeUtils.FORMAT_DDMMYYYY.format(checkInTime.getTime());
+        final String time = DateTimeUtils.FORMAT_HHMM.format(checkInTime.getTime());
 
         Bundle args = fragment.getArguments();
         args.putString(CheckInUtils.PREF_DATE, date);
@@ -193,27 +190,29 @@ public class MainActivity extends SherlockFragmentActivity {
 
         //symptom values
         final Activity activity = this;
-        initSymptom(0, date, time, ServiceUtils.SYMPTOM_TYPE_SORE_THROAT);
-        initSymptom(1, date, time, ServiceUtils.SYMPTOM_TYPE_EAT_DRINK);
+        initSymptom(0, date, time, checkInTime.getTimeInMillis(), ServiceUtils.SYMPTOM_TYPE_SORE_THROAT);
+        initSymptom(1, date, time, checkInTime.getTimeInMillis(), ServiceUtils.SYMPTOM_TYPE_EAT_DRINK);
 
         final PatientSvcApi patientService = PatientSvc.getInstance().init(this);
 
-        CallableTask.invoke(new Callable<SpringDataRestDTO<PatientDTO>>() {
+        CallableTask.invoke(new Callable<List<Patient>>() {
             @Override
-            public SpringDataRestDTO<PatientDTO> call() throws Exception {
+            public List<Patient> call() throws Exception {
                 return patientService.findByUsername(username);
             }
-        }, new TaskCallback<SpringDataRestDTO<PatientDTO>>() {
+        }, new TaskCallback<List<Patient>>() {
             @Override
-            public void success(SpringDataRestDTO<PatientDTO> result) {
+            public void success(List<Patient> result) {
                 List<Medication> medications = new ArrayList<Medication>();
-                for (Patient patient : result.getEmbedded().getModels()) {
+                for (Patient patient : result) {
                     medications.addAll(patient.getMedications());
                 }
-                int pos = 0;
+                int prefSuffix = 0;
                 for (Medication medication: medications) {
-                    CheckInUtils.saveEditor(activity, pos, CheckInUtils.PREF_MEDICATION_PREFIX, medication.getId(), date, time, -1);
-                    pos++;
+                    CheckInUtils.saveEditor(
+                            activity, prefSuffix,
+                            CheckInUtils.PREF_MEDICATION_PREFIX, medication.getId(), date, time, checkInTime.getTimeInMillis(), -1);
+                    prefSuffix++;
                 }
             }
 
@@ -225,19 +224,27 @@ public class MainActivity extends SherlockFragmentActivity {
 
     }
 
-    protected void initSymptom(final int pos, final String date, final String time, final String type) {
+    protected void initSymptom(
+            final int prefSuffix,
+            final String date,
+            final String time,
+            final long dateTime,
+            final String type) {
         final SymptomSvcApi api = SymptomSvc.getInstance().init(this);
         final Activity activity = this;
-        CallableTask.invoke(new Callable<SpringDataRestDTO<SymptomDTO>>() {
+        CallableTask.invoke(new Callable<List<Symptom>>() {
             @Override
-            public SpringDataRestDTO<SymptomDTO> call() throws Exception {
+            public List<Symptom> call() throws Exception {
                 return api.findByType(type);
             }
-        }, new TaskCallback<SpringDataRestDTO<SymptomDTO>>() {
+        }, new TaskCallback<List<Symptom>>() {
             @Override
-            public void success(SpringDataRestDTO<SymptomDTO> result) {
-                Symptom symptomEatDrink = result.getEmbedded().getModels().get(0);
-                CheckInUtils.saveEditor(activity, pos, CheckInUtils.PREF_SYMPTOM_PREFIX, symptomEatDrink.getId(), date, time, -1);
+            public void success(List<Symptom> result) {
+                Symptom symptomEatDrink = result.get(0);
+                CheckInUtils.saveEditor(
+                        activity, prefSuffix,
+                        CheckInUtils.PREF_SYMPTOM_PREFIX,
+                        symptomEatDrink.getId(), date, time, dateTime, -1);
             }
 
             @Override

@@ -6,15 +6,13 @@ import android.support.v4.view.ViewPager;
 import com.astuetz.PagerSlidingTabStrip;
 
 import org.aliensource.symptommanagement.android.AbstractFragment;
-import org.aliensource.symptommanagement.client.service.CallableTask;
-import org.aliensource.symptommanagement.android.main.MainUtils;
-import org.aliensource.symptommanagement.client.service.PatientSvc;
 import org.aliensource.symptommanagement.android.R;
+import org.aliensource.symptommanagement.android.main.MainUtils;
+import org.aliensource.symptommanagement.client.service.CallableTask;
+import org.aliensource.symptommanagement.client.service.PatientSvc;
 import org.aliensource.symptommanagement.client.service.TaskCallback;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
-import org.aliensource.symptommanagement.cloud.repository.dto.PatientDTO;
-import org.aliensource.symptommanagement.cloud.repository.dto.SpringDataRestDTO;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 
 import java.util.ArrayList;
@@ -44,16 +42,16 @@ public class CheckInFragment extends AbstractFragment<ViewPager> {
         final String username = MainUtils.getCredentials(getActivity())[1];
         final PatientSvcApi patientService = PatientSvc.getInstance().init(getActivity());
 
-        CallableTask.invoke(new Callable<SpringDataRestDTO<PatientDTO>>() {
+        CallableTask.invoke(new Callable<List<Patient>>() {
             @Override
-            public SpringDataRestDTO<PatientDTO> call() throws Exception {
+            public List<Patient> call() throws Exception {
                 return patientService.findByUsername(username);
             }
-        }, new TaskCallback<SpringDataRestDTO<PatientDTO>>() {
+        }, new TaskCallback<List<Patient>>() {
             @Override
-            public void success(SpringDataRestDTO<PatientDTO> result) {
+            public void success(List<Patient> result) {
                 List<Medication> medications = new ArrayList<Medication>();
-                for (Patient patient : result.getEmbedded().getModels()) {
+                for (Patient patient : result) {
                     medications.addAll(patient.getMedications());
                 }
                 tabSectionsAdapter = new TabSectionsAdapter(getChildFragmentManager(), getActivity(), medications);
