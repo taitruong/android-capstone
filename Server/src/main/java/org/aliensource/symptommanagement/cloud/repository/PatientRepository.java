@@ -14,6 +14,6 @@ import java.util.List;
 @Repository
 public interface PatientRepository extends CrudRepository<Patient, Long>{
 
-    public List<Patient> findByUsername(
+    public Patient findByUsername(
             @Param(ServiceUtils.PARAMETER_USERNAME) String username);
 }

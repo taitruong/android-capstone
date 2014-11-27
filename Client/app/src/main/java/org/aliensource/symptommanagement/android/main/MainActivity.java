@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -25,6 +26,8 @@ import org.aliensource.symptommanagement.android.LoginScreenActivity;
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
 import org.aliensource.symptommanagement.android.checkin.CheckInUtils;
+import org.aliensource.symptommanagement.android.checkin.SaveFragment;
+import org.aliensource.symptommanagement.android.checkin.TabSectionsAdapter;
 import org.aliensource.symptommanagement.android.patient.PatientListFragment;
 import org.aliensource.symptommanagement.android.patient.PatientReportFragment;
 import org.aliensource.symptommanagement.android.reminder.AlarmNotificationReceiver;
@@ -59,8 +62,6 @@ import butterknife.OnItemClick;
 
 public class MainActivity extends SherlockFragmentActivity {
 
-    protected String username;
-
     @InjectView(R.id.main_layout)
     protected DrawerLayout mDrawerLayout;
 
@@ -92,7 +93,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		ButterKnife.inject(this);
 
         Bundle args = getIntent().getExtras();
-        username = args.getString(MainUtils.ARG_USERNAME);
 
         initDrawerMenu(savedInstanceState);
 
@@ -161,9 +161,17 @@ public class MainActivity extends SherlockFragmentActivity {
 
     @OnItemClick(R.id.main_menu)
     protected void selectItem(int position) {
+        GregorianCalendar checkInTime = new GregorianCalendar();
+        String date = DateTimeUtils.FORMAT_DDMMYYYY.format(checkInTime.getTime());
+        String time = DateTimeUtils.FORMAT_HHMM.format(checkInTime.getTime());
+        Bundle args = fragments[position].getArguments();
+        args.putString(CheckInUtils.PREF_DATE, date);
+        args.putString(CheckInUtils.PREF_TIME, time);
+
         // update the main content by replacing fragments
-        if (fragments[position] instanceof CheckInFragment) {
-            initCheckIn((CheckInFragment) fragments[position]);
+        if (fragments[position] instanceof CheckInFragment
+                && CheckInUtils.initCheckIn(this)) {
+            initCheckIn(checkInTime, date, time);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
@@ -177,16 +185,13 @@ public class MainActivity extends SherlockFragmentActivity {
         mDrawerLayout.closeDrawer(mainMenuList);
     }
 
-    protected void initCheckIn(CheckInFragment fragment) {
+    /**
+     * Initializes the selections, date, and times in the Check-In tabs.
+     * This allows to remember so that the user can continue later on
+     */
+    public void initCheckIn(final GregorianCalendar checkInTime, final String date, final String time) {
         //save default values in preferences
         //use by default current  time for checkin time, symptom time and intake time
-        final GregorianCalendar checkInTime = new GregorianCalendar();
-        final String date = DateTimeUtils.FORMAT_DDMMYYYY.format(checkInTime.getTime());
-        final String time = DateTimeUtils.FORMAT_HHMM.format(checkInTime.getTime());
-
-        Bundle args = fragment.getArguments();
-        args.putString(CheckInUtils.PREF_DATE, date);
-        args.putString(CheckInUtils.PREF_TIME, time);
 
         //symptom values
         final Activity activity = this;
@@ -194,19 +199,18 @@ public class MainActivity extends SherlockFragmentActivity {
         initSymptom(1, date, time, checkInTime.getTimeInMillis(), ServiceUtils.SYMPTOM_TYPE_EAT_DRINK);
 
         final PatientSvcApi patientService = PatientSvc.getInstance().init(this);
-
-        CallableTask.invoke(new Callable<List<Patient>>() {
+        final String username = MainUtils.getCredentials(this).username;
+        //initialize intake time
+        CallableTask.invoke(new Callable<Patient>() {
             @Override
-            public List<Patient> call() throws Exception {
+            public Patient call() throws Exception {
                 return patientService.findByUsername(username);
             }
-        }, new TaskCallback<List<Patient>>() {
+        }, new TaskCallback<Patient>() {
             @Override
-            public void success(List<Patient> result) {
+            public void success(Patient patient) {
                 List<Medication> medications = new ArrayList<Medication>();
-                for (Patient patient : result) {
-                    medications.addAll(patient.getMedications());
-                }
+                medications.addAll(patient.getMedications());
                 int prefSuffix = 0;
                 for (Medication medication: medications) {
                     CheckInUtils.saveEditor(
@@ -221,7 +225,7 @@ public class MainActivity extends SherlockFragmentActivity {
                 throw new RuntimeException("Patient " + username + " not found!");
             }
         });
-
+        CheckInUtils.resetCheckIn(this, false);
     }
 
     protected void initSymptom(
@@ -240,11 +244,11 @@ public class MainActivity extends SherlockFragmentActivity {
         }, new TaskCallback<List<Symptom>>() {
             @Override
             public void success(List<Symptom> result) {
-                Symptom symptomEatDrink = result.get(0);
+                Symptom symptom = result.get(0);
                 CheckInUtils.saveEditor(
                         activity, prefSuffix,
                         CheckInUtils.PREF_SYMPTOM_PREFIX,
-                        symptomEatDrink.getId(), date, time, dateTime, -1);
+                        symptom.getId(), date, time, dateTime, -1);
             }
 
             @Override

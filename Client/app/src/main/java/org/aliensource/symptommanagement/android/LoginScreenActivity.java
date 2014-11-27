@@ -70,11 +70,6 @@ public class LoginScreenActivity extends Activity {
                 // OAuth 2.0 grant was successful and we
                 // can talk to the server, open up the video listing
                 Intent intent = new Intent(LoginScreenActivity.this, MainActivity.class);
-                Bundle args = new Bundle();
-                args.putString(MainUtils.ARG_SERVER, user);
-                args.putString(MainUtils.ARG_USERNAME, user);
-                args.putString(MainUtils.ARG_PASSWORD, user);
-                intent.putExtras(args);
 
                 startActivity(intent);
             }

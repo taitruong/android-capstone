@@ -75,10 +75,9 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
     @Test
     public void testFindByUsername() {
-        List<Patient> model = readOnlyService.findByUsername("patient1");
+        Patient model = readOnlyService.findByUsername("patient1");
         assertNotNull(model);
-        assertTrue(model.size() == 1);
-        assertEquals("patient1", model.get(0).getUsername());
+        assertEquals("patient1", model.getUsername());
     }
 
     @Test
@@ -90,9 +89,11 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
     @Test
     public void testCheckIn() {
+        //the patient we want to do the check-in
         Patient patient = service.findOne(1);
         assertNotNull(patient);
 
+        //create the symptom times
         List<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
         SymptomSvcApi symptomSvcApi = getService(SymptomSvcApi.class);
         for (String type: new String[]{ServiceUtils.SYMPTOM_TYPE_SORE_THROAT, ServiceUtils.SYMPTOM_TYPE_EAT_DRINK}) {
@@ -109,8 +110,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
             symptomTimes.add(symptomTime);
         }
 
+        //create the intake times for the medications
         List<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();
-
         for (Medication medication: patient.getMedications()) {
             IntakeTime intakeTime = new IntakeTime();
             intakeTime.setMedicament(medication.getMedicament());
@@ -118,14 +119,11 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
             intakeTimes.add(intakeTime);
         }
 
+        //attach to check-in
         CheckIn checkIn = new CheckIn();
         checkIn.setTimestamp(new GregorianCalendar().getTimeInMillis());
-
-        CheckInSvcApi checkInSvcApi = getService(CheckInSvcApi.class);
-        checkIn = checkInSvcApi.save(checkIn);
         checkIn.setIntakeTimes(intakeTimes);
         checkIn.setSymptomTimes(symptomTimes);
-        checkIn = checkInSvcApi.save(checkIn);
 
         int beforeCheckInSize = patient.getCheckIns().size();
 
@@ -140,9 +138,9 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         assertEquals(symptomTimes.size(), checkIn.getSymptomTimes().size());
         //intake times saved?
         assertEquals(intakeTimes.size(), checkIn.getIntakeTimes().size());
-        for (CheckIn ci: checkInSvcApi.findAll()) {
-            System.out.println(">>>> " + ci.getId() + " " + ci);
-        }
+        //test call to check-in controller to make sure whether there is no JPA or JSON problem
+        CheckInSvcApi checkInSvcApi = getService(CheckInSvcApi.class);
+        checkInSvcApi.findAll();
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import org.aliensource.symptommanagement.android.AbstractFragment;
 import org.aliensource.symptommanagement.android.R;
+import org.aliensource.symptommanagement.android.main.MainActivity;
 import org.aliensource.symptommanagement.android.main.MainUtils;
 import org.aliensource.symptommanagement.client.service.CallableTask;
 import org.aliensource.symptommanagement.client.service.PatientSvc;
@@ -39,21 +40,19 @@ public class CheckInFragment extends AbstractFragment<ViewPager> {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        final String username = MainUtils.getCredentials(getActivity())[1];
+        final String username = MainUtils.getCredentials(getActivity()).username;
         final PatientSvcApi patientService = PatientSvc.getInstance().init(getActivity());
 
-        CallableTask.invoke(new Callable<List<Patient>>() {
+        CallableTask.invoke(new Callable<Patient>() {
             @Override
-            public List<Patient> call() throws Exception {
+            public Patient call() throws Exception {
                 return patientService.findByUsername(username);
             }
-        }, new TaskCallback<List<Patient>>() {
+        }, new TaskCallback<Patient>() {
             @Override
-            public void success(List<Patient> result) {
+            public void success(Patient patient) {
                 List<Medication> medications = new ArrayList<Medication>();
-                for (Patient patient : result) {
-                    medications.addAll(patient.getMedications());
-                }
+                medications.addAll(patient.getMedications());
                 tabSectionsAdapter = new TabSectionsAdapter(getChildFragmentManager(), getActivity(), medications);
                 pager.setAdapter(tabSectionsAdapter);
                 tabs.setViewPager(pager);
@@ -61,7 +60,7 @@ public class CheckInFragment extends AbstractFragment<ViewPager> {
 
             @Override
             public void error(Exception e) {
-                throw new RuntimeException("Patient " + username + " not found!");
+                throw new RuntimeException("Patient " + username + " not found!", e);
             }
         });
         String date = getArguments().getString(CheckInUtils.PREF_DATE);

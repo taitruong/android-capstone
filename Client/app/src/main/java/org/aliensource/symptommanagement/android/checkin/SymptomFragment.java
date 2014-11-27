@@ -26,7 +26,7 @@ public class SymptomFragment extends BaseCheckInFragment {
         return CheckInUtils.PREF_SYMPTOM_PREFIX;
     }
 
-    protected void initSelection(int selection) {
+    protected void updateSelection(int selection) {
         boolean selected = false;
         if (selection == 0) {
             choice1.setChecked(true);

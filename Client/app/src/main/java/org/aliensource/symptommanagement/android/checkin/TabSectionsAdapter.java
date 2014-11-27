@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -36,13 +37,13 @@ public class TabSectionsAdapter extends FragmentPagerAdapter {
     @Override
     public SherlockFragment getItem(int i) {
         Bundle args = new Bundle();
-        if (i == titles.size() - 1) {
-            SaveFragment fragment = new SaveFragment();
+        if (isSaveFragment(i)) {
+            SaveFragment saveFragment = new SaveFragment();
             args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_save);
             //use the medication size as key suffix to get all medication data
             args.putInt(CheckInUtils.ARG_PREF_SUFFIX, medications.size() - 1);
-            fragment.setArguments(args);
-            return fragment;
+            saveFragment.setArguments(args);
+            return saveFragment;
         }
         switch (i) {
             case 0:
@@ -65,6 +66,10 @@ public class TabSectionsAdapter extends FragmentPagerAdapter {
                 medicationFragment.setArguments(args);
                 return medicationFragment;
         }
+    }
+
+    protected boolean isSaveFragment(int pos) {
+        return pos == titles.size() - 1;
     }
 
     @Override

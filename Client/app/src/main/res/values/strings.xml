@@ -36,9 +36,12 @@
     <!-- Others -->
     <string name="enter_date_and_time">Please enter date and Time:</string>
 
+    <!-- Check-In -->
+    <string name="check_in_title">Check-In [%1$s - %2$s]</string>
+    <string name="check_in_not_possible">You do neither have severe symptoms nor taken your medications. There is no need for a check-in and your doctor\'s attendance.</string>
+
     <!-- Check-In Symptom-->
     <string name="finish_check_in">Finish Check-In</string>
-    <string name="check_in_title">Check-In [%1$s - %2$s]</string>
 
     <string name="check_in_symptom1_tab_title">Sore Throat and Mouth Pain</string>
     <string name="check_in_symptom1_title">How bad is your mouth pain and sore throat?</string>

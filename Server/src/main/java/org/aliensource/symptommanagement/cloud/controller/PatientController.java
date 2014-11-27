@@ -46,7 +46,7 @@ public class PatientController {
     }
 
     @RequestMapping(value=PatientSvcApi.SEARCH_PATH_USERNAME, method=RequestMethod.GET)
-    public @ResponseBody List<Patient> findByUsername(@RequestParam(ServiceUtils.PARAMETER_USERNAME) String username) {
+    public @ResponseBody Patient findByUsername(@RequestParam(ServiceUtils.PARAMETER_USERNAME) String username) {
         return repository.findByUsername(username);
     }
 }

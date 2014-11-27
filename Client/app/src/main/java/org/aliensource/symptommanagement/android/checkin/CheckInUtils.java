@@ -21,6 +21,9 @@ public final class CheckInUtils extends BaseUtils {
 
     public static final String PREF_INIT_CHECKIN = "init-check-in";
 
+    public static final int PREF_BOOLEAN_TRUE = 0;
+    public static final int PREF_BOOLEAN_FALSE = -1;
+
     public static final String PREF_SYMPTOM_PREFIX = "symptom-";
     public static final String PREF_MEDICATION_PREFIX = "medication-";
 
@@ -34,7 +37,6 @@ public final class CheckInUtils extends BaseUtils {
             Activity activity, int prefSuffix, String prefix, long id, String date, String time, long dateTime, int selection) {
         SharedPreferences prefs = getPreferences(activity);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(PREF_INIT_CHECKIN, true);
         editor.putLong(prefix + PREF_ID + prefSuffix, id);
         editor.putLong(prefix + PREF_DATE_TIME + prefSuffix, dateTime);
 
@@ -46,7 +48,7 @@ public final class CheckInUtils extends BaseUtils {
     }
 
     public static DataWrapper getEditor(
-            Activity activity, int prefSuffix, String prefix) {
+            Activity activity, String prefix, int prefSuffix) {
         DataWrapper result = new DataWrapper();
         SharedPreferences prefs = getPreferences(activity);
         result.id = prefs.getLong(prefix + PREF_ID + prefSuffix, -1);
@@ -66,9 +68,9 @@ public final class CheckInUtils extends BaseUtils {
     public static void saveDateTime(Activity activity, int prefSuffix, String prefix, String dateTimeS) throws ParseException {
         SharedPreferences prefs = getPreferences(activity);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(prefix + PREF_DATE_TIME + prefSuffix, dateTimeS);
-
         Date dateTime = DateTimeUtils.FORMAT_DDMMYYYY_HHMM.parse(dateTimeS);
+        editor.putLong(prefix + PREF_DATE_TIME + prefSuffix, dateTime.getTime());
+
         String dateS = DateTimeUtils.FORMAT_DDMMYYYY.format(dateTime);
         String timeS = DateTimeUtils.FORMAT_HHMM.format(dateTime);
         editor.putString(PREF_DATE, dateS);
@@ -80,6 +82,13 @@ public final class CheckInUtils extends BaseUtils {
     public static boolean initCheckIn(Activity activity) {
         SharedPreferences prefs = getPreferences(activity);
         return prefs.getBoolean(PREF_INIT_CHECKIN, false);
+    }
+
+    public static void resetCheckIn(Activity activity, boolean reset) {
+        SharedPreferences prefs = getPreferences(activity);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(PREF_INIT_CHECKIN, reset);
+        editor.commit();
     }
 
 }

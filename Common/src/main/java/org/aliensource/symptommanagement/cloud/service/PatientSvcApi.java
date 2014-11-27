@@ -20,7 +20,7 @@ public interface PatientSvcApi {
 	public static final String SEARCH_PATH_USERNAME = SVC_PATH + "/search/findByUsername";
 	
 	@GET(SEARCH_PATH_USERNAME)
-	public List<Patient> findByUsername(@Query(ServiceUtils.PARAMETER_USERNAME) String username);
+	public Patient findByUsername(@Query(ServiceUtils.PARAMETER_USERNAME) String username);
 
     @GET(SVC_PATH)
     public List<Patient> findAll();

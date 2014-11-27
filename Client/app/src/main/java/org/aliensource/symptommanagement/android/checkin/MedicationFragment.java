@@ -39,7 +39,7 @@ public class MedicationFragment extends BaseCheckInFragment {
         return CheckInUtils.PREF_MEDICATION_PREFIX;
     }
 
-    protected void initSelection(int selection) {
+    protected void updateSelection(int selection) {
         boolean selected = false;
         if (selection == 0) {
             choice1.setChecked(true);
@@ -57,9 +57,9 @@ public class MedicationFragment extends BaseCheckInFragment {
     protected void updateSeverity() {
         enableDateAndTime();
         if (choice1.isChecked()) {
-            saveSelection(0);
+            saveSelection(CheckInUtils.PREF_BOOLEAN_TRUE);
         } else if (choice2.isChecked()) {
-            saveSelection(1);
+            saveSelection(CheckInUtils.PREF_BOOLEAN_FALSE);
         }
     }
 

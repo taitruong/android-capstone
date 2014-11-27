@@ -25,12 +25,13 @@ public final class MainUtils extends BaseUtils {
 
     public static final String ARG_TIME = "time";
 
-    public static String[] getCredentials(Activity activity) {
+    public static CredentialsWrapper getCredentials(Activity activity) {
         SharedPreferences prefs = getPreferences(activity);
-        String server = prefs.getString(MainUtils.PREF_MAIN_SERVER, "");
-        String username = prefs.getString(MainUtils.PREF_MAIN_USERNAME, "");
-        String password = prefs.getString(MainUtils.PREF_MAIN_PASSWORD, "");
-        return new String[] {server, username, password};
+        CredentialsWrapper data = new CredentialsWrapper();
+        data.server = prefs.getString(MainUtils.PREF_MAIN_SERVER, "");
+        data.username = prefs.getString(MainUtils.PREF_MAIN_USERNAME, "");
+        data.password = prefs.getString(MainUtils.PREF_MAIN_PASSWORD, "");
+        return data;
     }
 
     public static void saveCredentials(Activity activity, String server, String username, String password) {

@@ -53,16 +53,14 @@ public abstract class BaseCheckInFragment extends AbstractFragment<View> {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         prefSuffix = getArguments().getInt(CheckInUtils.ARG_PREF_SUFFIX);
         //it is possible that when calling the fragment the preferences are not saved yet.
-        if (CheckInUtils.initCheckIn(getActivity())) {
-            initFromPrefs();
-        }
+        initFromPrefs();
         return view;
     }
 
     protected void initFromPrefs() {
         SharedPreferences prefs =  CheckInUtils.getPreferences(getActivity());
         int selection = prefs.getInt(getSelectionKey(), -1);
-        initSelection(selection);
+        updateSelection(selection);
         long dateTimeL = prefs.getLong(
                 getDateTimeKey(),new GregorianCalendar().getTimeInMillis());
         Calendar dateTime = new GregorianCalendar();
@@ -72,11 +70,11 @@ public abstract class BaseCheckInFragment extends AbstractFragment<View> {
         time.setText(DateTimeUtils.FORMAT_HHMM.format(tmp));
     }
 
-    protected abstract void initSelection(int selection);
+    protected abstract void updateSelection(int selection);
 
     protected void saveSelection(int selection) {
         CheckInUtils.saveSelection(getActivity(), prefSuffix, getPrefPrefix(), selection);
-        initSelection(selection);
+        updateSelection(selection);
     }
 
     protected void saveDateTime() throws ParseException {
@@ -107,7 +105,7 @@ public abstract class BaseCheckInFragment extends AbstractFragment<View> {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-            timeView = (TextView) getActivity().findViewById(R.id.time);
+            timeView = (TextView) ((BaseCheckInFragment) getTargetFragment()).time;
 
             int[] hourAndMinute = DateTimeUtils.getHourAndMinute(timeView.getText());
 
@@ -160,7 +158,7 @@ public abstract class BaseCheckInFragment extends AbstractFragment<View> {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-            dateView = (TextView) getActivity().findViewById(R.id.date);
+            dateView = (TextView) ((BaseCheckInFragment) getTargetFragment()).date;
 
             try {
                 Calendar cal = DateTimeUtils.getDate(dateView.getText().toString());

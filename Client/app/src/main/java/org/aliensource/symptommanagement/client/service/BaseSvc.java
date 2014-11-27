@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import org.aliensource.symptommanagement.android.LoginScreenActivity;
+import org.aliensource.symptommanagement.android.main.CredentialsWrapper;
 import org.aliensource.symptommanagement.android.main.MainUtils;
 import org.aliensource.symptommanagement.client.EasyHttpClient;
 import org.aliensource.symptommanagement.client.oauth.SecuredRestBuilder;
@@ -38,8 +39,8 @@ public abstract class BaseSvc<API> {
 	}
 
     public synchronized API init(Activity activity) {
-        String[] credentials = MainUtils.getCredentials(activity);
-        return init(credentials[0], credentials[1], credentials[2]);
+        CredentialsWrapper data = MainUtils.getCredentials(activity);
+        return init(data.server, data.username, data.password);
     }
 
     public synchronized API init(String server, String user,

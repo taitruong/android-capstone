@@ -13,7 +13,6 @@
         android:drawableLeft="@drawable/ic_action_save"
         android:text="@string/save"
         android:textSize="@dimen/text_size_large"
-        android:enabled="false"
         android:gravity="center"/>
 
     <Button
