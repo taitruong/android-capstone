@@ -53,9 +53,11 @@ Now you can start the emulator / device by double-clicking on the virtual device
 ### Download stand-alone Android SDK
 Similar to Java JDK you need the SDK. 
 Download: https://developer.android.com/sdk/installing/index.html?pkg=tools
+Extract the file to your development environment.
 
 ### Download and install the development environment: 
 http://tools.android.com/download/studio/canary
+Select build 0.9.3
 
 ### Server Project
 Start Android Studio and import the server project via the menu:
@@ -105,7 +107,7 @@ Attach project to Git and GitHub
 
 ### Client Project
 Import the client project
-See above to import build.gradle file in the Client folder and select Android SDK folder.
+See above to import build.gradle file in the Client folder.
 
 Go to Tools>Android>SDK Manager and select the followin packages:
 - Tools:
