@@ -15,14 +15,6 @@
         android:paddingLeft="@dimen/margin_left_and_right"
         android:paddingRight="@dimen/margin_left_and_right"
         >
-        <ListView
-            android:id="@+id/videoList"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" >
-        </ListView>
     </FrameLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat

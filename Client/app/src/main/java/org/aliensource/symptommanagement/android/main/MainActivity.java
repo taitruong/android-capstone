@@ -26,10 +26,9 @@ import org.aliensource.symptommanagement.android.LoginScreenActivity;
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
 import org.aliensource.symptommanagement.android.checkin.CheckInUtils;
-import org.aliensource.symptommanagement.android.checkin.SaveFragment;
-import org.aliensource.symptommanagement.android.checkin.TabSectionsAdapter;
-import org.aliensource.symptommanagement.android.patient.PatientListFragment;
 import org.aliensource.symptommanagement.android.patient.PatientReportFragment;
+import org.aliensource.symptommanagement.android.patientslist.OnPatientsInteractionListener;
+import org.aliensource.symptommanagement.android.patientslist.PatientsListFragment;
 import org.aliensource.symptommanagement.android.reminder.AlarmNotificationReceiver;
 import org.aliensource.symptommanagement.android.reminder.ReminderPreferencesUtils;
 import org.aliensource.symptommanagement.android.reminder.ReminderSettingsFragment;
@@ -60,7 +59,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends SherlockFragmentActivity implements OnPatientsInteractionListener {
 
     @InjectView(R.id.main_layout)
     protected DrawerLayout mDrawerLayout;
@@ -74,7 +73,7 @@ public class MainActivity extends SherlockFragmentActivity {
     //workaround: initialize with empty array, will be set in initMenus() later anyway
     private String[] menuTitles = {""};
     //fragment array must be in the same order/position as for menuTitles array
-    private AbstractFragment[] fragments;
+    private Fragment[] fragments;
 
     private Map<String, PendingIntent> mReminderNotificationReceiverPendingIntentMap = new LinkedHashMap<String, PendingIntent>();
 
@@ -307,33 +306,33 @@ public class MainActivity extends SherlockFragmentActivity {
                         String menu2 = getString(R.string.patient_report);
                         menuTitles = new String[]{menu1, menu2};
 
-                        AbstractFragment fragment1 = new PatientListFragment();
+                        Fragment fragment1 = new PatientsListFragment();
                         Bundle args1 = new Bundle();
-                        args1.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patient_list);
+                        args1.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patients_list);
                         fragment1.setArguments(args1);
 
-                        AbstractFragment fragment2 = new PatientReportFragment();
+                        Fragment fragment2 = new PatientReportFragment();
                         Bundle args2 = new Bundle();
                         args2.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patient_report);
                         fragment2.setArguments(args2);
 
-                        fragments = new AbstractFragment[]{fragment1, fragment2};
+                        fragments = new Fragment[]{fragment1, fragment2};
                     } else {
                         String menu1 = getString(R.string.check_in);
                         String menu2 = getString(R.string.reminder_settings);
                         menuTitles = new String[]{menu1, menu2};
 
-                        AbstractFragment fragment1 = new CheckInFragment();
+                        Fragment fragment1 = new CheckInFragment();
                         Bundle args1 = new Bundle();
                         args1.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in);
                         fragment1.setArguments(args1);
 
-                        AbstractFragment fragment2 = new ReminderSettingsFragment();
+                        Fragment fragment2 = new ReminderSettingsFragment();
                         Bundle args2 = new Bundle();
                         args2.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_reminder_settings);
                         fragment2.setArguments(args2);
 
-                        fragments = new AbstractFragment[]{fragment1, fragment2};
+                        fragments = new Fragment[]{fragment1, fragment2};
                     }
 
                     // set up the drawer's list view with items and click listener
@@ -414,5 +413,13 @@ public class MainActivity extends SherlockFragmentActivity {
         PendingIntent mReminderNotificationReceiverPendingIntent = mReminderNotificationReceiverPendingIntentMap.remove(oldTime);
 
     }
+
+    @Override
+    public void onPatientSelected(long patientId) {
+        System.out.println(">>>>> received: " + patientId );
+/*        Intent intent = new Intent(this, ContactDetailActivity.class);
+        intent.setData(contactUri);
+        startActivity(intent);
+*/    }
 
 }

@@ -8,7 +8,7 @@
     <string name="cancel">Cancel</string>
 
     <!-- doctor menu items-->
-    <string name="patient_list">Patient Medications</string>
+    <string name="patient_list">Patients List</string>
     <string name="patient_report">Patient Reports</string>
     <string name="Logout">Logout</string>
 
@@ -60,4 +60,22 @@
     <string name="check_in_medication_title">Did you take your %s?</string>
     <string name="check_in_medication_value1">Yes</string>
     <string name="check_in_medication_value2">No</string>
+
+    <!-- menus-->
+    <string name="menu_search">Search</string>
+
+    <!-- Patients List-->
+    <!-- Used for the AlphabetIndexer in PatientsListFragment to provide quick navigation by
+         alphabet using ListView fast scroll. -->
+    <string name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+
+    <string name="no_patient_data">No patient data...</string>
+    <!-- When using ContactsContract.Contacts#CONTENT_FILTER_URI to search contacts, a match occurs
+         when using a number of different fields, such as name, e-mail address, address, phone
+         number, etc. When a match occurs that is not the name, there is currently no way to tell
+         which other field was matched. This string is displayed in the secondary display text in
+         ContactsListFragment when a search query match occurs that is not the display name.
+         -->
+    <string name="search_match_other">Matches Other Field</string>
+
 </resources>

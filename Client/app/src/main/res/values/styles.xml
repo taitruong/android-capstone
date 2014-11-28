@@ -15,5 +15,23 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@android:color/holo_blue_dark</item>
     </style>
+
+    <style name="PatientsListView">
+        <item name="android:verticalScrollbarPosition">right</item>
+        <item name="android:fastScrollAlwaysVisible">true</item>
+        <item name="android:scrollbarStyle">outsideInset</item>
+    </style>
+
+    <style name="searchTextHiglight">
+        <item name="android:textColor">@android:color/holo_blue_light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="listViewActivatedStyle"/>
+
+    <style name="quickContactBadgeStyle">
+        <item name="android:background">@drawable/quickcontact_badge_small</item>
+    </style>
+
     <color name="PatientBackground">@android:color/holo_blue_dark</color>
 </resources>

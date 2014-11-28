@@ -26,6 +26,7 @@ public abstract class AbstractFragment<T extends View> extends SherlockFragment 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         int layout = getArguments().getInt(MainUtils.ARG_LAYOUT);
         fragmentView = (T) inflater.inflate(layout, container, false);
         ButterKnife.inject(this, fragmentView);
