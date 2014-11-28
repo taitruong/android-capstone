@@ -53,6 +53,7 @@ Now you can start the emulator / device by double-clicking on the virtual device
 ### Download stand-alone Android SDK
 Similar to Java JDK you need the SDK. 
 Download: https://developer.android.com/sdk/installing/index.html?pkg=tools
+Extract the file to your development environment.
 
 ### Download and install the development environment: 
 http://tools.android.com/download/studio/canary
