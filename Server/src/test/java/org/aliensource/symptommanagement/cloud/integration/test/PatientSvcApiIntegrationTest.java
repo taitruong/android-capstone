@@ -11,6 +11,7 @@ import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.Symptom;
 import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
 import org.aliensource.symptommanagement.cloud.service.CheckInSvcApi;
+import org.aliensource.symptommanagement.cloud.service.PatientFilterWrapper;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
 import org.aliensource.symptommanagement.cloud.service.SymptomSvcApi;
@@ -78,6 +79,28 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         Patient model = readOnlyService.findByUsername("patient1");
         assertNotNull(model);
         assertEquals("patient1", model.getUsername());
+    }
+
+    @Test
+    public void testFindByDoctorUsernameAndFilter() {
+        List<Patient> data = readOnlyService.findByDoctorUsernameAndFilter("doctor1", "");
+        assertNotNull(data);
+        assertTrue(data.size() > 0);
+        data = readOnlyService.findByDoctorUsernameAndFilter("doctor1", "First");
+        assertNotNull(data);
+        assertTrue(data.size() > 0);
+        data = readOnlyService.findByDoctorUsernameAndFilter("doctor1", "Last");
+        assertNotNull(data);
+        assertTrue(data.size() > 0);
+        data = readOnlyService.findByDoctorUsernameAndFilter("doctor1", "medical-record");
+        assertNotNull(data);
+        assertTrue(data.size() > 0);
+        data = readOnlyService.findByDoctorUsernameAndFilter("doctor1", "record");
+        assertNotNull(data);
+        assertTrue(data.size() > 0);
+        data = readOnlyService.findByDoctorUsernameAndFilter("doctor1", "XXXXXXXXXXXXXXXXX");
+        assertNotNull(data);
+        assertEquals(0, data.size());
     }
 
     @Test

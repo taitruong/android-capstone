@@ -12,8 +12,8 @@ public interface SecurityService {
 
     public static final String TOKEN_PATH = "/oauth/token";
 
-    public static final String ROLE_DOCTOR = "Doctor";
-    public static final String ROLE_PATIENT = "Patient";
+    public static final String ROLE_DOCTOR = "ROLE_DOCTOR";
+    public static final String ROLE_PATIENT = "ROLE_PATIENT";
 
     @POST(ServiceUtils.PATH_AUTH_SERVICE)
     public boolean hasRole(@Query(ServiceUtils.PARAMETER_ROLE) String role);

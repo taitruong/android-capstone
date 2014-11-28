@@ -20,6 +20,8 @@ public class ServiceUtils {
     public static final String SYMPTOM_TYPE_SORE_THROAT = "SORE_THROAT";
     public static final String SYMPTOM_TYPE_EAT_DRINK = "EAT_DRINK";
 
+    //----- Patient service definitions
+    public static final String PARAMETER_FILTER = "filter";
 
     //-----------------------------
     //-----

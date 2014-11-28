@@ -2,10 +2,12 @@ package org.aliensource.symptommanagement.cloud.controller;
 
 import com.google.common.collect.Lists;
 
+import org.aliensource.symptommanagement.cloud.repository.Doctor;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.PatientRepository;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
+import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.ws.Service;
 
 /**
  * Created by ttruong on 26-Nov-14.
@@ -48,5 +48,29 @@ public class PatientController {
     @RequestMapping(value=PatientSvcApi.SEARCH_PATH_USERNAME, method=RequestMethod.GET)
     public @ResponseBody Patient findByUsername(@RequestParam(ServiceUtils.PARAMETER_USERNAME) String username) {
         return repository.findByUsername(username);
+    }
+
+    @RequestMapping(value=PatientSvcApi.SEARCH_PATH_DOCTOR_USERNAME_AND_FILTER, method=RequestMethod.GET)
+    public @ResponseBody List<Patient> findByDoctorUsernameAndFilter(
+            @RequestParam(ServiceUtils.PARAMETER_USERNAME) String username,
+            @RequestParam(ServiceUtils.PARAMETER_FILTER) String filter) {
+
+        filter = filter.toLowerCase().trim();
+        //@TODO this is not the best solution, fix this later
+        List<Patient> result = new ArrayList<Patient>();
+        for (Patient patient: repository.findAll()) {
+            for (Doctor doctor: patient.getDoctors()) {
+                if (doctor.getUsername().equals(username)) {
+                    if (TextUtils.isEmpty(filter)
+                            || patient.getFirstName().toLowerCase().contains(filter)
+                            || patient.getLastName().toLowerCase().contains(filter)
+                            || patient.getMedicalRecordNumber().toLowerCase().contains(filter)) {
+                        result.add(patient);
+                    }
+                    break;
+                }
+            }
+        }
+        return result;
     }
 }
