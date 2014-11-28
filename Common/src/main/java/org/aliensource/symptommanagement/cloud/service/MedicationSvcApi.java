@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -24,4 +25,6 @@ public interface MedicationSvcApi {
     @POST(SVC_PATH)
     public Medication save(@Body Medication Medication);
 
+    @DELETE(SVC_PATH_ID)
+    public Void delete(@Path(ServiceUtils.PARAMETER_ID) long id);
 }

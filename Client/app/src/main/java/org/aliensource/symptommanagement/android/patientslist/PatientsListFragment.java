@@ -68,7 +68,7 @@ public class PatientsListFragment extends ListFragment implements AdapterView.On
 
     @OnTextChanged(R.id.searchText)
     protected void onTextChanged() {
-        filter = searchText.getText().toString();
+        filter = searchText.getText().toString().toLowerCase();
         //TODO not the best solution to go always to the server, fix that later
         initAdapter();
     }
@@ -105,7 +105,7 @@ public class PatientsListFragment extends ListFragment implements AdapterView.On
             public void success(List<Patient> patients) {
                 List<Map<String, String>> data = new ArrayList<Map<String, String>>();
                 patientIds.clear();
-                patientAdapter = new SimpleAdapter(activity, data, R.layout.patient_list_item, columns, to);
+                patientAdapter = new SimpleAdapter(activity, data, R.layout.fragment_patient_list_item, columns, to);
                 for (Patient patient : patients) {
                     Map<String, String> row = new HashMap<String, String>();
                     row.put(columns[0], patient.getFirstName() + " " + patient.getLastName());
@@ -127,7 +127,6 @@ public class PatientsListFragment extends ListFragment implements AdapterView.On
 
     @OnItemClick(android.R.id.list)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        System.out.println(">>>> " + patientIds.get(position));
         DoctorUtils.savePatientId(getActivity(), patientIds.get(position));
         mOnPatientsInteractionListener.onPatientSelected();
     }

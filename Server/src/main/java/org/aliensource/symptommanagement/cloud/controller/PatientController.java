@@ -3,6 +3,9 @@ package org.aliensource.symptommanagement.cloud.controller;
 import com.google.common.collect.Lists;
 
 import org.aliensource.symptommanagement.cloud.repository.Doctor;
+import org.aliensource.symptommanagement.cloud.repository.Medicament;
+import org.aliensource.symptommanagement.cloud.repository.MedicamentRepository;
+import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.PatientRepository;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
@@ -28,6 +31,9 @@ public class PatientController {
 
     @Autowired
     private PatientRepository repository;
+
+    @Autowired
+    private MedicamentRepository medicamentRepository;
 
     @RequestMapping(value=PatientSvcApi.SVC_PATH, method=RequestMethod.GET)
     public @ResponseBody List<Patient> findAll(){
@@ -73,4 +79,35 @@ public class PatientController {
         }
         return result;
     }
+
+    @RequestMapping(value= PatientSvcApi.SVC_PATH_PATIENT_MEDICATION, method= RequestMethod.DELETE)
+    public @ResponseBody Patient deleteMedicationForPatient(
+            @PathVariable(ServiceUtils.PARAMETER_ID) long patientId,
+            @PathVariable(PatientSvcApi.PARAMETER_MEDICATION_ID)long medicationId) {
+        Patient patient = repository.findOne(patientId);
+        List<Medication> medications = new ArrayList<Medication>();
+        for (Medication medication: patient.getMedications()) {
+            if (medication.getId() != medicationId) {
+                medications.add(medication);
+            }
+        }
+        patient.setMedications(medications);
+        return repository.save(patient);
+    }
+
+    @RequestMapping(value= PatientSvcApi.SVC_PATH_PATIENT_MEDICAMENT, method= RequestMethod.POST)
+    public @ResponseBody Patient addMedicamentForPatient(
+            @PathVariable(ServiceUtils.PARAMETER_ID) long patientId,
+            @PathVariable(PatientSvcApi.PARAMETER_MEDICAMENT_ID)long medicamentId) {
+        Medicament medicament = medicamentRepository.findOne(medicamentId);
+        if (medicament == null) {
+            throw new IllegalArgumentException("Cannot add medication. Medicament with ID " + medicamentId + " not found!");
+        }
+        Patient patient = repository.findOne(patientId);
+        Medication medication = new Medication();
+        medication.setMedicament(medicament);
+        patient.getMedications().add(medication);
+        return repository.save(patient);
+    }
+
 }

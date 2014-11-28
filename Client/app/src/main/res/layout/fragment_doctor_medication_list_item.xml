@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    style="@style/listViewActivatedStyle">
+
+    <!-- Define CheckBox with focusable=false, since selection is handled by the ListView.
+         Also define left padding, otherwise text is overlapping the checkbox.
+    -->
+    <CheckBox
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_width="wrap_content"
+        android:id="@+id/doctorMedicationCheckBox"
+        android:focusable="false"
+        />
+    <TextView android:id="@android:id/text1"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/padding_top_bottom_medium"
+        android:paddingRight="@dimen/padding_top_bottom_medium"
+        android:layout_toRightOf="@+id/doctorMedicationCheckBox"
+        android:gravity="center_vertical"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:fontFamily="sans-serif-light"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:textSize="@dimen/text_size_large"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+</RelativeLayout>

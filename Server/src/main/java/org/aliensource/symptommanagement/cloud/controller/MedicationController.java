@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -40,4 +41,10 @@ public class MedicationController {
     public @ResponseBody Medication save(@RequestBody Medication model) {
         return repository.save(model);
     }
+
+    @RequestMapping(value=MedicationSvcApi.SVC_PATH_ID, method=RequestMethod.DELETE)
+    public @ResponseBody void delete(@PathVariable(ServiceUtils.PARAMETER_ID) long id) {
+        repository.delete(id);
+    }
+
 }

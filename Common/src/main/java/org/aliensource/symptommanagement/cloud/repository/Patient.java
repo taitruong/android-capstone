@@ -37,7 +37,7 @@ public class Patient extends Person {
             cascade = CascadeType.ALL)
     protected List<CheckIn> checkIns = new ArrayList<CheckIn>();
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected List<Medication> medications = new ArrayList<Medication>();
 
     @Override

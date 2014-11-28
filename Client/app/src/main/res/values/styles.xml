@@ -22,6 +22,12 @@
         <item name="android:scrollbarStyle">outsideInset</item>
     </style>
 
+    <style name="MedicationsListView">
+        <item name="android:verticalScrollbarPosition">right</item>
+        <item name="android:fastScrollAlwaysVisible">true</item>
+        <item name="android:scrollbarStyle">outsideInset</item>
+    </style>
+
     <style name="searchTextHighlight">
         <item name="android:textColor">@android:color/holo_red_light</item>
         <item name="android:textStyle">bold</item>

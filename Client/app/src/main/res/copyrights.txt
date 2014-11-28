@@ -1,0 +1,4 @@
+pill1.png from:
+- Icon made by http://www.freepik.com
+- title: Freepik, from: href="http://www.flaticon.com"
+- www.flaticon.com is licensed under http://creativecommons.org/licenses/by/3.0/

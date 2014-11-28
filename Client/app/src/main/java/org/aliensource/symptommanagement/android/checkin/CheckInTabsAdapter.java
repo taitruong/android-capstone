@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -59,9 +58,9 @@ public class CheckInTabsAdapter extends FragmentPagerAdapter {
                 symptomFragment2.setArguments(args);
                 return symptomFragment2;
             default:
-                MedicationFragment medicationFragment = new MedicationFragment();
+                CheckInMedicationFragment medicationFragment = new CheckInMedicationFragment();
                 args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_medication);
-                args.putSerializable(MedicationFragment.ARG_MEDICATION, medications.get(i - 2));
+                args.putSerializable(CheckInMedicationFragment.ARG_MEDICATION, medications.get(i - 2));
                 args.putInt(CheckInUtils.ARG_PREF_SUFFIX, i - 2);
                 medicationFragment.setArguments(args);
                 return medicationFragment;

@@ -6,16 +6,16 @@ import org.aliensource.symptommanagement.client.oauth.SecuredRestException;
 import org.aliensource.symptommanagement.cloud.TestUtils;
 import org.aliensource.symptommanagement.cloud.repository.CheckIn;
 import org.aliensource.symptommanagement.cloud.repository.IntakeTime;
+import org.aliensource.symptommanagement.cloud.repository.Medicament;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.Symptom;
 import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
 import org.aliensource.symptommanagement.cloud.service.CheckInSvcApi;
-import org.aliensource.symptommanagement.cloud.service.PatientFilterWrapper;
+import org.aliensource.symptommanagement.cloud.service.MedicationSvcApi;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
 import org.aliensource.symptommanagement.cloud.service.SymptomSvcApi;
-import org.aliensource.symptommanagement.cloud.service.SymptomTimeSvcApi;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -25,7 +25,9 @@ import java.util.List;
 import retrofit.RetrofitError;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -164,6 +166,60 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         //test call to check-in controller to make sure whether there is no JPA or JSON problem
         CheckInSvcApi checkInSvcApi = getService(CheckInSvcApi.class);
         checkInSvcApi.findAll();
+    }
+
+    @Test
+    public void testAddMedication() {
+        Patient patient = service.save(TestUtils.randomPatientWithoutDoctorsAndRoles());
+        assertNotNull(patient);
+        patient = service.addMedicamentForPatient(patient.getId(), 1);
+        assertNotNull(patient);
+        assertEquals(1, patient.getMedications().size());
+        assertEquals(1, patient.getMedications().get(0).getMedicament().getId());
+    }
+
+    @Test
+    public void testDeletedMedication() {
+        long id = 1;
+
+        Patient patient = service.findOne(id);
+        assertNotNull(patient);
+        assertNotNull(patient.getMedications());
+        assertTrue(patient.getMedications().size() > 0);
+
+        //remove medication from patient
+        Medication medication = patient.getMedications().get(0);
+        Medicament medicament = medication.getMedicament();
+        //remove medication from patient
+        patient = service.deleteMedicationForPatient(patient.getId(), medication.getId());
+        assertNotNull(patient);
+        assertNotNull(patient.getMedications());
+        boolean found = false;
+        for (Medication m: patient.getMedications()) {
+            if (m.getMedicament().getId() == medicament.getId()) {
+                found = true;
+                break;
+            }
+        }
+        assertFalse(found);
+/*        MedicationSvcApi medicationSvcApi = getService(MedicationSvcApi.class);
+        Medication medicationFromSvc = medicationSvcApi.findOne(medication.getId());
+        assertNull(medicationFromSvc);
+*/
+        //save back
+        patient.getMedications().add(medication);
+        //TODO reset id to zero after fix why medication is not deleted only reference to patient
+        patient = service.save(patient);
+        assertNotNull(patient);
+        assertNotNull(patient.getMedications());
+        found = false;
+        for (Medication m: patient.getMedications()) {
+            if (m.getMedicament().getId() == medicament.getId()) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
     }
 
     @Override

@@ -24,7 +24,7 @@ import butterknife.OnClick;
 /**
  * Created by ttruong on 19-Nov-14.
  */
-public class MedicationFragment extends BaseCheckInFragment {
+public class CheckInMedicationFragment extends BaseCheckInFragment {
 
     public static final String ARG_MEDICATION = "medication";
 

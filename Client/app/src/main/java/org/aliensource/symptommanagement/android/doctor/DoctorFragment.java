@@ -1,7 +1,9 @@
 package org.aliensource.symptommanagement.android.doctor;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -35,10 +37,18 @@ public class DoctorFragment extends AbstractFragment<ViewPager> {
 
     private DoctorTabsAdapter tabsAdapter;
 
+    /**
+     * setup after view has been created otherwise injected ViewPager is null
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setRetainInstance(true);
+        tabsAdapter = new DoctorTabsAdapter(getChildFragmentManager(), getActivity());
+        pager.setAdapter(tabsAdapter);
+        tabs.setViewPager(pager);
 
         final String username = MainUtils.getCredentials(getActivity()).username;
         final PatientSvcApi patientService = PatientSvc.getInstance().init(getActivity());
@@ -52,11 +62,9 @@ public class DoctorFragment extends AbstractFragment<ViewPager> {
         }, new TaskCallback<Patient>() {
             @Override
             public void success(Patient patient) {
-                List<Medication> medications = new ArrayList<Medication>();
-                medications.addAll(patient.getMedications());
-                tabsAdapter = new DoctorTabsAdapter(getChildFragmentManager(), getActivity(), medications);
-                pager.setAdapter(tabsAdapter);
-                tabs.setViewPager(pager);
+                String titleArgs = patient.getFirstName() + " " + patient.getLastName();
+                String title = getResources().getString(R.string.doctor_title, titleArgs);
+                getActivity().setTitle(title);
             }
 
             @Override
@@ -64,10 +72,6 @@ public class DoctorFragment extends AbstractFragment<ViewPager> {
                 throw new RuntimeException("Patient " + username + " not found!", e);
             }
         });
-        String date = getArguments().getString(CheckInUtils.PREF_DATE);
-        String time = getArguments().getString(CheckInUtils.PREF_TIME);
-        String title = getResources().getString(R.string.check_in_title, date, time);
-        getActivity().setTitle(title);
     }
 
 }
