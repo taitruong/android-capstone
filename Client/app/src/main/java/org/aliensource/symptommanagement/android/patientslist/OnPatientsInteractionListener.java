@@ -13,6 +13,6 @@ public interface OnPatientsInteractionListener {
     /**
      * Called when a patient is selected from the ListView.
      */
-    public void onPatientSelected(long patientId);
+    public void onPatientSelected();
 
 }

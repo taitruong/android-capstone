@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import org.aliensource.symptommanagement.android.R;
+import org.aliensource.symptommanagement.android.doctor.DoctorUtils;
 import org.aliensource.symptommanagement.android.main.MainUtils;
 import org.aliensource.symptommanagement.client.service.CallableTask;
 import org.aliensource.symptommanagement.client.service.PatientSvc;
@@ -127,6 +128,7 @@ public class PatientsListFragment extends ListFragment implements AdapterView.On
     @OnItemClick(android.R.id.list)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         System.out.println(">>>> " + patientIds.get(position));
-        mOnPatientsInteractionListener.onPatientSelected(patientIds.get(position));
+        DoctorUtils.savePatientId(getActivity(), patientIds.get(position));
+        mOnPatientsInteractionListener.onPatientSelected();
     }
 }

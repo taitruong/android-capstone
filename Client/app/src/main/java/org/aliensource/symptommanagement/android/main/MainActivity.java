@@ -26,6 +26,7 @@ import org.aliensource.symptommanagement.android.LoginScreenActivity;
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
 import org.aliensource.symptommanagement.android.checkin.CheckInUtils;
+import org.aliensource.symptommanagement.android.doctor.DoctorFragment;
 import org.aliensource.symptommanagement.android.patient.PatientReportFragment;
 import org.aliensource.symptommanagement.android.patientslist.OnPatientsInteractionListener;
 import org.aliensource.symptommanagement.android.patientslist.PatientsListFragment;
@@ -85,9 +86,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        //TODO: adjust to check background for patient or doctor user
         View layout = (View) findViewById(R.id.main_layout);
-        layout.setBackgroundColor(getResources().getColor(R.color.PatientBackground));
 
 		ButterKnife.inject(this);
 
@@ -172,16 +171,19 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
                 && CheckInUtils.initCheckIn(this)) {
             initCheckIn(checkInTime, date, time);
         }
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager
-                .beginTransaction()
-                .add(R.id.content_frame, fragments[position])
-                .commit();
-
+        showFragment(fragments[position]);
         // update selected item and title, then close the drawer
         mainMenuList.setItemChecked(position, true);
         setTitle(menuTitles[position]);
         mDrawerLayout.closeDrawer(mainMenuList);
+    }
+
+    protected void showFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .add(R.id.content_frame, fragment)
+                .commit();
     }
 
     /**
@@ -415,11 +417,12 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
     }
 
     @Override
-    public void onPatientSelected(long patientId) {
-        System.out.println(">>>>> received: " + patientId );
-/*        Intent intent = new Intent(this, ContactDetailActivity.class);
-        intent.setData(contactUri);
-        startActivity(intent);
-*/    }
+    public void onPatientSelected() {
+        Bundle args = new Bundle();
+        args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_doctor);
+        Fragment fragment = new DoctorFragment();
+        fragment.setArguments(args);
+        showFragment(fragment);
+    }
 
 }

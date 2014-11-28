@@ -1,4 +1,4 @@
-package org.aliensource.symptommanagement.android.checkin;
+package org.aliensource.symptommanagement.android.doctor;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -7,6 +7,7 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import org.aliensource.symptommanagement.android.AbstractFragment;
 import org.aliensource.symptommanagement.android.R;
+import org.aliensource.symptommanagement.android.checkin.CheckInUtils;
 import org.aliensource.symptommanagement.android.main.MainUtils;
 import org.aliensource.symptommanagement.client.service.CallableTask;
 import org.aliensource.symptommanagement.client.service.PatientSvc;
@@ -24,7 +25,7 @@ import butterknife.InjectView;
 /**
  * Created by ttruong on 07-Nov-14.
  */
-public class CheckInFragment extends AbstractFragment<ViewPager> {
+public class DoctorFragment extends AbstractFragment<ViewPager> {
 
     @InjectView(R.id.tabs)
     protected PagerSlidingTabStrip tabs;
@@ -32,7 +33,7 @@ public class CheckInFragment extends AbstractFragment<ViewPager> {
     @InjectView(R.id.pager)
     protected ViewPager pager;
 
-    private CheckInTabsAdapter tabsAdapter;
+    private DoctorTabsAdapter tabsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,18 +42,19 @@ public class CheckInFragment extends AbstractFragment<ViewPager> {
 
         final String username = MainUtils.getCredentials(getActivity()).username;
         final PatientSvcApi patientService = PatientSvc.getInstance().init(getActivity());
+        final long patientId = DoctorUtils.getPatientId(getActivity());
 
         CallableTask.invoke(new Callable<Patient>() {
             @Override
             public Patient call() throws Exception {
-                return patientService.findByUsername(username);
+                return patientService.findOne(patientId);
             }
         }, new TaskCallback<Patient>() {
             @Override
             public void success(Patient patient) {
                 List<Medication> medications = new ArrayList<Medication>();
                 medications.addAll(patient.getMedications());
-                tabsAdapter = new CheckInTabsAdapter(getChildFragmentManager(), getActivity(), medications);
+                tabsAdapter = new DoctorTabsAdapter(getChildFragmentManager(), getActivity(), medications);
                 pager.setAdapter(tabsAdapter);
                 tabs.setViewPager(pager);
             }

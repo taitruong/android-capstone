@@ -10,10 +10,10 @@
         <item name="android:paddingRight">@dimen/margin_left_and_right</item>
     </style>
 
-    <style name="Patient" parent="@android:style/TextAppearance.Medium">
+    <style name="SymptomBaseTheme" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@android:color/holo_blue_dark</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="PatientsListView">
@@ -22,8 +22,8 @@
         <item name="android:scrollbarStyle">outsideInset</item>
     </style>
 
-    <style name="searchTextHiglight">
-        <item name="android:textColor">@android:color/holo_blue_light</item>
+    <style name="searchTextHighlight">
+        <item name="android:textColor">@android:color/holo_red_light</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -33,5 +33,8 @@
         <item name="android:background">@drawable/quickcontact_badge_small</item>
     </style>
 
-    <color name="PatientBackground">@android:color/holo_blue_dark</color>
+    <color name="PatientPagerSlidingTabStripBackground">@android:color/white</color>
+    <color name="DoctorPagerSlidingTabStripBackground">@android:color/white</color>
+    <color name="PatientViewPagerBackground">@android:color/white</color>
+    <color name="DoctorViewPagerBackground">@android:color/white</color>
 </resources>

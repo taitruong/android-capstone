@@ -4,7 +4,7 @@
     android:id="@+id/layout_check_in"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/Patient">
+    style="@style/SymptomBaseTheme">
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"

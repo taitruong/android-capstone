@@ -78,4 +78,15 @@
          -->
     <string name="search_match_other">Matches Other Field</string>
 
+    <!-- Doctor fragment with tabs Medication, Patient Report and Alarms-->
+
+    <!-- Doctor > Medication -->
+    <string name="doctor_medications_tab_title">Medications</string>
+
+    <!-- Doctor > Patient Report -->
+    <string name="doctor_patient_report_tab_title">Patient Reports</string>
+
+    <!-- Doctor > Alarms -->
+    <string name="doctor_alarms_tab_title">Patient Alarms</string>
+
 </resources>

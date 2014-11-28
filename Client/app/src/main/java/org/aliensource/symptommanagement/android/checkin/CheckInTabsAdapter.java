@@ -18,12 +18,12 @@ import java.util.List;
 /**
  * Created by ttruong on 19-Nov-14.
  */
-public class TabSectionsAdapter extends FragmentPagerAdapter {
+public class CheckInTabsAdapter extends FragmentPagerAdapter {
 
     private List<Medication> medications;
     private List<String> titles = new ArrayList<String>();
 
-    public TabSectionsAdapter(FragmentManager fm, Activity activity, List<Medication> medications) {
+    public CheckInTabsAdapter(FragmentManager fm, Activity activity, List<Medication> medications) {
         super(fm);
         this.medications = medications;
         titles.add(activity.getString(R.string.check_in_symptom1_tab_title));

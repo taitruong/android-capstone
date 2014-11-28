@@ -11,7 +11,8 @@
         android:layout_height="@dimen/widget_height_large"
         android:drawableLeft="@drawable/ic_action_search"
         android:fontFamily="sans-serif-light"
-        android:gravity="left|center_vertical"/>
+        android:gravity="left|center_vertical"
+        style="@style/searchTextHighlight"/>
 
     <ListView android:id="@id/android:list"
         android:layout_width="match_parent"

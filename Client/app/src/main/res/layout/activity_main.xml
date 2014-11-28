@@ -2,8 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/SymptomBaseTheme"
     tools:context=".MainActivity" >
 
     <!-- As the main content view, the view below consumes the entire

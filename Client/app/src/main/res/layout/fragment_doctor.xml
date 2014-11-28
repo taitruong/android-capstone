@@ -2,17 +2,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/SymptomBaseTheme" >
+    style="@style/SymptomBaseTheme">
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/row_height_small"
-        android:background="@color/PatientPagerSlidingTabStripBackground" />
+        android:background="@color/DoctorPagerSlidingTabStripBackground" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
-        android:background="@color/PatientViewPagerBackground"
+        android:background="@color/DoctorViewPagerBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tabs"
