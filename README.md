@@ -105,7 +105,7 @@ Attach project to Git and GitHub
 
 ### Client Project
 Import the client project
-See above to import build.gradle file in the Client folder and select Android SDK folder.
+See above to import build.gradle file in the Client folder.
 
 Go to Tools>Android>SDK Manager and select the followin packages:
 - Tools:
