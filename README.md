@@ -51,9 +51,11 @@ Start Genymotion and click 'Add' to create a new Android device:
 Now you can start the emulator / device by double-clicking on the virtual device list.
 
 ### Download stand-alone Android SDK
-Similar to Java JDK you need the SDK. Download the latest Canary build (currently 0.9.3): http://tools.android.com/download/studio/canary
+Similar to Java JDK you need the SDK. 
+Download: https://developer.android.com/sdk/installing/index.html?pkg=tools
 
-### Download and install the development environment: https://developer.android.com/sdk/installing/studio.html#download
+### Download and install the development environment: 
+http://tools.android.com/download/studio/canary
 
 ### Server Project
 Start Android Studio and import the server project via the menu:
