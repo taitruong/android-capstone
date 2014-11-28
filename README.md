@@ -56,6 +56,7 @@ Download: https://developer.android.com/sdk/installing/index.html?pkg=tools
 
 ### Download and install the development environment: 
 http://tools.android.com/download/studio/canary
+Select build 0.9.3
 
 ### Server Project
 Start Android Studio and import the server project via the menu:
