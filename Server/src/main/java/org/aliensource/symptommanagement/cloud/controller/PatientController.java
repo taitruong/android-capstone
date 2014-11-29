@@ -3,6 +3,7 @@ package org.aliensource.symptommanagement.cloud.controller;
 import com.google.common.collect.Lists;
 
 import org.aliensource.symptommanagement.cloud.repository.Doctor;
+import org.aliensource.symptommanagement.cloud.repository.LastNameComparator;
 import org.aliensource.symptommanagement.cloud.repository.Medicament;
 import org.aliensource.symptommanagement.cloud.repository.MedicamentRepository;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -77,6 +79,8 @@ public class PatientController {
                 }
             }
         }
+
+        Collections.sort(result, new LastNameComparator<Patient>());
         return result;
     }
 
