@@ -124,6 +124,24 @@ INSERT INTO medicament VALUES (
 INSERT INTO medicament VALUES (
     4, 'Vicodin 5/500 mg'
 );
+INSERT INTO medicament VALUES (
+    5, 'Tofranil 50 mg'
+);
+INSERT INTO medicament VALUES (
+    6, 'Lioresal 10 mg'
+);
+INSERT INTO medicament VALUES (
+    7, 'Decadron 6 mg'
+);
+INSERT INTO medicament VALUES (
+    8, 'Maxolon (Drops)'
+);
+INSERT INTO medicament VALUES (
+    9, 'Alophen 5 mg'
+);
+
+
+
 
 /* Medication */
 INSERT INTO medication VALUES (
