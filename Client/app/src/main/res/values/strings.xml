@@ -34,6 +34,8 @@
     <string name="reminder_ticker_text">Symptom Management: Your check-in at %s o\'clock is required!</string>
     <string name="reminder_notification_title">Symptom Management</string>
     <string name="reminder_notification_text">Your check-in is required</string>
+    <string name="next_reminder_tomorrow">Next reminder for %s o\'clock starts tomorrow.</string>
+    <string name="next_reminder_today">Next reminder for %s o\'clock starts today.</string>
 
     <!-- Others -->
     <string name="enter_date_and_time">Please enter date and Time:</string>
@@ -87,6 +89,7 @@
     <!-- Doctor > Medication -->
     <string name="doctor_medications_tab_title">Medications</string>
     <string name="doctor_medications_all_added">The patient is using all kinds of drugs already. There are no other medicaments you can use.</string>
+    <string name="select_medicament">Select Medicament</string>
 
     <!-- Doctor > Patient Report -->
     <string name="doctor_patient_report_tab_title">Patient Reports</string>

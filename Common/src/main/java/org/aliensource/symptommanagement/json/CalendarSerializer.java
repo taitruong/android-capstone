@@ -18,7 +18,6 @@ public class CalendarSerializer extends JsonSerializer<Calendar> {
     @Override
     public void serialize(Calendar calendar, JsonGenerator jgen, SerializerProvider provider)
             throws IOException, JsonProcessingException {
-        System.out.println(">>>> serializing " + DateTimeUtils.FORMAT_DDMMYYYY_HHMM.format(calendar.getTime()));
         jgen.writeString(DateTimeUtils.FORMAT_DDMMYYYY_HHMM.format(calendar.getTime()));
     }
 

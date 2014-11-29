@@ -91,6 +91,9 @@ public class SaveFragment extends AbstractFragment {
                     //attach to check-in
                     final CheckIn checkIn = new CheckIn();
                     checkIn.setTimestamp(new GregorianCalendar().getTimeInMillis());
+                    //TODO since symptom and medicament references in intake and symptom times are
+                    //retrieved and set in a different background thread there is rare chance it might be null here
+                    //fix this later...
                     checkIn.setIntakeTimes(intakeTimes);
                     checkIn.setSymptomTimes(symptomTimes);
                     patient.getCheckIns().add(checkIn);
@@ -102,7 +105,10 @@ public class SaveFragment extends AbstractFragment {
                     }, new TaskCallback<Patient>() {
                         @Override
                         public void success(Patient patient) {
-                            //do nothing
+                            //reset values entered for check-in and return to MainActivity
+                            CheckInUtils.resetCheckIn(getActivity(), true);
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
                         }
 
                         @Override
@@ -117,10 +123,6 @@ public class SaveFragment extends AbstractFragment {
                     throw new RuntimeException("Cannot Check-In: Patient " + username + " not found!", e);
                 }
             });
-            //reset values entered for check-in and return to MainActivity
-            CheckInUtils.resetCheckIn(getActivity(), true);
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
         }
     }
 

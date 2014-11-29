@@ -23,7 +23,6 @@ public class CalendarDeserializer extends JsonDeserializer<Calendar> {
             throws IOException, JsonProcessingException {
         String dateStr = jsonParser.getText();
         try {
-            System.out.println(">>>> deserializing " + dateStr);
             Date date = DateTimeUtils.FORMAT_DDMMYYYY_HHMM.parse(dateStr);
             GregorianCalendar cal = new GregorianCalendar();
             cal.setTimeInMillis(date.getTime());

@@ -21,7 +21,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.aliensource.symptommanagement.DateTimeUtils;
-import org.aliensource.symptommanagement.android.AbstractFragment;
 import org.aliensource.symptommanagement.android.LoginScreenActivity;
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
@@ -291,7 +290,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
 	}
 
     private void initMenus() {
-        final SecurityService svc = SecuritySvc.getInstance().getOrShowLogin(this);
+        final SecurityService svc = SecuritySvc.getInstance().init(this);
         if (svc != null) {
             CallableTask.invoke(new Callable<Boolean>() {
 
@@ -346,7 +345,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
                 public void error(Exception e) {
                     Toast.makeText(
                             MainActivity.this,
-                            "Unable to login.",
+                            "Unable to create menus. " + e.getMessage() ,
                             Toast.LENGTH_SHORT).show();
 
                     startActivity(new Intent(MainActivity.this,
@@ -356,7 +355,39 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
         }
     }
 
+    /**
+     * Also called by {@link ReminderSettingsFragment#saveReminderPreferences(String, String)}.
+     */
     public void initAlarms() {
+        final SecurityService svc = SecuritySvc.getInstance().init(this);
+        if (svc != null) {
+            CallableTask.invoke(new Callable<Boolean>() {
+
+                @Override
+                public Boolean call() throws Exception {
+                    return svc.hasRole(SecurityService.ROLE_PATIENT);
+                }
+            }, new TaskCallback<Boolean>() {
+
+                @Override
+                public void success(Boolean isPatient) {
+                    if (isPatient) {
+                        createAlarms();
+                    }
+                }
+
+                @Override
+                public void error(Exception e) {
+                    Toast.makeText(
+                            MainActivity.this,
+                            "Unable to initialize alarms",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void createAlarms() {
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         SharedPreferences prefs = MainUtils.getPreferences(this);
         Set<String> reminderAlarms = ReminderPreferencesUtils.getReminderAlarms(this);
@@ -375,6 +406,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
             int[] hourAndMinute = DateTimeUtils.getHourAndMinute(reminderTime);
             //always create a new calendar
             GregorianCalendar cal = new GregorianCalendar();
+            //it is only a matter of milliseconds, but use the same time for creation ;)
             cal.setTimeInMillis(now.getTimeInMillis());
             cal.set(Calendar.MILLISECOND, 0);
             cal.set(Calendar.SECOND, 0);
@@ -382,10 +414,18 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
             cal.set(Calendar.MINUTE, hourAndMinute[1]);
             // in case the reminderTime time the date needs to move to the next day
             //otherwise the alarm notification is shown right away
-            String calS = DateTimeUtils.FORMAT_DDMMYYYY_HHMMSS.format(new Date(cal.getTimeInMillis()));
-            String nowS = DateTimeUtils.FORMAT_DDMMYYYY_HHMMSS.format(new Date(now.getTimeInMillis()));
+            String hourAndMinuteS = DateTimeUtils.FORMAT_HHMM.format(cal.getTime());
             if (cal.before(now)) {
                 cal.add(Calendar.DAY_OF_MONTH, 1);
+                Toast.makeText(
+                        this,
+                        getString(R.string.next_reminder_tomorrow, hourAndMinuteS),
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(
+                        this,
+                        getString(R.string.next_reminder_today, hourAndMinuteS),
+                        Toast.LENGTH_LONG).show();
             }
 
             //create the intent for the AlarmNotificationReceiver and then wrap it in a PendingIntent

@@ -28,10 +28,7 @@ import org.aliensource.symptommanagement.cloud.service.MedicamentSvcApi;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import butterknife.ButterKnife;
@@ -77,7 +74,7 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
         super.onCreateView(inflater, container, savedInstanceState);
         fragmentView = inflater.inflate(R.layout.fragment_doctor_medications_list, container, false);
         ButterKnife.inject(this, fragmentView);
-        initAdapter();
+        initMedicationAdapter();
         initMedicaments();
         checkDeleteButton();
         return fragmentView;
@@ -108,7 +105,7 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
             message.show();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Select Color Mode");
+            builder.setTitle(getString(R.string.select_medicament));
 
             ListView modeList = new ListView(getActivity());
             String[] stringArray = new String[medicamentIdList.size()];
@@ -137,6 +134,8 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
                     }, new TaskCallback<Patient>() {
                         @Override
                         public void success(Patient data) {
+                            initMedicationAdapter();
+                            dialog.cancel();
                         }
 
                         @Override
@@ -144,8 +143,6 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
                             throw new RuntimeException("Could not add medicament with ID " + medicamentId);
                         }
                     });
-                    initAdapter();
-                    dialog.cancel();
                 }
             });
             dialog.show();
@@ -167,6 +164,8 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
                 @Override
                 public void success(Patient patient) {
                     DoctorMedicationFragment.this.patient = patient;
+                    selectedMedicationsForDelete.clear();
+                    initMedicationAdapter();
                 }
 
                 @Override
@@ -175,8 +174,6 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
                 }
             });
         }
-        selectedMedicationsForDelete.clear();
-        initAdapter();
     }
 
     protected void checkDeleteButton() {
@@ -191,10 +188,10 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
     protected void onTextChanged() {
         filter = searchText.getText().toString().toLowerCase();
         //TODO not the best solution to go always to the server, fix that later
-        initAdapter();
+        initMedicationAdapter();
     }
 
-    protected void initAdapter() {
+    protected void initMedicationAdapter() {
         final Activity activity = getActivity();
         final PatientSvcApi patientSvcApi = PatientSvc.getInstance().init(activity);
         final long patientId = DoctorUtils.getPatientId(activity);
@@ -257,7 +254,6 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
 
             }
         });
-
     }
 
     @OnItemClick(android.R.id.list)
