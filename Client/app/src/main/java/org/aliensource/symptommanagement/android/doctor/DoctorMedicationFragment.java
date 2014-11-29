@@ -23,12 +23,14 @@ import org.aliensource.symptommanagement.client.service.MedicamentSvc;
 import org.aliensource.symptommanagement.client.service.PatientSvc;
 import org.aliensource.symptommanagement.client.service.TaskCallback;
 import org.aliensource.symptommanagement.cloud.repository.Medicament;
+import org.aliensource.symptommanagement.cloud.repository.MedicamentNameComparator;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.service.MedicamentSvcApi;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -275,6 +277,7 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
                 for (Medicament medicament: data) {
                     allMedicaments.add(medicament);
                 }
+                Collections.sort(allMedicaments, new MedicamentNameComparator());
             }
 
             @Override
@@ -298,6 +301,6 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
         }
         checkDeleteButton();
     }
-    
+
 
 }
