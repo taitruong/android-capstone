@@ -432,12 +432,12 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
                 Toast.makeText(
                         this,
                         getString(R.string.next_reminder_tomorrow, hourAndMinuteS),
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(
                         this,
                         getString(R.string.next_reminder_today, hourAndMinuteS),
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
             }
 
             //create the intent for the AlarmNotificationReceiver and then wrap it in a PendingIntent
