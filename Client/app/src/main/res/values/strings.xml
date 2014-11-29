@@ -64,6 +64,9 @@
     <string name="check_in_medication_title">Did you take your %s?</string>
     <string name="check_in_medication_value1">Yes</string>
     <string name="check_in_medication_value2">No</string>
+    <string name="check_in_create_symptom_sore_throat">Check-In: %1$s sore throat at %2$s</string>
+    <string name="check_in_create_symptom_eat_drink">Check-In: Stop from eat/drink - %1$s at %2$s</string>
+    <string name="check_in_create_medication">Check-In: %1$s at %2$s</string>
 
     <!-- menus-->
     <string name="menu_search">Search</string>

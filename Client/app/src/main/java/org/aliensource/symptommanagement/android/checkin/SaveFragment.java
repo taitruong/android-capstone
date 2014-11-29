@@ -52,11 +52,11 @@ public class SaveFragment extends AbstractFragment {
     Button cancel;
 
     //the number of the medications
-    protected int prefSuffix;
+    protected int prefMedicationSuffix;
 
     @Override
     public void onStart() {
-        prefSuffix = getArguments().getInt(CheckInUtils.ARG_PREF_SUFFIX);
+        prefMedicationSuffix = getArguments().getInt(CheckInUtils.ARG_PREF_SUFFIX);
         super.onStart();
     }
 
@@ -109,6 +109,55 @@ public class SaveFragment extends AbstractFragment {
                             CheckInUtils.resetCheckIn(getActivity(), true);
                             Intent intent = new Intent(getActivity(), MainActivity.class);
                             startActivity(intent);
+                            //show toast messages
+                            for (SymptomTime symptomTime: symptomTimes) {
+                                String message;
+                                if (ServiceUtils.SYMPTOM_TYPE_SORE_THROAT.equals(
+                                        symptomTime.getSymptom().getType())) {
+                                    String severity;
+                                    switch (symptomTime.getSeverity()) {
+                                        case 0:
+                                            severity = getString(R.string.check_in_symptom1_value1);
+                                            break;
+                                        case 1:
+                                            severity = getString(R.string.check_in_symptom1_value2);
+                                            break;
+                                        default:
+                                            severity = getString(R.string.check_in_symptom1_value3);
+                                    }
+                                    String dateTime = DateTimeUtils.FORMAT_HHMM.format(
+                                            new Date(symptomTime.getTimestamp()));
+                                    message = getString(
+                                            R.string.check_in_create_symptom_sore_throat,
+                                            severity, dateTime);
+                                } else {
+                                    String severity;
+                                    switch (symptomTime.getSeverity()) {
+                                        case 0:
+                                            severity = getString(R.string.check_in_symptom2_value1);
+                                            break;
+                                        case 1:
+                                            severity = getString(R.string.check_in_symptom2_value2);
+                                            break;
+                                        default:
+                                            severity = getString(R.string.check_in_symptom2_value3);
+                                    }
+                                    String dateTime = DateTimeUtils.FORMAT_HHMM.format(
+                                            new Date(symptomTime.getTimestamp()));
+                                    message = getString(
+                                            R.string.check_in_create_symptom_eat_drink,
+                                            severity, dateTime);
+                                }
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            }
+                            for (IntakeTime intakeTime: intakeTimes) {
+                                String dateTime = DateTimeUtils.FORMAT_HHMM.format(
+                                        new Date(intakeTime.getTimestamp()));
+                                String message = getString(
+                                        R.string.check_in_create_medication,
+                                        intakeTime.getMedicament().getName(), dateTime);
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            }
                         }
 
                         @Override
@@ -129,8 +178,10 @@ public class SaveFragment extends AbstractFragment {
     protected List<SymptomTime> createSymptomTimes() {
         List<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
         for (int suffix = 0 ; suffix < 2; suffix++) {
-            final DataWrapper data = CheckInUtils.getEditor(getActivity(), CheckInUtils.PREF_SYMPTOM_PREFIX, prefSuffix);
-            if (data.selection <= 0) {
+            final DataWrapper data = CheckInUtils.getEditor(getActivity(), CheckInUtils.PREF_SYMPTOM_PREFIX, suffix);
+            // create only when something has selected, including
+            // severity level 0 (Well-Controlled: sore/throat/ No: eat/drink)
+            if (data.selection < 0) {
                 continue;
             }
             //set reference to symptom
@@ -163,8 +214,9 @@ public class SaveFragment extends AbstractFragment {
     protected List<IntakeTime> createIntakeTimes() {
         //create the intake times for the medications
         List<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();
-        for (int suffix = 0; suffix <= prefSuffix; suffix++) {
+        for (int suffix = 0; suffix <= prefMedicationSuffix; suffix++) {
             final DataWrapper data = CheckInUtils.getEditor(getActivity(), CheckInUtils.PREF_MEDICATION_PREFIX, suffix);
+            //create only medication when selection is 'Yes'
             if (data.selection == CheckInUtils.PREF_BOOLEAN_FALSE) {
                 continue;
             }
