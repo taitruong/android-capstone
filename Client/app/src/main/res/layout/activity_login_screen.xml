@@ -44,8 +44,9 @@
         android:layout_alignBottom="@+id/userName"
         android:layout_alignLeft="@+id/userName"
         android:layout_marginBottom="58dp"
-        android:ems="10"
+        android:ems="13"
         android:hint="@string/server"
+        android:textSize="@dimen/text_size_small"
         android:text="@string/localhost" >
     </EditText>
 
