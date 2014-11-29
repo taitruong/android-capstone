@@ -3,6 +3,7 @@ package org.aliensource.symptommanagement.android.doctor;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
@@ -150,6 +151,33 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
     }
 
     @OnClick(R.id.delete)
+    protected void confirmDelete() {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+
+        // Setting Dialog Title
+        alertDialog.setTitle(getString(R.string.delete));
+
+        // Setting Dialog Message
+        alertDialog.setMessage(getString(R.string.confirm_delete_medications));
+
+        // Setting OK Button
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                delete();
+            }
+        });
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertDialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
     protected void delete() {
         final Activity activity = getActivity();
         final PatientSvcApi patientSvcApi = PatientSvc.getInstance().init(activity);

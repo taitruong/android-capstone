@@ -90,6 +90,7 @@
     <string name="doctor_medications_tab_title">Medications</string>
     <string name="doctor_medications_all_added">The patient is using all kinds of drugs already. There are no other medicaments you can use.</string>
     <string name="select_medicament">Select Medicament</string>
+    <string name="confirm_delete_medications">Delete medications?</string>
 
     <!-- Doctor > Patient Report -->
     <string name="doctor_patient_report_tab_title">Patient Reports</string>
