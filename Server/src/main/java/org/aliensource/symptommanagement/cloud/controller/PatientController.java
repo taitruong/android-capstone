@@ -10,6 +10,7 @@ import org.aliensource.symptommanagement.cloud.repository.MedicamentRepository;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.PatientRepository;
+import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
 import org.apache.http.util.TextUtils;
@@ -112,7 +113,8 @@ public class PatientController {
         Medication medication = new Medication();
         medication.setMedicament(medicament);
         patient.getMedications().add(medication);
-        return repository.save(patient);
+        patient = repository.save(patient);
+        return patient;
     }
 
 
@@ -124,6 +126,16 @@ public class PatientController {
         patient.getCheckIns().add(checkIn);
         patient = repository.save(patient);
         return patient;
+    }
+
+    protected void createAlarms(List<SymptomTime> checkInSymptomTimes, Patient patient) {
+        if (checkInSymptomTimes.isEmpty()) {
+            return;
+        }
+        for (SymptomTime checkInSymptomTime: checkInSymptomTimes) {
+//            for (CheckIn checkIn: )
+//            for (SymptomTime symptomTime: patient.get)
+        }
     }
 
 }

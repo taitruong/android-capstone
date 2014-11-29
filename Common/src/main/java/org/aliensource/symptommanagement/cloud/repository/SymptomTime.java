@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
  * Created by ttruong on 14-Nov-14.
  */
 @Entity
-public class SymptomTime extends BaseModel {
+public class SymptomTime extends BaseModel implements BaseTimestampModel {
 
     protected long timestamp;
 

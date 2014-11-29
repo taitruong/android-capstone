@@ -1,5 +1,7 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Objects;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class CheckIn extends BaseModel {
      * of the same check-in in the Patient.checkins-list.
      */
     @ManyToOne
+    @JsonIgnore
     protected Patient patient;
 
     @OneToMany(fetch = FetchType.EAGER,
