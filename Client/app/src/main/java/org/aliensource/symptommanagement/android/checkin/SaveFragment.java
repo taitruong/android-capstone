@@ -117,6 +117,7 @@ public class SaveFragment extends AbstractFragment {
                     throw new RuntimeException("Cannot Check-In: Patient " + username + " not found!", e);
                 }
             });
+            //reset values entered for check-in and return to MainActivity
             CheckInUtils.resetCheckIn(getActivity(), true);
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);

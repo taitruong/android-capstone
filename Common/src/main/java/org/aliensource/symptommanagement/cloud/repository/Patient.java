@@ -40,6 +40,9 @@ public class Patient extends Person {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected List<Medication> medications = new ArrayList<Medication>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    protected List<Alarm> alarms = new ArrayList<Alarm>();
+
     @Override
     //workaround otherwise JSON conversion complaints
     //override roles and define attribute for conversion
@@ -113,4 +116,13 @@ public class Patient extends Person {
             return false;
         }
     }
+
+    public List<Alarm> getAlarms() {
+        return alarms;
+    }
+
+    public void setAlarms(List<Alarm> alarms) {
+        this.alarms = alarms;
+    }
+
 }
