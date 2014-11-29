@@ -16,30 +16,40 @@
     <!-- Use standard android.R class text2 id instead of app specific id. This is just useful for
          consistency. This is secondary text and not always visible so by default is has its
          visibility set to gone -->
-    <TextView android:id="@android:id/text2"
+    <TextView android:id="@+id/text3"
         android:paddingLeft="@dimen/padding_top_bottom_medium"
         android:paddingRight="@dimen/padding_top_bottom_medium"
         android:layout_width="match_parent"
-        android:layout_height="26dp"
+        android:layout_height="16dp"
         android:layout_toRightOf="@android:id/icon"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:fontFamily="sans-serif"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:text="@string/search_match_other"
+        android:text="Medical Record Number"
         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-    <!-- Use standard android.R class text1 id instead of app specific id. This is just useful for
-         consistency. This view also sets layout_alignWithParentIfMissing=true which lets the view
-         align with the parent view if the text2 view is not part of the view hierarchy (which is
-         its initial state). -->
-    <TextView android:id="@android:id/text1"
+    <TextView android:id="@+id/text2"
+        android:paddingLeft="@dimen/padding_top_bottom_medium"
+        android:paddingRight="@dimen/padding_top_bottom_medium"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_above="@+id/text3"
+        android:layout_toRightOf="@android:id/icon"
+        android:layout_alignParentRight="true"
+        android:fontFamily="sans-serif"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:text="Birthday"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    <TextView android:id="@+id/text1"
         android:paddingLeft="@dimen/padding_top_bottom_medium"
         android:paddingRight="@dimen/padding_top_bottom_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@android:id/text2"
+        android:layout_above="@+id/text2"
         android:layout_toRightOf="@android:id/icon"
         android:gravity="center_vertical"
         android:layout_alignParentRight="true"
@@ -48,7 +58,6 @@
         android:fontFamily="sans-serif-light"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:text="first last"
+        android:text="Firstname, Lastname"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
-
 </RelativeLayout>

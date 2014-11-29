@@ -43,4 +43,13 @@ public final class MainUtils extends BaseUtils {
         editor.commit();
     }
 
+    public static void removeCredentials(Activity activity) {
+        SharedPreferences prefs = getPreferences(activity);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(MainUtils.PREF_MAIN_SERVER);
+        editor.remove(MainUtils.PREF_MAIN_USERNAME);
+        editor.remove(MainUtils.PREF_MAIN_PASSWORD);
+        editor.commit();
+    }
+
 }
