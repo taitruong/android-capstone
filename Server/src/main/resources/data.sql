@@ -1,59 +1,59 @@
 /* Doctors */
 INSERT INTO doctor VALUES (
-    1, 0, 'John', 'Gastro', 'pass', 'doctor1'
+    1, 0, 'Derek', 'Shepherd', 'pass', 'doctor1'
 );
 INSERT INTO doctor VALUES (
-    2, 0, 'Hans', 'Klempner', 'pass', 'doctor2'
+    2, 0, 'Christina', 'Yang', 'pass', 'doctor2'
 );
 INSERT INTO doctor VALUES (
-    3, 0, 'Peter', 'Spritze', 'pass', 'doctor3'
+    3, 0, 'Miranda', 'Bailey', 'pass', 'doctor3'
 );
 
 /* Patients */
 INSERT INTO patient VALUES (
-    1, 0, 'Heul', 'Suse', 'pass', 'patient1', 'privat-001'
+    1, 0, 'Jane', 'Doe', 'pass', 'patient1', 'JD1200987'
 );
 INSERT INTO patient VALUES (
-    2, 0, 'Mala', 'Ria', 'pass', 'patient2', 'AOK-0123'
+    2, 215395200, 'John', 'Doe', 'pass', 'patient2', 'AOK-0123'
 );
 INSERT INTO patient VALUES (
-    3, 0, 'Weich', 'Ei', 'pass', 'patient3', 'privat-121344'
+    3, -20217600, 'Will', 'Smithers', 'pass', 'patient3', 'privat-121344'
 );
 INSERT INTO patient VALUES (
-    101, 0, 'First1', 'Last1', 'pass', 'patient101', 'medical-record-001'
+    101, 70070400, 'Al', 'Capone', 'pass', 'patient101', 'medical-record-001'
 );
 INSERT INTO patient VALUES (
-    102, 0, 'First2', 'Last2', 'pass', 'patient102', 'medical-record-002'
+    102, 335009100, 'Hugo', 'Sampson', 'pass', 'patient102', 'medical-record-002'
 );
 INSERT INTO patient VALUES (
-    103, 0, 'First3', 'Last3', 'pass', 'patient103', 'medical-record-003'
+    103, 137747580, 'Marc', 'Meier', 'pass', 'patient103', 'medical-record-003'
 );
 INSERT INTO patient VALUES (
-    104, 0, 'First4', 'Last4', 'pass', 'patient104', 'medical-record-004'
+    104, 377766780, 'Elisabeth', 'Sanders', 'pass', 'patient104', 'medical-record-004'
 );
 INSERT INTO patient VALUES (
-    105, 0, 'First5', 'Last5', 'pass', 'patient105', 'medical-record-005'
+    105, -416594820, 'Tobias', 'Levine', 'pass', 'patient105', 'medical-record-005'
 );
 INSERT INTO patient VALUES (
-    106, 0, 'First6', 'Last6', 'pass', 'patient106', 'medical-record-006'
+    106, -171737220, 'Sandra', 'Parker', 'pass', 'patient106', 'medical-record-006'
 );
 INSERT INTO patient VALUES (
-    107, 0, 'First7', 'Last7', 'pass', 'patient107', 'medical-record-007'
+    107, -173317620, 'Simon', 'Star', 'pass', 'patient107', 'medical-record-007'
 );
 INSERT INTO patient VALUES (
-    108, 0, 'First8', 'Last8', 'pass', 'patient108', 'medical-record-008'
+    108, 677376780, 'Christian', 'Bole', 'pass', 'patient108', 'medical-record-008'
 );
 INSERT INTO patient VALUES (
-    109, 0, 'First9', 'Last9', 'pass', 'patient109', 'medical-record-009'
+    109, 253497600, 'Catherine', 'Mole', 'pass', 'patient109', 'medical-record-009'
 );
 INSERT INTO patient VALUES (
-    110, 0, 'First10', 'Last10', 'pass', 'patient110', 'medical-record-010'
+    110, 4925400, 'Max', 'Jupiter', 'pass', 'patient110', 'medical-record-010'
 );
 INSERT INTO patient VALUES (
-    111, 0, 'First11', 'Last11', 'pass', 'patient111', 'medical-record-011'
+    111, -115948200, 'Phil', 'Fellon', 'pass', 'patient111', 'medical-record-011'
 );
 INSERT INTO patient VALUES (
-    112, 0, 'First12', 'Last12', 'pass', 'patient112', 'medical-record-012'
+    112, -166578600, 'Melanie', 'Jackson', 'pass', 'patient112', 'medical-record-012'
 );
 
 /* Relations between patients and doctors */
@@ -113,10 +113,16 @@ INSERT INTO symptom VALUES (
 
 /* Medicaments */
 INSERT INTO medicament VALUES (
-    1, 'Lortab'
+    1, 'Lortab 10/500 mg'
 );
 INSERT INTO medicament VALUES (
-    2, 'OxyContin'
+    2, 'OxyContin 40 mg'
+);
+INSERT INTO medicament VALUES (
+    3, 'MS CONTIN 30 mg'
+);
+INSERT INTO medicament VALUES (
+    4, 'Vicodin 5/500 mg'
 );
 
 /* Medication */
