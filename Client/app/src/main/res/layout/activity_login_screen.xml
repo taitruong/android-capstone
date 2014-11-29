@@ -10,6 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp"
+        android:maxLines="1"
         android:ems="10"
         android:hint="@string/userName"
         android:text="doctor1">
@@ -21,8 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/userName"
         android:layout_centerHorizontal="true"
+        android:maxLines="1"
         android:ems="10"
-        android:hint="@string/password"
         android:inputType="textPassword"
         android:text="pass" />
 
@@ -45,6 +46,7 @@
         android:layout_alignLeft="@+id/userName"
         android:layout_marginBottom="58dp"
         android:ems="13"
+        android:maxLines="1"
         android:hint="@string/server"
         android:textSize="@dimen/text_size_small"
         android:text="@string/localhost" >
