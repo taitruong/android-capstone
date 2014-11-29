@@ -298,4 +298,6 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
         }
         checkDeleteButton();
     }
+    
+
 }

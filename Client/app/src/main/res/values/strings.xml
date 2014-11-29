@@ -12,7 +12,7 @@
     <!-- doctor menu items-->
     <string name="patient_list">Patients List</string>
     <string name="patient_report">Patient Reports</string>
-    <string name="Logout">Logout</string>
+    <string name="logout">Logout</string>
 
     <!-- patient menu items-->
     <string name="check_in">Check-In</string>

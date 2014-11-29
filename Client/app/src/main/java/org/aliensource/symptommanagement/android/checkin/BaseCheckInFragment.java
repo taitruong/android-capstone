@@ -188,6 +188,5 @@ public abstract class BaseCheckInFragment extends AbstractFragment<View> {
                 throw new RuntimeException(ex);
             }
         }
-
     }
 }

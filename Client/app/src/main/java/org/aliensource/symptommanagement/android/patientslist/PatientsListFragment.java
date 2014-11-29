@@ -11,8 +11,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import org.aliensource.symptommanagement.DateTimeUtils;
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.doctor.DoctorUtils;
+import org.aliensource.symptommanagement.android.main.MainActivity;
 import org.aliensource.symptommanagement.android.main.MainUtils;
 import org.aliensource.symptommanagement.client.service.CallableTask;
 import org.aliensource.symptommanagement.client.service.PatientSvc;
@@ -21,6 +23,7 @@ import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +46,8 @@ public class PatientsListFragment extends ListFragment implements AdapterView.On
     @InjectView(android.R.id.list)
     protected ListView patientsList;
     private SimpleAdapter patientAdapter;
-    private static final String[] columns = {"overview", "details"};
-    private static final int[] to = new int[]{android.R.id.text1, android.R.id.text2};
+    private static final String[] columns = {"overview", "details1", "details2"};
+    private static final int[] to = new int[]{R.id.text1, R.id.text2, R.id.text3};
 
     private List<Long> patientIds = new ArrayList<Long>();
 
@@ -107,9 +110,11 @@ public class PatientsListFragment extends ListFragment implements AdapterView.On
                 patientIds.clear();
                 patientAdapter = new SimpleAdapter(activity, data, R.layout.fragment_patient_list_item, columns, to);
                 for (Patient patient : patients) {
+                    String birthday = DateTimeUtils.FORMAT_DDMMYYYY.format(new Date(patient.getDateOfBirth()));
                     Map<String, String> row = new HashMap<String, String>();
-                    row.put(columns[0], patient.getFirstName() + " " + patient.getLastName());
-                    row.put(columns[1], patient.getMedicalRecordNumber());
+                    row.put(columns[0], patient.getLastName() + ", " + patient.getFirstName());
+                    row.put(columns[1], birthday);
+                    row.put(columns[2], patient.getMedicalRecordNumber());
                     data.add(row);
                     patientIds.add(patient.getId());
                 }
@@ -130,4 +135,5 @@ public class PatientsListFragment extends ListFragment implements AdapterView.On
         DoctorUtils.savePatientId(getActivity(), patientIds.get(position));
         mOnPatientsInteractionListener.onPatientSelected();
     }
+
 }

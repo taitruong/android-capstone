@@ -158,6 +158,10 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
 
     @OnItemClick(R.id.main_menu)
     protected void selectItem(int position) {
+        if (position == menuTitles.length - 1) {
+            logout();
+            return;
+        }
         GregorianCalendar checkInTime = new GregorianCalendar();
         String date = DateTimeUtils.FORMAT_DDMMYYYY.format(checkInTime.getTime());
         String time = DateTimeUtils.FORMAT_HHMM.format(checkInTime.getTime());
@@ -177,11 +181,18 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
         mDrawerLayout.closeDrawer(mainMenuList);
     }
 
+    protected void logout() {
+        MainUtils.removeCredentials(this);
+        startActivity(new Intent(MainActivity.this,
+                LoginScreenActivity.class));
+    }
+
     protected void showFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
                 .add(R.id.content_frame, fragment)
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -302,10 +313,10 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
 
                 @Override
                 public void success(Boolean isDoctor) {
+                    String logout = getString(R.string.logout);
                     if (isDoctor) {
                         String menu1 = getString(R.string.patient_list);
-                        String menu2 = getString(R.string.patient_report);
-                        menuTitles = new String[]{menu1, menu2};
+                        menuTitles = new String[]{menu1, logout};
 
                         Fragment fragment1 = new PatientsListFragment();
                         Bundle args1 = new Bundle();
@@ -321,7 +332,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
                     } else {
                         String menu1 = getString(R.string.check_in);
                         String menu2 = getString(R.string.reminder_settings);
-                        menuTitles = new String[]{menu1, menu2};
+                        menuTitles = new String[]{menu1, menu2, logout};
 
                         Fragment fragment1 = new CheckInFragment();
                         Bundle args1 = new Bundle();
