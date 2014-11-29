@@ -115,7 +115,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
     @Test
     public void testCheckIn() {
         //the patient we want to do the check-in
-        Patient patient = service.findOne(1);
+        long patientId = 1;
+        Patient patient = service.findOne(patientId);
         assertNotNull(patient);
 
         //create the symptom times
@@ -152,8 +153,7 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
         int beforeCheckInSize = patient.getCheckIns().size();
 
-        patient.getCheckIns().add(checkIn);
-        patient = service.save(patient);
+        patient = service.addCheckIn(patientId, checkIn);
 
         //check-in saved?
         assertEquals(beforeCheckInSize + 1, patient.getCheckIns().size());

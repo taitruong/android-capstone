@@ -100,7 +100,7 @@ public class SaveFragment extends AbstractFragment {
                     CallableTask.invoke(new Callable<Patient>() {
                         @Override
                         public Patient call() throws Exception {
-                            return patientService.save(patient);
+                            return patientService.addCheckIn(patient.getId(), checkIn);
                         }
                     }, new TaskCallback<Patient>() {
                         @Override

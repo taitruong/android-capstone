@@ -2,6 +2,7 @@ package org.aliensource.symptommanagement.cloud.controller;
 
 import com.google.common.collect.Lists;
 
+import org.aliensource.symptommanagement.cloud.repository.CheckIn;
 import org.aliensource.symptommanagement.cloud.repository.Doctor;
 import org.aliensource.symptommanagement.cloud.repository.LastNameComparator;
 import org.aliensource.symptommanagement.cloud.repository.Medicament;
@@ -112,6 +113,17 @@ public class PatientController {
         medication.setMedicament(medicament);
         patient.getMedications().add(medication);
         return repository.save(patient);
+    }
+
+
+    @RequestMapping(value= PatientSvcApi.SVC_PATH_PATIENT_CHECKIN, method= RequestMethod.POST)
+    public @ResponseBody Patient addCheckIn(
+            @PathVariable(ServiceUtils.PARAMETER_ID) long patientId,
+            @RequestBody CheckIn checkIn) {
+        Patient patient = repository.findOne(patientId);
+        patient.getCheckIns().add(checkIn);
+        patient = repository.save(patient);
+        return patient;
     }
 
 }

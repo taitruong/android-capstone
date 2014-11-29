@@ -1,5 +1,6 @@
 package org.aliensource.symptommanagement.cloud.service;
 
+import org.aliensource.symptommanagement.cloud.repository.CheckIn;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 
 import java.util.List;
@@ -20,16 +21,14 @@ public interface PatientSvcApi {
 	public static final String SVC_PATH = "/patient";
     public static final String SVC_PATH_ID = SVC_PATH + "/{" + ServiceUtils.PARAMETER_ID + "}";
     public static final String SVC_PATH_PATIENT_MEDICATION =
-            SVC_PATH +
-                    "/{" + ServiceUtils.PARAMETER_ID + "}" +
-                    "/medication/{" + PARAMETER_MEDICATION_ID + "}";
+            SVC_PATH_ID + "/medication/{" + PARAMETER_MEDICATION_ID + "}";
     public static final String SVC_PATH_PATIENT_MEDICAMENT =
-            SVC_PATH +
-                    "/{" + ServiceUtils.PARAMETER_ID + "}" +
-                    "/medicament/{" + PARAMETER_MEDICAMENT_ID + "}";
+            SVC_PATH_ID + "/medicament/{" + PARAMETER_MEDICAMENT_ID + "}";
 
 	public static final String SEARCH_PATH_USERNAME = SVC_PATH + "/search/findByUsername";
     public static final String SEARCH_PATH_DOCTOR_USERNAME_AND_FILTER = SVC_PATH + "/search/findByDoctorUsernameAndFilter";
+
+    public static final String SVC_PATH_PATIENT_CHECKIN = SVC_PATH_ID + "/checkIn";
 
     @GET(SVC_PATH)
     public List<Patient> findAll();
@@ -63,5 +62,10 @@ public interface PatientSvcApi {
     public List<Patient> findByDoctorUsernameAndFilter(
             @Query(ServiceUtils.PARAMETER_USERNAME) String username,
             @Query(ServiceUtils.PARAMETER_FILTER) String filter);
+
+    @POST(SVC_PATH_PATIENT_CHECKIN)
+    public Patient addCheckIn(
+            @Path(ServiceUtils.PARAMETER_ID) long patientId,
+            @Body CheckIn checkIn);
 
 }

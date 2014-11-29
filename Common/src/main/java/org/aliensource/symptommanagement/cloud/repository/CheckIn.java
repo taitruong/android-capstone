@@ -20,7 +20,7 @@ public class CheckIn extends BaseModel {
     protected long timestamp;
 
     /**
-     * WORKAROUND (otherwise we can a StackOverflowError
+     * WORKAROUND (otherwise we get a StackOverflowError
      * This workaround is needed for PatientSvcApiIntegrationTest.testCheckIn().
      * Otherwise when a new check-in is created and attached to the patient we get two references
      * of the same check-in in the Patient.checkins-list.
