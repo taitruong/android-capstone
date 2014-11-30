@@ -37,6 +37,7 @@ import static org.junit.Assert.fail;
 public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<PatientSvcApi> {
 
     private final Patient model = TestUtils.randomPatientWithoutDoctorsAndRoles();
+    private CheckInSvcApi checkInSvcApi = getService(CheckInSvcApi.class);
 
     @Test
     public void testAdd() throws Exception {
@@ -154,14 +155,15 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         checkIn.setIntakeTimes(intakeTimes);
         checkIn.setSymptomTimes(symptomTimes);
 
-        int beforeCheckInSize = patient.getCheckIns().size();
+        int beforeCheckInSize = checkInSvcApi.findByPatientId(patient.getId()).size();
 
         patient = service.addCheckIn(patientId, checkIn);
 
         //check-in saved?
-        assertEquals(beforeCheckInSize + 1, patient.getCheckIns().size());
+        assertEquals(
+                beforeCheckInSize + 1, checkInSvcApi.findByPatientId(patient.getId()).size());
         //get last check-in
-        checkIn = patient.getCheckIns().get(beforeCheckInSize);
+        checkIn = checkInSvcApi.findByPatientId(patient.getId()).get(beforeCheckInSize);
         //symptom times saved?
         assertEquals(symptomTimes.size(), checkIn.getSymptomTimes().size());
         //intake times saved?

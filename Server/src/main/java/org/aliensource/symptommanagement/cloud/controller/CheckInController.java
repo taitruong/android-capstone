@@ -40,6 +40,12 @@ public class CheckInController {
         return repository.findOne(id);
     }
 
+    @RequestMapping(value= CheckInSvcApi.SEARCH_PATH_PATIENT, method= RequestMethod.GET)
+    public @ResponseBody
+    List<CheckIn> findByPatientId(@PathVariable(ServiceUtils.PARAMETER_ID) long patientId) {
+        return repository.findByPatientId(patientId);
+    }
+
     @RequestMapping(value=CheckInSvcApi.SVC_PATH, method=RequestMethod.POST)
     public @ResponseBody CheckIn save(@RequestBody CheckIn model) {
         return repository.save(model);

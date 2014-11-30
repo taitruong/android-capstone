@@ -25,8 +25,9 @@ import static org.junit.Assert.assertTrue;
 public class CheckInSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<CheckInSvcApi> {
 
     @Test
-    public void testSave() {
+    public void testSaveAndFindByPatientId() {
         CheckIn model = new CheckIn();
+        model.setPatientId(1);
         model = service.save(model);
 
         //exists in list?
@@ -36,6 +37,9 @@ public class CheckInSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Chec
 
         //search by id
         assertNotNull(service.findOne(model.getId()));
+        List<CheckIn> result = service.findByPatientId(1);
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
 
 /*    @Test

@@ -14,6 +14,7 @@ public interface CheckInSvcApi {
 
 	public static final String SVC_PATH = "/checkIn";
     public static final String SVC_PATH_ID = SVC_PATH + "/{" + ServiceUtils.PARAMETER_ID + "}";
+    public static final String SEARCH_PATH_PATIENT = SVC_PATH + "/search/findByPatientId" + "/{" + ServiceUtils.PARAMETER_ID + "}";
 
     @GET(SVC_PATH)
     public List<CheckIn> findAll();
@@ -23,4 +24,7 @@ public interface CheckInSvcApi {
 
     @GET(SVC_PATH_ID)
     public CheckIn findOne(@Path(ServiceUtils.PARAMETER_ID) long id);
+
+    @GET(SEARCH_PATH_PATIENT)
+    public List<CheckIn> findByPatientId(@Path(ServiceUtils.PARAMETER_ID) long patientId);
 }

@@ -160,6 +160,7 @@ public class PatientController {
             @PathVariable(ServiceUtils.PARAMETER_ID) long patientId,
             @RequestBody CheckIn detachedCheckIn) {
         CheckIn checkIn = checkInRepository.save(new CheckIn());
+        checkIn.setPatientId(patientId);
         checkIn.setTimestamp(detachedCheckIn.getTimestamp());
 
         List<SymptomTime> persistedSymptomTimes = new ArrayList<SymptomTime>();
@@ -184,11 +185,6 @@ public class PatientController {
         checkIn = checkInRepository.save(checkIn);
 
         Patient patient = repository.findOne(patientId);
-        //attach patient AFTER check-in has been created
-        checkIn.setPatient(patient);
-        //now add check-in and save
-        patient.getCheckIns().add(checkIn);
-        repository.save(patient);
         createAlarms(patient, checkIn.getSymptomTimes());
         return patient;
     }
@@ -220,7 +216,8 @@ public class PatientController {
             Patient patient, boolean addSoreThroat, boolean addEatDrink) {
         List<SymptomTime> allSoreThroatSymptomTimes = new ArrayList<SymptomTime>();
         List<SymptomTime> allEatDrinkSymptomTimes = new ArrayList<SymptomTime>();
-        for (CheckIn checkIn: patient.getCheckIns()) {
+        List<CheckIn> checkIns = checkInRepository.findByPatientId(patient.getId());
+        for (CheckIn checkIn: checkIns) {
             for (SymptomTime symptomTime: checkIn.getSymptomTimes()) {
                 if (ServiceUtils.SYMPTOM_TYPE_SORE_THROAT.equals(symptomTime.getSymptom().getType())) {
                     if (addSoreThroat) {
@@ -318,6 +315,7 @@ public class PatientController {
         }
     }
 
+    @PostConstruct
     protected void createSampleCheckIns() {
         System.out.println(">>>> init some some data");
         createEatDrinkCheckIn();

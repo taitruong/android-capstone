@@ -22,17 +22,7 @@ public class CheckIn extends BaseModel {
 
     protected long timestamp;
 
-    /**
-     * WORKAROUND (otherwise we get a StackOverflowError
-     * This workaround is needed for PatientSvcApiIntegrationTest.testCheckIn().
-     * Otherwise when a new check-in is created and attached to the patient we get two references
-     * of the same check-in in the Patient.checkins-list.
-     */
-    @ManyToOne(cascade = CascadeType.MERGE)
-    //ignore by JSON otherwise we can a StackOverflowError
-    @JsonIgnore
-    @JoinColumn(name = "patient_id")
-    protected Patient patient;
+    protected long patientId;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)
@@ -42,20 +32,20 @@ public class CheckIn extends BaseModel {
             cascade = CascadeType.ALL)
     protected List<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();
 
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public long getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(long patientId) {
+        this.patientId = patientId;
     }
 
     public List<SymptomTime> getSymptomTimes() {
@@ -79,6 +69,7 @@ public class CheckIn extends BaseModel {
         // Google Guava provides great utilities for hashing
         return Objects.hashCode(
                 timestamp,
+                patientId,
                 symptomTimes,
                 intakeTimes);
     }
@@ -89,6 +80,7 @@ public class CheckIn extends BaseModel {
             CheckIn other = (CheckIn) obj;
             // Google Guava provides great utilities for equals too!
             return Objects.equal(timestamp, other.timestamp)
+                    && Objects.equal(patientId, other.patientId)
                     && Objects.equal(symptomTimes, other.symptomTimes)
                     && Objects.equal(intakeTimes, other.intakeTimes);
         } else {

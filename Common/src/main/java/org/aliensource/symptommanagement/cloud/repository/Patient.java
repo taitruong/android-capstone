@@ -32,11 +32,6 @@ public class Patient extends Person {
     )
     protected List<Doctor> doctors = new ArrayList<Doctor>();
 
-    @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "patient",
-            cascade = CascadeType.ALL)
-    protected List<CheckIn> checkIns = new ArrayList<CheckIn>();
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected List<Medication> medications = new ArrayList<Medication>();
 
@@ -67,14 +62,6 @@ public class Patient extends Person {
         this.doctors = doctors;
     }
 
-    public List<CheckIn> getCheckIns() {
-        return checkIns;
-    }
-
-    public void setCheckIns(List<CheckIn> checkIns) {
-        this.checkIns = checkIns;
-    }
-
     public List<Medication> getMedications() {
         return medications;
     }
@@ -95,7 +82,6 @@ public class Patient extends Person {
                 medicalRecordNumber,
                 roles,
                 doctors,
-                checkIns,
                 medications
                 /*alarms*/);
     }
@@ -113,7 +99,6 @@ public class Patient extends Person {
                 && Objects.equal(medicalRecordNumber, other.medicalRecordNumber)
                 && Objects.equal(roles, other.roles)
                 && Objects.equal(doctors, other.doctors)
-                && Objects.equal(checkIns, other.checkIns)
                 && Objects.equal(medications, other.medications)
                 /*&& Objects.equal(alarms, other.alarms)*/;
         } else {
