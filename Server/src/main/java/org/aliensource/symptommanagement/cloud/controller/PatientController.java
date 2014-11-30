@@ -358,7 +358,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
-        base.add(Calendar.HOUR_OF_DAY, 14);
+        base.add(Calendar.HOUR_OF_DAY, 12);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
         symptomTimes = new ArrayList<SymptomTime>();
@@ -372,7 +372,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
-        base.add(Calendar.HOUR_OF_DAY, 18);
+        base.add(Calendar.HOUR_OF_DAY, 4);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
         symptomTimes = new ArrayList<SymptomTime>();
@@ -386,7 +386,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
-        base.add(Calendar.HOUR_OF_DAY, 20);
+        base.add(Calendar.HOUR_OF_DAY, 2);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
         symptomTimes = new ArrayList<SymptomTime>();
@@ -437,7 +437,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
-        base.add(Calendar.HOUR_OF_DAY, 10);
+        base.add(Calendar.HOUR_OF_DAY, 8);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
         symptomTimes = new ArrayList<SymptomTime>();
@@ -451,7 +451,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
-        base.add(Calendar.HOUR_OF_DAY, 26);
+        base.add(Calendar.HOUR_OF_DAY, 16);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
         symptomTimes = new ArrayList<SymptomTime>();
@@ -465,7 +465,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
-        base.add(Calendar.HOUR_OF_DAY, 30);
+        base.add(Calendar.HOUR_OF_DAY, 4);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
         symptomTimes = new ArrayList<SymptomTime>();
@@ -479,7 +479,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
-        base.add(Calendar.HOUR_OF_DAY, 42);
+        base.add(Calendar.HOUR_OF_DAY, 12);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
         symptomTimes = new ArrayList<SymptomTime>();
@@ -493,7 +493,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
-        base.add(Calendar.HOUR_OF_DAY, 45);
+        base.add(Calendar.HOUR_OF_DAY, 3);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
         symptomTimes = new ArrayList<SymptomTime>();

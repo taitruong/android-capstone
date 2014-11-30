@@ -19,13 +19,27 @@ import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.ValueDependentColor;
 
+import org.aliensource.symptommanagement.DateTimeUtils;
 import org.aliensource.symptommanagement.android.AbstractFragment;
 import org.aliensource.symptommanagement.android.R;
+import org.aliensource.symptommanagement.android.doctor.DoctorUtils;
+import org.aliensource.symptommanagement.android.main.MainUtils;
+import org.aliensource.symptommanagement.client.service.CallableTask;
+import org.aliensource.symptommanagement.client.service.CheckInSvc;
+import org.aliensource.symptommanagement.client.service.PatientSvc;
+import org.aliensource.symptommanagement.client.service.TaskCallback;
+import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
+import org.aliensource.symptommanagement.cloud.service.CheckInSvcApi;
+import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 import butterknife.InjectView;
 
@@ -43,12 +57,75 @@ public class PatientReportFragment extends AbstractFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        createSoreThroatReport();
-        createEatDrinkReport();
+        createReport();
         return view;
     }
 
-    protected void createSoreThroatReport() {
+    protected void createReport() {
+        final PatientSvcApi patientSvcApi = PatientSvc.getInstance().init(getActivity());
+        final long patientId = DoctorUtils.getPatientId(getActivity());
+        CallableTask.invoke( new Callable<List<SymptomTime>[]>() {
+            @Override
+            public List<SymptomTime>[] call() throws Exception {
+                List<SymptomTime>[] soreThroatEatDrink =
+                        patientSvcApi.getSymptomTimesByEatDrinkSoreThroat(patientId);
+                return soreThroatEatDrink;
+            }
+        }, new TaskCallback<List<SymptomTime>[]>() {
+            @Override
+            public void success(List<SymptomTime>[] soreThroatEatDrink) {
+                if (!soreThroatEatDrink[0].isEmpty()) {
+                    System.out.println(">>>> sore throat report");
+                    soreThroatLayout.addView(
+                            createReport(
+                                    soreThroatEatDrink[0],
+                                    getString(R.string.sore_throat),
+                                    getString(R.string.check_in_symptom1_value3),
+                                    getString(R.string.check_in_symptom1_value2),
+                                    getString(R.string.check_in_symptom1_value1)));
+                }
+                if (!soreThroatEatDrink[1].isEmpty()) {
+                    System.out.println(">>>> eat drink report");
+                    eatDrinkLayout.addView(
+                            createReport(
+                                    soreThroatEatDrink[1],
+                                    getString(R.string.eat_drink),
+                                    getString(R.string.check_in_symptom2_value3),
+                                    getString(R.string.check_in_symptom2_value2),
+                                    getString(R.string.check_in_symptom2_value1)));
+                }
+
+            }
+
+            @Override
+            public void error(Exception e) {
+
+            }
+        });
+    }
+
+    protected GraphView.GraphViewData[] createData(List<SymptomTime> allSymptomTimes) {
+        List<GraphView.GraphViewData> data = new ArrayList<GraphView.GraphViewData>();
+        for (SymptomTime symptomTime: allSymptomTimes) {
+            Date date = new Date(symptomTime.getTimestamp());
+/*            System.out.println(
+                    ">>>>>"
+                    + DateTimeUtils.FORMAT_DDMMYYYY_HHMMSS.format(date)
+                    + ", severity: " + symptomTime.getSeverity());
+*/            data.add(new GraphView.GraphViewData(symptomTime.getTimestamp(), symptomTime.getSeverity() + 1));
+        }
+        //add current date as baseline
+        data.add(new GraphView.GraphViewData(System.currentTimeMillis(), 0));
+        GraphView.GraphViewData[] result = new GraphView.GraphViewData[data.size()];
+        return data.toArray(result);
+    }
+
+    protected GraphView createReport(
+            List<SymptomTime> allSymptomTimes,
+            String title,
+            String vLabel3,
+            String vLabel2,
+            String vLabel1) {
         GraphViewSeries.GraphViewSeriesStyle seriesStyle = new GraphViewSeries.GraphViewSeriesStyle();
         seriesStyle.setValueDependentColor(new ValueDependentColor() {
             @Override
@@ -63,56 +140,26 @@ public class PatientReportFragment extends AbstractFragment {
                 }
             }
         });
-        // init example series data
-        Calendar cal1 = new GregorianCalendar();
-        cal1.add(Calendar.DAY_OF_MONTH, -1);
-        Calendar cal2 = new GregorianCalendar();
-        cal2.add(Calendar.DAY_OF_MONTH, -1);
-        cal2.add(Calendar.HOUR_OF_DAY, 2);
-        Calendar cal3 = new GregorianCalendar();
-        cal3.add(Calendar.DAY_OF_MONTH, -1);
-        cal3.add(Calendar.HOUR_OF_DAY, 8);
-        Calendar cal4 = new GregorianCalendar();
-        cal4.add(Calendar.DAY_OF_MONTH, -1);
-        cal4.add(Calendar.HOUR_OF_DAY, 12);
-        Calendar cal5 = new GregorianCalendar();
-        cal5.add(Calendar.DAY_OF_MONTH, -1);
-        cal5.add(Calendar.HOUR_OF_DAY, 16);
-        Calendar cal6 = new GregorianCalendar();
-        cal6.add(Calendar.DAY_OF_MONTH, -1);
-        cal6.add(Calendar.HOUR_OF_DAY, 18);
-        Calendar cal7 = new GregorianCalendar();
-        cal7.add(Calendar.DAY_OF_MONTH, -1);
-        cal7.add(Calendar.HOUR_OF_DAY, 20);
 
-        GraphViewSeries exampleSeries = new GraphViewSeries(
-                "XXXXX",
-                seriesStyle,
-                new GraphView.GraphViewData[] {
-                    new GraphView.GraphViewData(cal1.getTimeInMillis(), 0)
-                    , new GraphView.GraphViewData(cal2.getTimeInMillis(), 1)
-                    , new GraphView.GraphViewData(cal3.getTimeInMillis(), 1)
-                    , new GraphView.GraphViewData(cal4.getTimeInMillis(), 0)
-                    , new GraphView.GraphViewData(cal5.getTimeInMillis(), 2)
-                    , new GraphView.GraphViewData(cal6.getTimeInMillis(), 2)
-                    , new GraphView.GraphViewData(cal7.getTimeInMillis(), 3)
-        });
+        GraphView.GraphViewData[] data = createData(allSymptomTimes);
+
+        GraphViewSeries exampleSeries = new GraphViewSeries( "", seriesStyle, data);
 
         GraphView graphView = new BarGraphView(
                 getActivity() // context
-                , getString(R.string.sore_throat) // heading
+                , title // heading
         );
         graphView.addSeries(exampleSeries); // data
 
         graphView.setScrollable(false);
         graphView.setScalable(false);
         String[] verticalLabels = {
-                getString(R.string.check_in_symptom1_value3),
-                getString(R.string.check_in_symptom1_value2),
-                getString(R.string.check_in_symptom1_value1),
+                vLabel3,
+                vLabel2,
+                vLabel1,
                 ""};
         graphView.setVerticalLabels(verticalLabels);
-        graphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.text_size_small));
+        graphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.text_size_xsmall));
 
         //horizontal custom label
 		/*
@@ -132,98 +179,7 @@ public class PatientReportFragment extends AbstractFragment {
 
         graphView.getGraphViewStyle().setGridStyle(GraphViewStyle.GridStyle.BOTH);
         graphView.getGraphViewStyle().setGridColor(Color.GREEN);
-        soreThroatLayout.addView(graphView);
-    }
-
-    protected void createEatDrinkReport() {
-        GraphViewSeries.GraphViewSeriesStyle seriesStyle = new GraphViewSeries.GraphViewSeriesStyle();
-        seriesStyle.setValueDependentColor(new ValueDependentColor() {
-            @Override
-            public int get(GraphViewDataInterface data) {
-
-                if (data.getY() >= 3) {
-                    return Color.RED;
-                } else if (data.getY() >= 2) {
-                    return Color.YELLOW;
-                } else {
-                    return Color.GREEN;
-                }
-            }
-        });
-        // init example series data
-        Calendar cal1 = new GregorianCalendar();
-        cal1.add(Calendar.DAY_OF_MONTH, -2);
-        Calendar cal2 = new GregorianCalendar();
-        cal2.add(Calendar.DAY_OF_MONTH, -2);
-        cal2.add(Calendar.HOUR_OF_DAY, 2);
-        Calendar cal3 = new GregorianCalendar();
-        cal3.add(Calendar.DAY_OF_MONTH, -2);
-        cal3.add(Calendar.HOUR_OF_DAY, 8);
-        Calendar cal4 = new GregorianCalendar();
-        cal4.add(Calendar.DAY_OF_MONTH, -2);
-        cal4.add(Calendar.HOUR_OF_DAY, 12);
-        Calendar cal5 = new GregorianCalendar();
-        cal5.add(Calendar.DAY_OF_MONTH, -2);
-        cal5.add(Calendar.HOUR_OF_DAY, 16);
-        Calendar cal6 = new GregorianCalendar();
-        cal6.add(Calendar.DAY_OF_MONTH, -2);
-        cal6.add(Calendar.HOUR_OF_DAY, 18);
-        Calendar cal7 = new GregorianCalendar();
-        cal7.add(Calendar.DAY_OF_MONTH, -2);
-        cal7.add(Calendar.HOUR_OF_DAY, 20);
-        Calendar cal8 = new GregorianCalendar();
-        cal8.add(Calendar.DAY_OF_MONTH, -2);
-        cal8.add(Calendar.HOUR_OF_DAY, 48);
-
-        GraphViewSeries exampleSeries = new GraphViewSeries(
-                "",
-                seriesStyle,
-                new GraphView.GraphViewData[] {
-                        new GraphView.GraphViewData(cal1.getTimeInMillis(), 0)
-                        , new GraphView.GraphViewData(cal2.getTimeInMillis(), 1)
-                        , new GraphView.GraphViewData(cal3.getTimeInMillis(), 1)
-                        , new GraphView.GraphViewData(cal4.getTimeInMillis(), 0)
-                        , new GraphView.GraphViewData(cal5.getTimeInMillis(), 2)
-                        , new GraphView.GraphViewData(cal6.getTimeInMillis(), 2)
-                        , new GraphView.GraphViewData(cal7.getTimeInMillis(), 3)
-                        , new GraphView.GraphViewData(cal8.getTimeInMillis(), 1)
-                });
-
-        GraphView graphView = new BarGraphView(
-                getActivity() // context
-                , getString(R.string.eat_drink) // heading
-        );
-        graphView.addSeries(exampleSeries); // data
-
-        graphView.setScrollable(true);
-        graphView.setScalable(true);
-        String[] verticalLabels = {
-                getString(R.string.check_in_symptom2_value3),
-                getString(R.string.check_in_symptom2_value2),
-                getString(R.string.check_in_symptom2_value1),
-                ""};
-        graphView.setVerticalLabels(verticalLabels);
-        graphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.text_size_small));
-
-        //horizontal custom label
-		/*
-		 * date as label formatter
-		 */
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
-        graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
-                    Date d = new Date((long) value);
-                    return dateFormat.format(d);
-                }
-                return null; // let graphview generate Y-axis label for us
-            }
-        });
-
-        graphView.getGraphViewStyle().setGridStyle(GraphViewStyle.GridStyle.BOTH);
-        graphView.getGraphViewStyle().setGridColor(Color.GREEN);
-        eatDrinkLayout.addView(graphView);
+        return graphView;
     }
 
 }

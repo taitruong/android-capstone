@@ -15,12 +15,12 @@
             android:id="@+id/soreThroatLayout"
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="600dip"/>
+            android:layout_height="200dip"/>
 
         <LinearLayout
             android:id="@+id/eatDrinkLayout"
             android:layout_width="fill_parent"
-            android:layout_height="600dip"
+            android:layout_height="200dip"
             android:orientation="vertical" />
 
     </LinearLayout>
