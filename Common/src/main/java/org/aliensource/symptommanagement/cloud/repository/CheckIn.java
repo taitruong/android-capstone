@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -27,16 +28,18 @@ public class CheckIn extends BaseModel {
      * Otherwise when a new check-in is created and attached to the patient we get two references
      * of the same check-in in the Patient.checkins-list.
      */
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
+    //ignore by JSON otherwise we can a StackOverflowError
     @JsonIgnore
+    @JoinColumn(name = "patient_id")
     protected Patient patient;
 
     @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = CascadeType.ALL)
     protected List<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
 
     @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = CascadeType.ALL)
     protected List<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();
 
     public Patient getPatient() {
@@ -75,6 +78,7 @@ public class CheckIn extends BaseModel {
     public int hashCode() {
         // Google Guava provides great utilities for hashing
         return Objects.hashCode(
+                timestamp,
                 symptomTimes,
                 intakeTimes);
     }
@@ -84,7 +88,8 @@ public class CheckIn extends BaseModel {
         if (obj instanceof CheckIn) {
             CheckIn other = (CheckIn) obj;
             // Google Guava provides great utilities for equals too!
-            return Objects.equal(symptomTimes, other.symptomTimes)
+            return Objects.equal(timestamp, other.timestamp)
+                    && Objects.equal(symptomTimes, other.symptomTimes)
                     && Objects.equal(intakeTimes, other.intakeTimes);
         } else {
             return false;

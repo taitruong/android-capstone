@@ -31,7 +31,7 @@ public class Medication extends BaseModel {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof IntakeTime) {
+        if (obj instanceof Medication) {
             Medication other = (Medication) obj;
             // Google Guava provides great utilities for equals too!
             return Objects.equal(medicament, other.medicament);

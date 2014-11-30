@@ -23,7 +23,7 @@ public class Patient extends Person {
     protected String medicalRecordNumber;
 
     @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST})
+            cascade = CascadeType.ALL)
     //define join table with the Patient entity being the owner
     @JoinTable(
             name = "PATIENT_DOCTOR",
@@ -40,8 +40,8 @@ public class Patient extends Person {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected List<Medication> medications = new ArrayList<Medication>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    protected List<Alarm> alarms = new ArrayList<Alarm>();
+//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    protected List<Alarm> alarms = new ArrayList<Alarm>();
 
     @Override
     //workaround otherwise JSON conversion complaints
@@ -93,9 +93,11 @@ public class Patient extends Person {
                 password,
                 dateOfBirth,
                 medicalRecordNumber,
+                roles,
                 doctors,
                 checkIns,
-                medications);
+                medications
+                /*alarms*/);
     }
 
     @Override
@@ -109,20 +111,22 @@ public class Patient extends Person {
                 && Objects.equal(password, other.password)
                 && Objects.equal(dateOfBirth, other.dateOfBirth)
                 && Objects.equal(medicalRecordNumber, other.medicalRecordNumber)
+                && Objects.equal(roles, other.roles)
                 && Objects.equal(doctors, other.doctors)
                 && Objects.equal(checkIns, other.checkIns)
-                && Objects.equal(medications, other.medications);
+                && Objects.equal(medications, other.medications)
+                /*&& Objects.equal(alarms, other.alarms)*/;
         } else {
             return false;
         }
     }
 
-    public List<Alarm> getAlarms() {
+/*    public List<Alarm> getAlarms() {
         return alarms;
     }
 
     public void setAlarms(List<Alarm> alarms) {
         this.alarms = alarms;
     }
-
+*/
 }

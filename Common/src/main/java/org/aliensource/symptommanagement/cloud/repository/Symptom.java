@@ -28,7 +28,7 @@ public class Symptom extends BaseModel {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Role) {
+        if (obj instanceof Symptom) {
             Symptom other = (Symptom) obj;
             // Google Guava provides great utilities for equals too!
             return Objects.equal(type, other.type);

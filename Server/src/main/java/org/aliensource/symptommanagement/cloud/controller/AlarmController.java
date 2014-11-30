@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -39,6 +40,12 @@ public class AlarmController {
     @RequestMapping(value=AlarmSvcApi.SVC_PATH, method=RequestMethod.POST)
     public @ResponseBody Alarm save(@RequestBody Alarm model) {
         return repository.save(model);
+    }
+
+    @RequestMapping(value= AlarmSvcApi.SEARCH_PATH_PATIENT_ID, method=RequestMethod.GET)
+    public @ResponseBody
+    List<Alarm> findByPatientId(@RequestParam(ServiceUtils.PARAMETER_ID) long patientId) {
+        return repository.findByPatientId(patientId);
     }
 
 }

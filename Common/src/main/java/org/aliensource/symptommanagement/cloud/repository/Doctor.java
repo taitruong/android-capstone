@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
@@ -18,7 +19,7 @@ import javax.persistence.ManyToMany;
 public class Doctor extends Person {
 
     //many-to-many relationship mapped by the owner's / Patient's attribute doctors
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     protected List<Patient> patients = new ArrayList<Patient>();
 
     public List<Patient> getPatients() {
@@ -46,6 +47,7 @@ public class Doctor extends Person {
                 username,
                 password,
                 dateOfBirth,
+                roles,
                 patients);
     }
 
@@ -59,6 +61,7 @@ public class Doctor extends Person {
                     && Objects.equal(username, other.username)
                     && Objects.equal(password, other.password)
                     && Objects.equal(dateOfBirth, other.dateOfBirth)
+                    && Objects.equal(roles, other.roles)
                     && Objects.equal(patients, other.patients);
         } else {
             return false;

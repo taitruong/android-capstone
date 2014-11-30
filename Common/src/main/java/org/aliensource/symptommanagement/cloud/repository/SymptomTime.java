@@ -2,7 +2,10 @@ package org.aliensource.symptommanagement.cloud.repository;
 
 import com.google.common.base.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
@@ -17,7 +20,7 @@ public class SymptomTime extends BaseModel implements BaseTimestampModel {
 
     //do not use ManyToOne otherwise Gson complains "Expected BEGIN_OBJECT but was NUMBER"
     // when calling e.g. CheckInController.findAll
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     protected Symptom symptom;
 
     public long getTimestamp() {
