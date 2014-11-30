@@ -33,7 +33,7 @@ import org.aliensource.symptommanagement.android.doctor.DoctorFragment;
 import org.aliensource.symptommanagement.android.doctor.DoctorUtils;
 import org.aliensource.symptommanagement.android.patientslist.OnPatientsInteractionListener;
 import org.aliensource.symptommanagement.android.patientslist.PatientsListFragment;
-import org.aliensource.symptommanagement.android.reminder.AlarmNotificationReceiver;
+import org.aliensource.symptommanagement.android.reminder.ReminderNotificationReceiver;
 import org.aliensource.symptommanagement.android.reminder.ReminderPreferencesUtils;
 import org.aliensource.symptommanagement.android.reminder.ReminderSettingsFragment;
 import org.aliensource.symptommanagement.android.report.PatientReportFragment;
@@ -445,12 +445,12 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
             }
 
             //create the intent for the AlarmNotificationReceiver and then wrap it in a PendingIntent
-            Intent mAlarmNotificationReceiverIntent = new Intent(MainActivity.this, AlarmNotificationReceiver.class);
+            Intent mAlarmNotificationReceiverIntent = new Intent(MainActivity.this, ReminderNotificationReceiver.class);
 
             //the id must be passed to the receiver and defined in the PendingIntent
             alarmId++;
-            mAlarmNotificationReceiverIntent.putExtra(AlarmNotificationReceiver.ARGS_ALARM_ID, alarmId);
-            mAlarmNotificationReceiverIntent.putExtra(AlarmNotificationReceiver.ARGS_ALARM_TIME, reminderTime);
+            mAlarmNotificationReceiverIntent.putExtra(ReminderNotificationReceiver.ARGS_ALARM_ID, alarmId);
+            mAlarmNotificationReceiverIntent.putExtra(ReminderNotificationReceiver.ARGS_ALARM_TIME, reminderTime);
             PendingIntent mAlarmNotificationReceiverPendingIntent = PendingIntent.getBroadcast(
                     MainActivity.this,
                     alarmId, //this ID must be unique for each PendingIntent, otherwise only the last is set as an alarm

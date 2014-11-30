@@ -25,10 +25,6 @@ public class DoctorTabsAdapter extends FragmentPagerAdapter {
     public DoctorTabsAdapter(FragmentManager fm, Activity activity) {
         super(fm);
         titles.add(activity.getString(R.string.doctor_medications_tab_title));
-        titles.add(activity.getString(R.string.sore_throat));
-        titles.add(activity.getString(R.string.eat_drink));
-        titles.add("Lortab");
-        titles.add("OxyContin");
     }
 
     @Override

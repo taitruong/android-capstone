@@ -3,13 +3,9 @@ package org.aliensource.symptommanagement.android.report;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.CustomLabelFormatter;
@@ -19,25 +15,18 @@ import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.ValueDependentColor;
 
-import org.aliensource.symptommanagement.DateTimeUtils;
 import org.aliensource.symptommanagement.android.AbstractFragment;
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.doctor.DoctorUtils;
-import org.aliensource.symptommanagement.android.main.MainUtils;
 import org.aliensource.symptommanagement.client.service.CallableTask;
-import org.aliensource.symptommanagement.client.service.CheckInSvc;
 import org.aliensource.symptommanagement.client.service.PatientSvc;
 import org.aliensource.symptommanagement.client.service.TaskCallback;
-import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
-import org.aliensource.symptommanagement.cloud.service.CheckInSvcApi;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -48,8 +37,8 @@ import butterknife.InjectView;
  */
 public class PatientReportFragment extends AbstractFragment {
 
-    @InjectView(R.id.soreThroatLayout)
-    protected LinearLayout soreThroatLayout;
+    @InjectView(R.id.soreThroatMouthPainLayout)
+    protected LinearLayout soreThroatMouthPainLayout;
 
     @InjectView(R.id.eatDrinkLayout)
     protected LinearLayout eatDrinkLayout;
@@ -76,10 +65,10 @@ public class PatientReportFragment extends AbstractFragment {
             public void success(List<SymptomTime>[] soreThroatEatDrink) {
                 if (!soreThroatEatDrink[0].isEmpty()) {
                     System.out.println(">>>> sore throat report");
-                    soreThroatLayout.addView(
+                    soreThroatMouthPainLayout.addView(
                             createReport(
                                     soreThroatEatDrink[0],
-                                    getString(R.string.sore_throat),
+                                    getString(R.string.sore_throat_mouth_pain),
                                     getString(R.string.check_in_symptom1_value3),
                                     getString(R.string.check_in_symptom1_value2),
                                     getString(R.string.check_in_symptom1_value1)));

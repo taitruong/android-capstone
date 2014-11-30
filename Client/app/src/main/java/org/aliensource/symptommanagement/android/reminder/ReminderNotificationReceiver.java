@@ -13,7 +13,7 @@ import org.aliensource.symptommanagement.android.R;
 /**
  * Created by ttruong on 11-Nov-14.
  */
-public class AlarmNotificationReceiver extends BroadcastReceiver {
+public class ReminderNotificationReceiver extends BroadcastReceiver {
 
     protected static final int ALARM_ID_OFFSET = 1;
     public static final String ARGS_ALARM_ID = "alarm_id";

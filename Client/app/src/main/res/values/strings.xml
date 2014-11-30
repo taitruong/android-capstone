@@ -47,7 +47,7 @@
     <!-- Check-In Symptom-->
     <string name="finish_check_in">Finish Check-In</string>
 
-    <string name="check_in_symptom1_tab_title">Sore Throat and Mouth Pain</string>
+    <string name="check_in_symptom1_tab_title">Sore Throat/Mouth Pain</string>
     <string name="check_in_symptom1_title">How bad is your mouth pain and sore throat?</string>
     <string name="check_in_symptom1_value1">Well-Controlled</string>
     <string name="check_in_symptom1_value2">Moderate</string>
@@ -97,7 +97,7 @@
 
     <!-- Doctor > Patient Report -->
     <string name="doctor_patient_report_tab_title">Patient Reports</string>
-    <string name="sore_throat">Sore Throat</string>
+    <string name="sore_throat_mouth_pain">Sore Throat/Mouth Pain</string>
     <string name="eat_drink">Eat/Drink</string>
 
     <!-- Doctor > Alarms -->

@@ -31,7 +31,8 @@
             android:label="@string/title_activity_main" >
         </activity>
 
-        <receiver android:name=".reminder.AlarmNotificationReceiver"/>
+        <receiver android:name=".reminder.ReminderNotificationReceiver"/>
+        <receiver android:name=".doctor.AlarmNotificationReceiver"/>
     </application>
 
 </manifest>
