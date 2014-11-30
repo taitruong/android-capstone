@@ -33,7 +33,7 @@
     <!-- Reminder translations-->
     <string name="reminder_ticker_text">Symptom Management: Your check-in at %s o\'clock is required!</string>
     <string name="reminder_notification_title">Symptom Management</string>
-    <string name="reminder_notification_text">Your check-in is required</string>
+    <string name="reminder_notification_text">%s: Your check-in is required</string>
     <string name="next_reminder_tomorrow">Next reminder for %s o\'clock starts tomorrow.</string>
     <string name="next_reminder_today">Next reminder for %s o\'clock starts today.</string>
 
