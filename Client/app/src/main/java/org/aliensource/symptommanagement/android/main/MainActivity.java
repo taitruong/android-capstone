@@ -2,6 +2,8 @@ package org.aliensource.symptommanagement.android.main;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +13,9 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,12 +30,12 @@ import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
 import org.aliensource.symptommanagement.android.checkin.CheckInUtils;
 import org.aliensource.symptommanagement.android.doctor.DoctorFragment;
-import org.aliensource.symptommanagement.android.patient.PatientReportFragment;
 import org.aliensource.symptommanagement.android.patientslist.OnPatientsInteractionListener;
 import org.aliensource.symptommanagement.android.patientslist.PatientsListFragment;
 import org.aliensource.symptommanagement.android.reminder.AlarmNotificationReceiver;
 import org.aliensource.symptommanagement.android.reminder.ReminderPreferencesUtils;
 import org.aliensource.symptommanagement.android.reminder.ReminderSettingsFragment;
+import org.aliensource.symptommanagement.android.report.PatientReportFragment;
 import org.aliensource.symptommanagement.client.service.CallableTask;
 import org.aliensource.symptommanagement.client.service.PatientSvc;
 import org.aliensource.symptommanagement.client.service.SecuritySvc;
@@ -47,7 +51,6 @@ import org.aliensource.symptommanagement.cloud.service.SymptomSvcApi;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -470,11 +473,46 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
 
     @Override
     public void onPatientSelected() {
-        Bundle args = new Bundle();
-        args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_doctor);
-        Fragment fragment = new DoctorFragment();
-        fragment.setArguments(args);
-        showFragment(fragment);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("");
+
+        ListView modeList = new ListView(this);
+        String[] stringArray = new String[] {getString(R.string.doctor_medications_tab_title),
+        getString(R.string.patient_report)};
+        ArrayAdapter<String> modeAdapter =
+                new ArrayAdapter<String>(
+                        this,
+                        android.R.layout.simple_list_item_1,
+                        android.R.id.text1,
+                        stringArray);
+        modeList.setAdapter(modeAdapter);
+
+        builder.setView(modeList);
+        final Dialog dialog = builder.create();
+        modeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1) {
+                    Bundle args = new Bundle();
+                    args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patient_report);
+                    Fragment fragment = new PatientReportFragment();
+                    fragment.setArguments(args);
+                    showFragment(fragment);
+                } else {
+                    Bundle args = new Bundle();
+                    args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_doctor);
+                    Fragment fragment = new DoctorFragment();
+                    fragment.setArguments(args);
+                    showFragment(fragment);
+                }
+                dialog.cancel();
+            }
+        });
+        dialog.show();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
 }

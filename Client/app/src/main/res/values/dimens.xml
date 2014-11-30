@@ -7,6 +7,7 @@
     <dimen name="padding_top_bottom_small">8dp</dimen>
     <dimen name="padding_top_bottom_medium">16dp</dimen>
 
+    <dimen name="text_size_xsmall">7dp</dimen>
     <dimen name="text_size_small">14dp</dimen>
     <dimen name="text_size_medium">18dp</dimen>
     <dimen name="text_size_large">22dp</dimen>

@@ -6,14 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.checkin.CheckInUtils;
-import org.aliensource.symptommanagement.android.checkin.CheckInMedicationFragment;
 import org.aliensource.symptommanagement.android.checkin.SymptomFragment;
 import org.aliensource.symptommanagement.android.main.MainUtils;
-import org.aliensource.symptommanagement.cloud.repository.Medication;
+import org.aliensource.symptommanagement.android.report.PatientReportFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +25,10 @@ public class DoctorTabsAdapter extends FragmentPagerAdapter {
     public DoctorTabsAdapter(FragmentManager fm, Activity activity) {
         super(fm);
         titles.add(activity.getString(R.string.doctor_medications_tab_title));
-        titles.add(activity.getString(R.string.doctor_patient_report_tab_title));
-        titles.add(activity.getString(R.string.doctor_alarms_tab_title));
+        titles.add(activity.getString(R.string.sore_throat));
+        titles.add(activity.getString(R.string.eat_drink));
+        titles.add("Lortab");
+        titles.add("OxyContin");
     }
 
     @Override
@@ -42,8 +41,26 @@ public class DoctorTabsAdapter extends FragmentPagerAdapter {
                 args.putInt(CheckInUtils.ARG_PREF_SUFFIX, i);
                 fragment.setArguments(args);
                 return fragment;
-            default:
+            case 1:
+                fragment = new PatientReportFragment();
+                args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patient_report);
+                args.putInt(CheckInUtils.ARG_PREF_SUFFIX, i);
+                fragment.setArguments(args);
+                return fragment;
+            case 2:
+                fragment = new PatientReportFragment();
+                args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patient_report);
+                args.putInt(CheckInUtils.ARG_PREF_SUFFIX, i);
+                fragment.setArguments(args);
+                return fragment;
+            case 3:
                 SymptomFragment symptomFragment2 = new SymptomFragment();
+                args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_symptom2);
+                args.putInt(CheckInUtils.ARG_PREF_SUFFIX, i);
+                symptomFragment2.setArguments(args);
+                return symptomFragment2;
+            default:
+                symptomFragment2 = new SymptomFragment();
                 args.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in_symptom2);
                 args.putInt(CheckInUtils.ARG_PREF_SUFFIX, i);
                 symptomFragment2.setArguments(args);

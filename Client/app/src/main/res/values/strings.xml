@@ -97,6 +97,8 @@
 
     <!-- Doctor > Patient Report -->
     <string name="doctor_patient_report_tab_title">Patient Reports</string>
+    <string name="sore_throat">Sore Throat</string>
+    <string name="eat_drink">Eat/Drink</string>
 
     <!-- Doctor > Alarms -->
     <string name="doctor_alarms_tab_title">Patient Alarms</string>
