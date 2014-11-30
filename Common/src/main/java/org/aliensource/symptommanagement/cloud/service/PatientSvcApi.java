@@ -2,6 +2,7 @@ package org.aliensource.symptommanagement.cloud.service;
 
 import org.aliensource.symptommanagement.cloud.repository.CheckIn;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
 
 import java.util.List;
 
@@ -27,6 +28,11 @@ public interface PatientSvcApi {
 
 	public static final String SEARCH_PATH_USERNAME = SVC_PATH + "/search/findByUsername";
     public static final String SEARCH_PATH_DOCTOR_USERNAME_AND_FILTER = SVC_PATH + "/search/findByDoctorUsernameAndFilter";
+
+    public static final String SEARCH_PATH_SYMPTOM_TIMES_FOR_PATIENT =
+            SVC_PATH
+                    + "/search/findSymptomTimesForPatient"
+                    + "/{" + ServiceUtils.PARAMETER_ID + "}";
 
     public static final String SVC_PATH_PATIENT_CHECKIN = SVC_PATH_ID + "/checkIn";
 
@@ -68,4 +74,6 @@ public interface PatientSvcApi {
             @Path(ServiceUtils.PARAMETER_ID) long patientId,
             @Body CheckIn checkIn);
 
+    @GET(SEARCH_PATH_SYMPTOM_TIMES_FOR_PATIENT)
+    public List<SymptomTime>[] getSymptomTimesByEatDrinkSoreThroat(@Path(ServiceUtils.PARAMETER_ID) long patientId);
 }

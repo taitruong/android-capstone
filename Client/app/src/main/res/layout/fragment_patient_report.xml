@@ -1,30 +1,27 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/SymptomBaseTheme"
-    android:scrollbars="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <FrameLayout
-        android:scrollbars="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-        <RelativeLayout
-            android:id="@+id/container"
-            android:orientation="vertical"
-            android:background="@android:color/darker_gray"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/soreThroatLayout"
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="600dip"/>
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbarAlwaysDrawHorizontalTrack="true"
+    android:background="@android:color/darker_gray"
+    android:fillViewport="true">
 
-            <LinearLayout
-                android:id="@+id/eatDrinkLayout"
-                android:layout_width="fill_parent"
-                android:layout_height="600dip"
-                android:orientation="vertical"
-                android:layout_below="@+id/soreThroatLayout"/>
-        </RelativeLayout>
-    </FrameLayout>
-</FrameLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@android:color/darker_gray"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:id="@+id/soreThroatLayout"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="600dip"/>
+
+        <LinearLayout
+            android:id="@+id/eatDrinkLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="600dip"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+</ScrollView>

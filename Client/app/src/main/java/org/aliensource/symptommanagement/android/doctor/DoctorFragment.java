@@ -49,29 +49,6 @@ public class DoctorFragment extends AbstractFragment<ViewPager> {
         tabsAdapter = new DoctorTabsAdapter(getChildFragmentManager(), getActivity());
         pager.setAdapter(tabsAdapter);
         tabs.setViewPager(pager);
-
-        final String username = MainUtils.getCredentials(getActivity()).username;
-        final PatientSvcApi patientService = PatientSvc.getInstance().init(getActivity());
-        final long patientId = DoctorUtils.getPatientId(getActivity());
-
-        CallableTask.invoke(new Callable<Patient>() {
-            @Override
-            public Patient call() throws Exception {
-                return patientService.findOne(patientId);
-            }
-        }, new TaskCallback<Patient>() {
-            @Override
-            public void success(Patient patient) {
-                String titleArgs = patient.getFirstName() + " " + patient.getLastName();
-                String title = getResources().getString(R.string.doctor_title, titleArgs);
-                getActivity().setTitle(title);
-            }
-
-            @Override
-            public void error(Exception e) {
-                throw new RuntimeException("Patient " + username + " not found!", e);
-            }
-        });
     }
 
 }

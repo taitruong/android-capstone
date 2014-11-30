@@ -32,12 +32,7 @@ import butterknife.InjectView;
 /**
  * Created by ttruong on 30-Nov-14.
  */
-public class PatientReportFragment extends AbstractFragment implements View.OnTouchListener{
-
-    private int currentX;
-    private int currentY;
-    @InjectView(R.id.container)
-    protected RelativeLayout container;
+public class PatientReportFragment extends AbstractFragment {
 
     @InjectView(R.id.soreThroatLayout)
     protected LinearLayout soreThroatLayout;
@@ -50,10 +45,6 @@ public class PatientReportFragment extends AbstractFragment implements View.OnTo
         View view = super.onCreateView(inflater, container, savedInstanceState);
         createSoreThroatReport();
         createEatDrinkReport();
-        view.setOnTouchListener(this);
-        container.setOnTouchListener(this);
-        soreThroatLayout.setOnTouchListener(this);
-        eatDrinkLayout.setOnTouchListener(this);
         return view;
     }
 
@@ -127,7 +118,7 @@ public class PatientReportFragment extends AbstractFragment implements View.OnTo
 		/*
 		 * date as label formatter
 		 */
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd HH:ss");
         graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
@@ -141,7 +132,6 @@ public class PatientReportFragment extends AbstractFragment implements View.OnTo
 
         graphView.getGraphViewStyle().setGridStyle(GraphViewStyle.GridStyle.BOTH);
         graphView.getGraphViewStyle().setGridColor(Color.GREEN);
-        graphView.setOnTouchListener(this);
         soreThroatLayout.addView(graphView);
     }
 
@@ -233,32 +223,7 @@ public class PatientReportFragment extends AbstractFragment implements View.OnTo
 
         graphView.getGraphViewStyle().setGridStyle(GraphViewStyle.GridStyle.BOTH);
         graphView.getGraphViewStyle().setGridColor(Color.GREEN);
-        graphView.setOnTouchListener(this);
         eatDrinkLayout.addView(graphView);
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                currentX = (int) event.getRawX();
-                currentY = (int) event.getRawY();
-                break;
-            }
-
-            case MotionEvent.ACTION_MOVE: {
-                int x2 = (int) event.getRawX();
-                int y2 = (int) event.getRawY();
-                container.scrollBy(currentX - x2 , currentY - y2);
-                currentX = x2;
-                currentY = y2;
-                break;
-            }
-            case MotionEvent.ACTION_UP: {
-                break;
-            }
-        }
-        return true;
     }
 
 }

@@ -423,6 +423,12 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         return checkIn;
     }
 
+    @Test
+    public void testGetSymptomTimesByEatDrinkSoreThroat() {
+        List<SymptomTime>[] result = service.getSymptomTimesByEatDrinkSoreThroat(1);
+        assertNotNull(result);
+    }
+
     @Override
     public Class<PatientSvcApi> getApiClass() {
         return PatientSvcApi.class;

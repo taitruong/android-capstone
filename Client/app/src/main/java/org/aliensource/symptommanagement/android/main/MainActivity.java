@@ -30,6 +30,7 @@ import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
 import org.aliensource.symptommanagement.android.checkin.CheckInUtils;
 import org.aliensource.symptommanagement.android.doctor.DoctorFragment;
+import org.aliensource.symptommanagement.android.doctor.DoctorUtils;
 import org.aliensource.symptommanagement.android.patientslist.OnPatientsInteractionListener;
 import org.aliensource.symptommanagement.android.patientslist.PatientsListFragment;
 import org.aliensource.symptommanagement.android.reminder.AlarmNotificationReceiver;
@@ -509,10 +510,41 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
             }
         });
         dialog.show();
+        setPatientInfoInTitle();
+    }
+
+    protected void setPatientInfoInTitle() {
+        final String username = MainUtils.getCredentials(this).username;
+        final PatientSvcApi patientService = PatientSvc.getInstance().init(this);
+        final long patientId = DoctorUtils.getPatientId(this);
+
+        CallableTask.invoke(new Callable<Patient>() {
+            @Override
+            public Patient call() throws Exception {
+                return patientService.findOne(patientId);
+            }
+        }, new TaskCallback<Patient>() {
+            @Override
+            public void success(Patient patient) {
+                String titleArgs = patient.getFirstName() + " " + patient.getLastName();
+                String title = getResources().getString(R.string.doctor_title, titleArgs);
+                setTitle(title);
+            }
+
+            @Override
+            public void error(Exception e) {
+                throw new RuntimeException("Patient " + username + " not found!", e);
+            }
+        });
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
+    }
+
+    protected void createAlarmData() {
+
     }
 }

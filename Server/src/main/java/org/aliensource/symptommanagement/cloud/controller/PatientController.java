@@ -19,12 +19,14 @@ import org.aliensource.symptommanagement.cloud.repository.Symptom;
 import org.aliensource.symptommanagement.cloud.repository.SymptomRepository;
 import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
 import org.aliensource.symptommanagement.cloud.repository.SymptomTimeRepository;
+import org.aliensource.symptommanagement.cloud.repository.TimestampComparator;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
 import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Created by ttruong on 26-Nov-14.
@@ -77,7 +81,13 @@ public class PatientController {
         return repository.findOne(id);
     }
 
-    @RequestMapping(value=PatientSvcApi.SVC_PATH, method=RequestMethod.POST)
+    @RequestMapping(value= PatientSvcApi.SEARCH_PATH_SYMPTOM_TIMES_FOR_PATIENT, method= RequestMethod.GET)
+    public @ResponseBody List<SymptomTime>[] getSymptomTimesByEatDrinkSoreThroat(@PathVariable(ServiceUtils.PARAMETER_ID) long patientId) {
+        Patient patient = findOne(patientId);
+        return getSymptomTimesByEatDrinkSoreThroat(patient, true, true);
+    }
+
+        @RequestMapping(value=PatientSvcApi.SVC_PATH, method=RequestMethod.POST)
     public @ResponseBody Patient save(@RequestBody Patient model) {
         return repository.save(model);
     }
@@ -197,6 +207,17 @@ public class PatientController {
             }
         }
         //filter all symptom times with the same symptom
+        List<SymptomTime>[] result = getSymptomTimesByEatDrinkSoreThroat(patient, addSoreThroat, addEatDrink);
+        List<SymptomTime> allSoreThroatSymptomTimes = result[0];
+        List<SymptomTime> allEatDrinkSymptomTimes = result[1];
+
+        // TODO sort by time, it is rare but possible that the id starts from scratch again
+        createSoreThroatAlarm(patient, allSoreThroatSymptomTimes);
+        createEatDrinkAlarm(patient, allEatDrinkSymptomTimes);
+    }
+
+    protected List<SymptomTime>[] getSymptomTimesByEatDrinkSoreThroat(
+            Patient patient, boolean addSoreThroat, boolean addEatDrink) {
         List<SymptomTime> allSoreThroatSymptomTimes = new ArrayList<SymptomTime>();
         List<SymptomTime> allEatDrinkSymptomTimes = new ArrayList<SymptomTime>();
         for (CheckIn checkIn: patient.getCheckIns()) {
@@ -212,9 +233,12 @@ public class PatientController {
                 }
             }
         }
-        // TODO sort by time, it is rare but possible that the id starts from scratch again
-        createSoreThroatAlarm(patient, allSoreThroatSymptomTimes);
-        createEatDrinkAlarm(patient, allEatDrinkSymptomTimes);
+        List<SymptomTime>[] result = new List[2];
+        allSoreThroatSymptomTimes.sort(new TimestampComparator<SymptomTime>());
+        allEatDrinkSymptomTimes.sort(new TimestampComparator<SymptomTime>());
+        result[0] = allSoreThroatSymptomTimes;
+        result[1] = allEatDrinkSymptomTimes;
+        return result;
     }
 
     protected void createSoreThroatAlarm(Patient patient, List<SymptomTime> allSymptomTimes) {
@@ -292,5 +316,197 @@ public class PatientController {
                 }
             }
         }
+    }
+
+    protected void createSampleCheckIns() {
+        System.out.println(">>>> init some some data");
+        createEatDrinkCheckIn();
+        createSoreThroatCheckIn();
+    }
+
+    protected void createEatDrinkCheckIn() {
+        Patient patient = repository.findOne(1L);
+
+        Calendar base = new GregorianCalendar();
+        //create checkin with sore throat
+        base.add(Calendar.DAY_OF_MONTH, -1);
+        CheckIn checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        List<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
+        SymptomTime symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        Symptom eatDrink = symptomRepository.findByType(ServiceUtils.SYMPTOM_TYPE_EAT_DRINK).get(0);
+        symptomTime.setSymptom(eatDrink);
+        symptomTime.setSeverity(0);
+        //save
+        addCheckIn(1, checkIn);
+
+        //create checkin with sore throat
+        base.add(Calendar.HOUR_OF_DAY, 2);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        eatDrink = symptomRepository.findByType(ServiceUtils.SYMPTOM_TYPE_EAT_DRINK).get(0);
+        symptomTime.setSymptom(eatDrink);
+        symptomTime.setSeverity(2);
+        //save
+        addCheckIn(1, checkIn);
+
+        base.add(Calendar.HOUR_OF_DAY, 14);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(eatDrink);
+        symptomTime.setSeverity(2);
+        //save
+        addCheckIn(1, checkIn);
+
+        base.add(Calendar.HOUR_OF_DAY, 18);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(eatDrink);
+        symptomTime.setSeverity(0);
+        //save
+        addCheckIn(1, checkIn);
+
+        base.add(Calendar.HOUR_OF_DAY, 20);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(eatDrink);
+        symptomTime.setSeverity(1);
+        //save
+        addCheckIn(1, checkIn);
+
+    }
+
+    protected void createSoreThroatCheckIn() {
+        Patient patient = repository.findOne(1L);
+        Symptom soreThroat = symptomRepository.findByType(ServiceUtils.SYMPTOM_TYPE_SORE_THROAT).get(0);
+
+        Calendar base = new GregorianCalendar();
+        //create checkin with sore throat
+        base.add(Calendar.DAY_OF_MONTH, -2);
+        CheckIn checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        List<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
+        SymptomTime symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(soreThroat);
+        symptomTime.setSeverity(0);
+        //save
+        addCheckIn(1, checkIn);
+
+        //create checkin with sore throat
+        base.add(Calendar.HOUR_OF_DAY, 2);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(soreThroat);
+        symptomTime.setSeverity(0);
+        //save
+        addCheckIn(1, checkIn);
+
+        base.add(Calendar.HOUR_OF_DAY, 10);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(soreThroat);
+        symptomTime.setSeverity(1);
+        //save
+        addCheckIn(1, checkIn);
+
+        base.add(Calendar.HOUR_OF_DAY, 26);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(soreThroat);
+        symptomTime.setSeverity(1);
+        //save
+        addCheckIn(1, checkIn);
+
+        base.add(Calendar.HOUR_OF_DAY, 30);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(soreThroat);
+        symptomTime.setSeverity(2);
+        //save
+        addCheckIn(1, checkIn);
+
+        base.add(Calendar.HOUR_OF_DAY, 42);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(soreThroat);
+        symptomTime.setSeverity(2);
+        //save
+        addCheckIn(1, checkIn);
+
+        base.add(Calendar.HOUR_OF_DAY, 45);
+        checkIn = new CheckIn();
+        checkIn.setTimestamp(base.getTimeInMillis());
+        symptomTimes = new ArrayList<SymptomTime>();
+        symptomTime = new SymptomTime();
+        symptomTimes.add(symptomTime);
+        checkIn.setSymptomTimes(symptomTimes);
+        //set values
+        symptomTime.setTimestamp(base.getTimeInMillis());
+        symptomTime.setSymptom(soreThroat);
+        symptomTime.setSeverity(0);
+        //save
+        addCheckIn(1, checkIn);
     }
 }
