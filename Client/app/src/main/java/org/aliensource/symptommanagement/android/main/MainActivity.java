@@ -179,7 +179,6 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
         // update the main content by replacing fragments
         if (fragments[position] instanceof CheckInFragment
                 && CheckInUtils.initCheckIn(this)) {
-            System.out.println(">>>> init check-in");
             initCheckIn(checkInTime, date, time);
         }
         showFragment(fragments[position]);
