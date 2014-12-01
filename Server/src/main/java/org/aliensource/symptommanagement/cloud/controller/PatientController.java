@@ -267,7 +267,7 @@ public class PatientController {
                         //add another 4 hours, 16 hours of difference
                         previousCal.add(Calendar.HOUR_OF_DAY, 4);
                         if (previousCal.compareTo(latestCal) <= 0
-                                && previousSymptom.getSeverity() == 1
+                                && previousSymptom.getSeverity() >= 1
                                 && latestSymptom.getSeverity() == 2) {
                             create = true;
                             System.out.println(">>>>> 16 hours of moderate to severe Sore Throat");
