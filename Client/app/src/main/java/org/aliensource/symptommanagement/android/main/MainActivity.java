@@ -499,7 +499,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
         mAlarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 now.getTimeInMillis(),
-                1000 * 15,//starts every 15 seconds
+                1000 * 60,//starts every 60 seconds
                 mAlarmNotificationReceiverPendingIntent);
     }
 
