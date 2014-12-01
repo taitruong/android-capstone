@@ -32,8 +32,8 @@ public abstract class BaseSvc<API> {
 		if (service != null) {
 			return service;
 		} else {
-			Intent i = new Intent(ctx, LoginScreenActivity.class);
-			ctx.startActivity(i);
+			Intent intent = new Intent(ctx, LoginScreenActivity.class);
+			ctx.startActivity(intent);
 			return null;
 		}
 	}

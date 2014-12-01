@@ -2,7 +2,11 @@ package org.aliensource.symptommanagement.android.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import org.aliensource.symptommanagement.android.LoginScreenActivity;
 
 /**
  * Created by ttruong on 21-Nov-14.
@@ -31,6 +35,14 @@ public final class MainUtils extends BaseUtils {
         data.server = prefs.getString(MainUtils.PREF_MAIN_SERVER, "");
         data.username = prefs.getString(MainUtils.PREF_MAIN_USERNAME, "");
         data.password = prefs.getString(MainUtils.PREF_MAIN_PASSWORD, "");
+        //go to login in case credentials are partially corrupt
+        if (TextUtils.isEmpty(data.server)
+                || TextUtils.isEmpty(data.password)
+                || TextUtils.isEmpty(data.username)) {
+            removeCredentials(activity);
+            Intent intent = new Intent(activity, LoginScreenActivity.class);
+            activity.startActivity(intent);
+        }
         return data;
     }
 
