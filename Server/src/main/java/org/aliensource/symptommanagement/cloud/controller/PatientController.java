@@ -207,7 +207,6 @@ public class PatientController {
         List<SymptomTime> allSoreThroatSymptomTimes = result[0];
         List<SymptomTime> allEatDrinkSymptomTimes = result[1];
 
-        // TODO sort by time, it is rare but possible that the id starts from scratch again
         createSoreThroatAlarm(patient, allSoreThroatSymptomTimes);
         createEatDrinkAlarm(patient, allEatDrinkSymptomTimes);
     }
