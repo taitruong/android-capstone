@@ -145,7 +145,7 @@ public class PatientReportFragment extends AbstractFragment {
                 ""};
         graphView.setVerticalLabels(verticalLabels);
         graphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.text_size_xsmall));
-        graphView.getGraphViewStyle().setVerticalLabelsWidth(75);
+        graphView.getGraphViewStyle().setVerticalLabelsWidth(200);
         //horizontal custom label
 		/*
 		 * date as label formatter
