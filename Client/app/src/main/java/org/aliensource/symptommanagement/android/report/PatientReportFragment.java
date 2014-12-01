@@ -93,12 +93,14 @@ public class PatientReportFragment extends AbstractFragment {
 
     protected GraphView.GraphViewData[] createData(List<SymptomTime> allSymptomTimes) {
         List<GraphView.GraphViewData> data = new ArrayList<GraphView.GraphViewData>();
+        long last = 0;
         for (SymptomTime symptomTime: allSymptomTimes) {
             Date date = new Date(symptomTime.getTimestamp());
             data.add(new GraphView.GraphViewData(symptomTime.getTimestamp(), symptomTime.getSeverity() + 1));
+            last = symptomTime.getTimestamp();
         }
         //add current date as baseline
-        data.add(new GraphView.GraphViewData(System.currentTimeMillis(), 0));
+        data.add(new GraphView.GraphViewData(last + 1, 0));
         GraphView.GraphViewData[] result = new GraphView.GraphViewData[data.size()];
         return data.toArray(result);
     }
