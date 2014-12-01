@@ -321,7 +321,7 @@ public class PatientController {
 
     @PostConstruct
     protected void createSampleCheckIns() {
-        System.out.println(">>>> init some some data");
+        System.out.println(">>>> create some sample data for testing");
         createEatDrinkCheckIn();
         createSoreThroatCheckIn();
     }

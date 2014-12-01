@@ -64,7 +64,6 @@ public class PatientReportFragment extends AbstractFragment {
             @Override
             public void success(List<SymptomTime>[] soreThroatEatDrink) {
                 if (!soreThroatEatDrink[0].isEmpty()) {
-                    System.out.println(">>>> sore throat report");
                     soreThroatMouthPainLayout.addView(
                             createReport(
                                     soreThroatEatDrink[0],
@@ -74,7 +73,6 @@ public class PatientReportFragment extends AbstractFragment {
                                     getString(R.string.check_in_symptom1_value1)));
                 }
                 if (!soreThroatEatDrink[1].isEmpty()) {
-                    System.out.println(">>>> eat drink report");
                     eatDrinkLayout.addView(
                             createReport(
                                     soreThroatEatDrink[1],
@@ -97,11 +95,7 @@ public class PatientReportFragment extends AbstractFragment {
         List<GraphView.GraphViewData> data = new ArrayList<GraphView.GraphViewData>();
         for (SymptomTime symptomTime: allSymptomTimes) {
             Date date = new Date(symptomTime.getTimestamp());
-/*            System.out.println(
-                    ">>>>>"
-                    + DateTimeUtils.FORMAT_DDMMYYYY_HHMMSS.format(date)
-                    + ", severity: " + symptomTime.getSeverity());
-*/            data.add(new GraphView.GraphViewData(symptomTime.getTimestamp(), symptomTime.getSeverity() + 1));
+            data.add(new GraphView.GraphViewData(symptomTime.getTimestamp(), symptomTime.getSeverity() + 1));
         }
         //add current date as baseline
         data.add(new GraphView.GraphViewData(System.currentTimeMillis(), 0));
