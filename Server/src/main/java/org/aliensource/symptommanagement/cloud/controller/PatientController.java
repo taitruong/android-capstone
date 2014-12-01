@@ -268,7 +268,13 @@ public class PatientController {
                         previousCal.add(Calendar.HOUR_OF_DAY, 4);
                         if (previousCal.compareTo(latestCal) <= 0
                                 && previousSymptom.getSeverity() >= 1
-                                && latestSymptom.getSeverity() == 2) {
+                                && latestSymptom.getSeverity() >= 1
+                                //latest severity must be greater
+                                //this makes sure that only these two rules applies:
+                                //16 hours from moderate to severe
+                                //16 hours from severe to severe
+                                //and NOT 16 hours from severe to moderate
+                                && !(latestSymptom.getSeverity() < previousSymptom.getSeverity())) {
                             create = true;
                             System.out.println(">>>>> 16 hours of moderate to severe Sore Throat");
                         }
