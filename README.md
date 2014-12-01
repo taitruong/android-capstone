@@ -20,6 +20,7 @@ Install the JDK here: http://www.oracle.com/technetwork/java/javase/downloads/jd
 - select "Windows x64" version for 64bit
 
 ## Install Git and TortoiseGit
+- not required when you have all source in a zip file (e.g. from the assessment in the capstone project)
 
 First install Git: http://msysgit.github.io/
 You might have to add the git install folder to your PATH. Test this:
@@ -30,7 +31,7 @@ Now install TortoiseGit: https://code.google.com/p/tortoisegit/
 
 ## GitHub
 
-Register on GitHub: https://github.com/ and ask Tai for having access to: https://github.com/taitruong/android-capstone
+Register on GitHub: https://github.com/ and ask user taitruong for having access to: https://github.com/taitruong/android-capstone
 
 Create the folder D:\development\android_capstone and start the command prompt in this folder. Clone the remote repository from GitHub to a local Git repository into the "git" folder:
 ```
@@ -42,6 +43,8 @@ Create the folder D:\development\android_capstone and start the command prompt i
 - Value: C:\Program Files\Java\jdk1.8.0_25
 
 ## Install Android Studio
+IMPORTANT:
+Install Android Studio 1.0.0 RC 2, older version won't work. Unless you adjust the build.gradle file with the latest gradle plugin...
 
 ### Download and install the Android emulator Genymotion: https://cloud.genymotion.com/page/launchpad/download/
 
@@ -57,7 +60,8 @@ Extract the file to your development environment.
 
 ### Download and install the development environment: 
 http://tools.android.com/download/studio/canary
-Select build 0.9.3
+Select Android Studio version 1.0.0 RC2
+
 
 ### Server Project
 Start Android Studio and import the server project via the menu:

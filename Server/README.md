@@ -1,8 +1,8 @@
-## Running the Video Service Application
+## Running the Symptom Management Application
 
 To run the application:
 
-Right-click on the Application class in the org.magnum.mobilecloud.video
+Right-click on the Application class in the org.aliensource.symptommanagement.cloud
 package, Run As->Java Application
 
 To stop the application:
