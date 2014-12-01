@@ -259,16 +259,18 @@ public class PatientController {
                 if (previousCal.compareTo(latestCal) <= 0) {
                     //12 hours of severe pain?
                     boolean create = false;
-                    if (latestSymptom.getSeverity() == 2) {
+                    if (previousSymptom.getSeverity() == 2
+                            && latestSymptom.getSeverity() == 2) {
                         create = true;
                         System.out.println(">>>>> 12 hours of severe Sore Throat");
                     } else {
                         //add another 4 hours, 16 hours of difference
                         previousCal.add(Calendar.HOUR_OF_DAY, 4);
                         if (previousCal.compareTo(latestCal) <= 0
-                                && latestSymptom.getSeverity() == 1) {
+                                && previousSymptom.getSeverity() == 1
+                                && latestSymptom.getSeverity() == 2) {
                             create = true;
-                            System.out.println(">>>>> 16 hours of moderate/severe Sore Throat");
+                            System.out.println(">>>>> 16 hours of moderate to severe Sore Throat");
                         }
                     }
                     if (create) {
@@ -277,6 +279,7 @@ public class PatientController {
                         alarm.setEnd(latestSymptom.getTimestamp());
                         alarm.setSymptom(latestSymptom.getSymptom());
                         alarm.setPatientId(patient.getId());
+                        alarm.setSeverity(latestSymptom.getSeverity());
                         alarmRepository.save(alarm);
                     }
                 }
@@ -309,6 +312,7 @@ public class PatientController {
                     alarm.setEnd(latestSymptom.getTimestamp());
                     alarm.setSymptom(latestSymptom.getSymptom());
                     alarm.setPatientId(patient.getId());
+                    alarm.setSeverity(latestSymptom.getSeverity());
                     alarmRepository.save(alarm);
                 }
             }

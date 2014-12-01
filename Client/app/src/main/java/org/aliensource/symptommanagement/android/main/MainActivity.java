@@ -29,6 +29,8 @@ import org.aliensource.symptommanagement.android.LoginScreenActivity;
 import org.aliensource.symptommanagement.android.R;
 import org.aliensource.symptommanagement.android.checkin.CheckInFragment;
 import org.aliensource.symptommanagement.android.checkin.CheckInUtils;
+import org.aliensource.symptommanagement.android.doctor.AlarmNotificationReceiver;
+import org.aliensource.symptommanagement.android.doctor.AlarmService;
 import org.aliensource.symptommanagement.android.doctor.DoctorFragment;
 import org.aliensource.symptommanagement.android.doctor.DoctorUtils;
 import org.aliensource.symptommanagement.android.patientslist.OnPatientsInteractionListener;
@@ -80,6 +82,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
     private Fragment[] fragments;
 
     private Map<String, PendingIntent> mReminderNotificationReceiverPendingIntentMap = new LinkedHashMap<String, PendingIntent>();
+    private PendingIntent alarmNotificationReceiverPendingIntent;
 
     private AlarmManager mAlarmManager;
     private int alarmId = 0;
@@ -388,7 +391,13 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
                 @Override
                 public void success(Boolean isPatient) {
                     if (isPatient) {
-                        createAlarms();
+                        createReminderNotifications();
+                    } else {
+                        Intent startServiceIntent = new Intent(getApplicationContext(),
+                                AlarmService.class);
+                        // Start the Service
+                        startService(startServiceIntent);
+                        createAlarmNotifications();
                     }
                 }
 
@@ -403,7 +412,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
         }
     }
 
-    private void createAlarms() {
+    private void createReminderNotifications() {
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         SharedPreferences prefs = MainUtils.getPreferences(this);
         Set<String> reminderAlarms = ReminderPreferencesUtils.getReminderAlarms(this);
@@ -467,9 +476,32 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
         }
     }
 
-    protected void updateReminderNotification(String oldTime, String newTime) {
-        PendingIntent mReminderNotificationReceiverPendingIntent = mReminderNotificationReceiverPendingIntentMap.remove(oldTime);
+    private void createAlarmNotifications() {
+        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
+        //cancel old alarms
+        if (alarmNotificationReceiverPendingIntent != null) {
+            mAlarmManager.cancel(alarmNotificationReceiverPendingIntent);
+            alarmNotificationReceiverPendingIntent = null;
+        }
+
+        GregorianCalendar now = new GregorianCalendar();
+        //create the intent for the AlarmNotificationReceiver and then wrap it in a PendingIntent
+        Intent mAlarmNotificationReceiverIntent = new Intent(MainActivity.this, AlarmNotificationReceiver.class);
+
+        //the id as request code
+        alarmId++;
+        PendingIntent mAlarmNotificationReceiverPendingIntent = PendingIntent.getBroadcast(
+                MainActivity.this,
+                alarmId, //this ID must be unique for each PendingIntent, otherwise only the last is set as an alarm
+                mAlarmNotificationReceiverIntent,
+                //set flag otherwise when an alarm is replace the old extra bundle is not replaced!
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        mAlarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                now.getTimeInMillis(),
+                1000 * 15,//starts every 15 seconds
+                mAlarmNotificationReceiverPendingIntent);
     }
 
     @Override
@@ -544,7 +576,4 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
         return super.onTouchEvent(event);
     }
 
-    protected void createAlarmData() {
-
-    }
 }

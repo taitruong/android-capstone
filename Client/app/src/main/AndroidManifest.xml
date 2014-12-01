@@ -33,6 +33,8 @@
 
         <receiver android:name=".reminder.ReminderNotificationReceiver"/>
         <receiver android:name=".doctor.AlarmNotificationReceiver"/>
+
+        <service android:name=".doctor.AlarmService"/>
     </application>
 
 </manifest>

@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
  */
 public abstract class BaseUtils {
 
-    private static final String SHARED_PREFERENCES_MAIN = "main-shared-preferences";
+    public static final String SHARED_PREFERENCES_MAIN = "main-shared-preferences";
 
     //pref utils
     public static SharedPreferences getPreferences(Activity activity) {

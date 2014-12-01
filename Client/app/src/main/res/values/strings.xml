@@ -101,6 +101,9 @@
     <string name="eat_drink">Eat/Drink</string>
 
     <!-- Doctor > Alarms -->
-    <string name="doctor_alarms_tab_title">Patient Alarms</string>
+    <string name="doctor_alarms_sore_throat_mouth_pain_title">%1$s Alarm [%2$s - %3$s]</string>
+    <string name="doctor_alarms_sore_throat_mouth_pain">Patient %1$s has %2$s mouth pain/sore throat!</string>
+    <string name="doctor_alarms_eat_drink_title">Alarm [%1$s - %2$s]: Eat/Drink</string>
+    <string name="doctor_alarms_eat_drink">Patient %1$s can not eat!</string>
 
 </resources>

@@ -17,6 +17,9 @@ public class Alarm extends BaseModel {
     protected long patientId;
     protected long start;
     protected long end;
+
+    protected int severity;
+
     @ManyToOne(fetch = FetchType.EAGER)
     protected Symptom symptom;
 
@@ -74,6 +77,14 @@ public class Alarm extends BaseModel {
         } else {
             return false;
         }
+    }
+
+    public int getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(int severity) {
+        this.severity = severity;
     }
 
 }

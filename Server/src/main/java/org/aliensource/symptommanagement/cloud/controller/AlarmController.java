@@ -4,6 +4,11 @@ import com.google.common.collect.Lists;
 
 import org.aliensource.symptommanagement.cloud.repository.Alarm;
 import org.aliensource.symptommanagement.cloud.repository.AlarmRepository;
+import org.aliensource.symptommanagement.cloud.repository.Doctor;
+import org.aliensource.symptommanagement.cloud.repository.DoctorRepository;
+import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.PatientAlarmDTO;
+import org.aliensource.symptommanagement.cloud.repository.PatientRepository;
 import org.aliensource.symptommanagement.cloud.service.AlarmSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +20,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ttruong on 26-Nov-14.
  */
 @Controller
 public class AlarmController {
+
+    @Autowired
+    private PatientRepository patientRepository;
 
     @Autowired
     private AlarmRepository repository;
@@ -46,6 +57,32 @@ public class AlarmController {
     public @ResponseBody
     List<Alarm> findByPatientId(@RequestParam(ServiceUtils.PARAMETER_ID) long patientId) {
         return repository.findByPatientId(patientId);
+    }
+
+    @RequestMapping(value= AlarmSvcApi.SEARCH_PATH_DOCTOR_USERNAME, method=RequestMethod.GET)
+    public @ResponseBody List<PatientAlarmDTO> getPatientAlarmsByDoctorUserName(
+            @RequestParam(ServiceUtils.PARAMETER_USERNAME) String doctorUserName) {
+        List<PatientAlarmDTO> patientAlarms = new ArrayList<PatientAlarmDTO>();
+
+        List<Patient> patients = Lists.newArrayList(patientRepository.findAll());
+        for (Patient patient: patients) {
+            for (Doctor doctor: patient.getDoctors()) {
+                if (doctor.getUsername().equals(doctorUserName)) {
+                    List<Alarm> alarms = findByPatientId(patient.getId());
+                    int alarmsSize = alarms.size();
+                    if (alarmsSize > 0) {
+                        //get latest alarm
+                        PatientAlarmDTO patientAlarmDTO = new PatientAlarmDTO();
+                        patientAlarmDTO.alarm = alarms.get(alarmsSize - 1);
+                        patientAlarmDTO.patient = patient;
+                        patientAlarms.add(patientAlarmDTO);
+                    }
+                    break;
+                }
+            }
+        }
+
+        return patientAlarms;
     }
 
 }

@@ -81,7 +81,7 @@ public final class CheckInUtils extends BaseUtils {
 
     public static boolean initCheckIn(Activity activity) {
         SharedPreferences prefs = getPreferences(activity);
-        return prefs.getBoolean(PREF_INIT_CHECKIN, false);
+        return prefs.getBoolean(PREF_INIT_CHECKIN, true);
     }
 
     public static void resetCheckIn(Activity activity, boolean reset) {
