@@ -21,7 +21,7 @@ targetCompatibility = 1.7
 
 war {
     baseName = 'server'
-    version =  '0.1.0'
+    version =  '1.0.0'
 }
 
 repositories {
@@ -74,5 +74,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.2'
+    gradleVersion = '2.2.1'
 }

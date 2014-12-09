@@ -13,7 +13,9 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            //runProguard replaced by minifyEnabled.
+            // See: http://stackoverflow.com/questions/27016385/error26-0-gradle-dsl-method-not-found-runproguard
+            minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
