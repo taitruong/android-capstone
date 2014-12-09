@@ -57,7 +57,7 @@ public class PatientReportFragment extends AbstractFragment {
             @Override
             public List<SymptomTime>[] call() throws Exception {
                 List<SymptomTime>[] soreThroatEatDrink =
-                        patientSvcApi.getSymptomTimesByEatDrinkSoreThroat(patientId);
+                        patientSvcApi.getSymptomTimesByEatDrinkOrSoreThroatMouthPain(patientId);
                 return soreThroatEatDrink;
             }
         }, new TaskCallback<List<SymptomTime>[]>() {

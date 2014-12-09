@@ -54,6 +54,7 @@ public class LoginScreenActivity extends Activity {
 		String pass = password_.getText().toString();
 		String server = server_.getText().toString();
 
+        //test call to make sure whether we have https access and the provided credentials are correct
 		final SecurityService svc = SecuritySvc.getInstance().init(server, user, pass);
         MainUtils.saveCredentials(this, server, user, pass);
 

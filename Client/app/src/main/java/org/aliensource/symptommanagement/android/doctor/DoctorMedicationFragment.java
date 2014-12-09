@@ -86,7 +86,6 @@ public class DoctorMedicationFragment extends ListFragment implements AdapterVie
     @OnClick(R.id.add)
     protected void add() {
         final Activity activity = getActivity();
-        final MedicamentSvcApi medicamentSvcApi = MedicamentSvc.getInstance().init(activity);
         final List<Long> medicamentIdList = new ArrayList<Long>();
         final List<String> medicamentNameList = new ArrayList<String>();
         //check whether all medicaments are already in any medication

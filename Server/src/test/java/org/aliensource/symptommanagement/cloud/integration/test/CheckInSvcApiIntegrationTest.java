@@ -26,8 +26,12 @@ public class CheckInSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Chec
 
     @Test
     public void testSaveAndFindByPatientId() {
+        long patientId = 1;
+        List<CheckIn> result = service.findByPatientId(patientId);
+        int sizeBefore = result.size();
+
         CheckIn model = new CheckIn();
-        model.setPatientId(1);
+        model.setPatientId(patientId);
         model = service.save(model);
 
         //exists in list?
@@ -37,9 +41,9 @@ public class CheckInSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Chec
 
         //search by id
         assertNotNull(service.findOne(model.getId()));
-        List<CheckIn> result = service.findByPatientId(1);
+        result = service.findByPatientId(patientId);
         assertNotNull(result);
-        assertEquals(1, result.size());
+        assertEquals(sizeBefore + 1, result.size());
     }
 
 /*    @Test

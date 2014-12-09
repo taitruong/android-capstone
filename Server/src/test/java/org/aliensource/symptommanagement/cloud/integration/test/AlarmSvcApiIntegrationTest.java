@@ -4,8 +4,12 @@ import org.aliensource.symptommanagement.cloud.repository.Alarm;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.PatientAlarmDTO;
 import org.aliensource.symptommanagement.cloud.repository.Role;
+import org.aliensource.symptommanagement.cloud.repository.Symptom;
 import org.aliensource.symptommanagement.cloud.service.AlarmSvcApi;
+import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.RoleSvcApi;
+import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
+import org.aliensource.symptommanagement.cloud.service.SymptomSvcApi;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -26,8 +30,24 @@ public class AlarmSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<AlarmS
 
     @Test
     public void testSave() {
+        long patientId = 111;
+        List<Alarm> alarms = service.findByPatientId(patientId);
+        int sizeBefore = alarms.size();
+
+        SymptomSvcApi symptomSvcApi = getService(SymptomSvcApi.class);
+        List<Symptom> symptoms = symptomSvcApi.findByType(ServiceUtils.SYMPTOM_TYPE_SORE_THROAT);
+        assertNotNull(ServiceUtils.SYMPTOM_TYPE_SORE_THROAT + " not found", symptoms);
+        assertEquals(1, symptoms.size());
+
+        PatientSvcApi patientSvcApi = getService(PatientSvcApi.class);
+        Patient patient = patientSvcApi.findOne(patientId);
+        assertNotNull(patient);
+        assertEquals(patientId, patient.getId());
+
         Alarm model = new Alarm();
-        model.setPatientId(111);
+        model.setPatientId(patient.getId());
+        model.setSymptom(symptoms.get(0));
+
         model = service.save(model);
 
         //exists in list?
@@ -38,9 +58,9 @@ public class AlarmSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<AlarmS
         //search by id
         assertNotNull(service.findOne(model.getId()));
 
-        List<Alarm> alarms = service.findByPatientId(111);
+        alarms = service.findByPatientId(patientId);
         assertNotNull(alarms);
-        assertEquals(1, alarms.size());
+        assertEquals(sizeBefore + 1, alarms.size());
     }
 
     @Test

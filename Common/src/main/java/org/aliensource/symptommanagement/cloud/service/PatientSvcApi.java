@@ -75,5 +75,5 @@ public interface PatientSvcApi {
             @Body CheckIn checkIn);
 
     @GET(SEARCH_PATH_SYMPTOM_TIMES_FOR_PATIENT)
-    public List<SymptomTime>[] getSymptomTimesByEatDrinkSoreThroat(@Path(ServiceUtils.PARAMETER_ID) long patientId);
+    public List<SymptomTime>[] getSymptomTimesByEatDrinkOrSoreThroatMouthPain(@Path(ServiceUtils.PARAMETER_ID) long patientId);
 }

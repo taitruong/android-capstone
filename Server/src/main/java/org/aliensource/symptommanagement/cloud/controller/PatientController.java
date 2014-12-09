@@ -26,7 +26,6 @@ import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,9 +81,9 @@ public class PatientController {
     }
 
     @RequestMapping(value= PatientSvcApi.SEARCH_PATH_SYMPTOM_TIMES_FOR_PATIENT, method= RequestMethod.GET)
-    public @ResponseBody List<SymptomTime>[] getSymptomTimesByEatDrinkSoreThroat(@PathVariable(ServiceUtils.PARAMETER_ID) long patientId) {
+    public @ResponseBody List<SymptomTime>[] getSymptomTimesByEatDrinkOrSoreThroatMouthPain(@PathVariable(ServiceUtils.PARAMETER_ID) long patientId) {
         Patient patient = findOne(patientId);
-        return getSymptomTimesByEatDrinkSoreThroat(patient, true, true);
+        return getSymptomTimesByEatDrinkOrSoreThroatMouthPain(patient, true, true);
     }
 
         @RequestMapping(value=PatientSvcApi.SVC_PATH, method=RequestMethod.POST)
@@ -203,7 +202,7 @@ public class PatientController {
             }
         }
         //filter all symptom times with the same symptom
-        List<SymptomTime>[] result = getSymptomTimesByEatDrinkSoreThroat(patient, addSoreThroat, addEatDrink);
+        List<SymptomTime>[] result = getSymptomTimesByEatDrinkOrSoreThroatMouthPain(patient, addSoreThroat, addEatDrink);
         List<SymptomTime> allSoreThroatSymptomTimes = result[0];
         List<SymptomTime> allEatDrinkSymptomTimes = result[1];
 
@@ -211,7 +210,7 @@ public class PatientController {
         createEatDrinkAlarm(patient, allEatDrinkSymptomTimes);
     }
 
-    protected List<SymptomTime>[] getSymptomTimesByEatDrinkSoreThroat(
+    protected List<SymptomTime>[] getSymptomTimesByEatDrinkOrSoreThroatMouthPain(
             Patient patient, boolean addSoreThroat, boolean addEatDrink) {
         List<SymptomTime> allSoreThroatSymptomTimes = new ArrayList<SymptomTime>();
         List<SymptomTime> allEatDrinkSymptomTimes = new ArrayList<SymptomTime>();
@@ -308,7 +307,8 @@ public class PatientController {
             previousCal.setTimeInMillis(previousSymptom.getTimestamp());
 
             // alarms are created only for severity > 0
-            if (previousSymptom.getSeverity() == 2 && latestSymptom.getSeverity() == 2) {
+            if (previousSymptom.getSeverity() == 2
+                    && latestSymptom.getSeverity() == 2) {
                 previousCal.add(Calendar.HOUR_OF_DAY, 12);
                 //must be at least 12 hours difference
                 if (previousCal.compareTo(latestCal) <= 0) {
@@ -328,14 +328,23 @@ public class PatientController {
     protected void createSampleCheckIns() {
         System.out.println(">>>> create some sample data for testing");
         createEatDrinkCheckIn();
-        createSoreThroatCheckIn();
+        createSoreThroatMouthPainCheckIn();
     }
 
+    /**
+     * Adds 5 eat/drink check-ins in the last 24 hours:
+     * - 24 hours ago: severity level 0
+     * - 22 hours ago: severity level 2
+     * - 10 hours ago: severity level 2
+     * -  6 hours ago: severity level 0
+     * -  4 hours ago: severity level 1
+     */
     protected void createEatDrinkCheckIn() {
         Patient patient = repository.findOne(1L);
 
         Calendar base = new GregorianCalendar();
         //create checkin with sore throat
+        //24 hours ago - last day
         base.add(Calendar.DAY_OF_MONTH, -1);
         CheckIn checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -352,6 +361,7 @@ public class PatientController {
         addCheckIn(1, checkIn);
 
         //create checkin with sore throat
+        //22 hours ago - last day + 2 hours
         base.add(Calendar.HOUR_OF_DAY, 2);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -367,6 +377,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
+        //10 hours ago
         base.add(Calendar.HOUR_OF_DAY, 12);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -381,6 +392,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
+        //6 hours ago
         base.add(Calendar.HOUR_OF_DAY, 4);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -395,6 +407,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
+        //4 hours ago
         base.add(Calendar.HOUR_OF_DAY, 2);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -411,12 +424,23 @@ public class PatientController {
 
     }
 
-    protected void createSoreThroatCheckIn() {
+    /**
+     * Adds 7 sore throat/mouth pain check-ins in the last 48 hours:
+     * - 48 hours ago: severity level 0
+     * - 46 hours ago: severity level 0
+     * - 38 hours ago: severity level 1
+     * - 22 hours ago: severity level 1
+     * - 18 hours ago: severity level 2
+     * -  6 hours ago: severity level 2
+     * -  3 hours ago: severity level 0
+     */
+    protected void createSoreThroatMouthPainCheckIn() {
         Patient patient = repository.findOne(1L);
         Symptom soreThroat = symptomRepository.findByType(ServiceUtils.SYMPTOM_TYPE_SORE_THROAT).get(0);
 
         Calendar base = new GregorianCalendar();
         //create checkin with sore throat
+        //48 hours ago
         base.add(Calendar.DAY_OF_MONTH, -2);
         CheckIn checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -432,6 +456,7 @@ public class PatientController {
         addCheckIn(1, checkIn);
 
         //create checkin with sore throat
+        //46 hours ago - 2 days ago + 2 hours
         base.add(Calendar.HOUR_OF_DAY, 2);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -446,6 +471,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
+        //38 hours ago
         base.add(Calendar.HOUR_OF_DAY, 8);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -460,6 +486,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
+        //22 hours ago
         base.add(Calendar.HOUR_OF_DAY, 16);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -474,6 +501,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
+        //18 hours ago
         base.add(Calendar.HOUR_OF_DAY, 4);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -488,6 +516,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
+        //6 hours ago
         base.add(Calendar.HOUR_OF_DAY, 12);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());
@@ -502,6 +531,7 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
 
+        //3 hours ago
         base.add(Calendar.HOUR_OF_DAY, 3);
         checkIn = new CheckIn();
         checkIn.setTimestamp(base.getTimeInMillis());

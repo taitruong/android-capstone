@@ -30,7 +30,7 @@ public class SecurityController {
     @Qualifier("clientDetailsService") // userDetailsService and clientDetailsService are the same
     private ClientAndUserDetailsService combinedService;
 
-    @RequestMapping(value = ServiceUtils.PATH_AUTH_SERVICE, method = RequestMethod.POST)
+    @RequestMapping(value = ServiceUtils.PATH_AUTH_SERVICE, method = RequestMethod.GET)
     public @ResponseBody boolean hasRole(@RequestParam(ServiceUtils.PARAMETER_ROLE) String role, Principal p, HttpServletRequest request) {
         UserDetails userDetails = combinedService.loadUserByUsername(p.getName());
 

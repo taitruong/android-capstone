@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
  * Created by ttruong on 14-Nov-14.
  */
 @Entity
-public class CheckIn extends BaseModel {
+public class CheckIn extends BaseModel implements BaseTimestampModel {
 
     protected long timestamp;
 

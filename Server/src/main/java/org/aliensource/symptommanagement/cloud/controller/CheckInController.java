@@ -6,6 +6,7 @@ import org.aliensource.symptommanagement.cloud.repository.CheckIn;
 import org.aliensource.symptommanagement.cloud.repository.CheckInRepository;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.PatientRepository;
+import org.aliensource.symptommanagement.cloud.repository.TimestampComparator;
 import org.aliensource.symptommanagement.cloud.service.CheckInSvcApi;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
@@ -40,10 +41,17 @@ public class CheckInController {
         return repository.findOne(id);
     }
 
+    /**
+     * Retrieves all check-ins from a patient and sort it by timestamp
+     * @param patientId
+     * @return
+     */
     @RequestMapping(value= CheckInSvcApi.SEARCH_PATH_PATIENT, method= RequestMethod.GET)
     public @ResponseBody
     List<CheckIn> findByPatientId(@PathVariable(ServiceUtils.PARAMETER_ID) long patientId) {
-        return repository.findByPatientId(patientId);
+        List<CheckIn> result = repository.findByPatientId(patientId);
+        result.sort(new TimestampComparator<CheckIn>());
+        return result;
     }
 
     @RequestMapping(value=CheckInSvcApi.SVC_PATH, method=RequestMethod.POST)
