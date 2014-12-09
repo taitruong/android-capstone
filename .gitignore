@@ -1,8 +1,14 @@
-*/.gradle
-*/.idea
-*/build
-*/app/build
+# generated files
+**/bin
+**/gen
+
+**/.gradle
+**/.idea
+**/build
 *.iml
+*.dex
 *.class
+*.apk
+*.ap_
 desktop.ini
 local.properties
