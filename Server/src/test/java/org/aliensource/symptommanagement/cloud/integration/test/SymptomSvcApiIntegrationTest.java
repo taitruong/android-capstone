@@ -31,6 +31,7 @@ public class SymptomSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Symp
     @Test
     public void testSave() {
         Symptom model = new Symptom();
+        model.setType("SomePseudoSymptom");
         model = service.save(model);
 
         //exists in list?

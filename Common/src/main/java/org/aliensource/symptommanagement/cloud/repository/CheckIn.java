@@ -24,10 +24,14 @@ public class CheckIn extends BaseModel implements BaseTimestampModel {
 
     protected long patientId;
 
+    // TODO @tt why does it create a join table?
+    // Ideally the SymptomTime has a reference check_in_id to this
     @OneToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)
     protected List<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
 
+    // TODO @tt why does it create a join table?
+    // Ideally the IntakeTime has a reference check_in_id to this
     @OneToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)
     protected List<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();

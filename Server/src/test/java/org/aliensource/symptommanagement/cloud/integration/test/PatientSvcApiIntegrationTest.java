@@ -459,7 +459,7 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
     }
 
     @Test
-    public void testGetSymptomTimesByEatDrinkSoreThroat() {
+    public void testGetSymptomTimesByEatDrinkOrSoreThroatMouthPain() {
         List<SymptomTime>[] result = service.getSymptomTimesByEatDrinkOrSoreThroatMouthPain(1);
         assertNotNull(result);
     }
