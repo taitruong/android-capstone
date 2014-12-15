@@ -1,5 +1,6 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 
 import javax.persistence.CascadeType;
@@ -14,6 +15,12 @@ import javax.persistence.ManyToOne;
 @Entity
 public class SymptomTime extends BaseModel implements BaseTimestampModel {
 
+    @ManyToOne
+    @JoinColumn(name = "check_in_id")
+    //needs to be ignored, otherwise we get an infinite cycle in the JSON output
+    @JsonIgnore
+    protected CheckIn checkIn;
+
     protected long timestamp;
 
     protected int severity;
@@ -22,6 +29,14 @@ public class SymptomTime extends BaseModel implements BaseTimestampModel {
     // when calling e.g. CheckInController.findAll
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     protected Symptom symptom;
+
+    public CheckIn getCheckIn() {
+        return checkIn;
+    }
+
+    public void setCheckIn(CheckIn checkIn) {
+        this.checkIn = checkIn;
+    }
 
     public long getTimestamp() {
         return timestamp;

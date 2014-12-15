@@ -167,6 +167,7 @@ public class PatientController {
             //first attach symptom from DB instead of using detached symptom provided by client
             Symptom symptom = symptomRepository.findOne(symptomTime.getSymptom().getId());
             symptomTime.setSymptom(symptom);
+            symptomTime.setCheckIn(checkIn);
 //            persistedSymptomTimes.add(symptomTimeRepository.save(symptomTime));
         }
         List<IntakeTime> persistedIntakeTimes = new ArrayList<IntakeTime>();
@@ -174,6 +175,7 @@ public class PatientController {
             //first attach medicament from DB instead of using detached medicament provided by client
             Medicament medicament = medicamentRepository.findOne(intakeTime.getMedicament().getId());
             intakeTime.setMedicament(medicament);
+            intakeTime.setCheckIn(checkIn);
 //            persistedIntakeTimes.add(intakeTimeRepository.save(intakeTime));
         }
 

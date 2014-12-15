@@ -1,9 +1,11 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
@@ -12,8 +14,22 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Medication extends BaseModel {
 
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    //needs to be ignored, otherwise we get an infinite cycle in the JSON output
+    @JsonIgnore
+    protected Patient patient;
+
     @ManyToOne(fetch = FetchType.EAGER)
     protected Medicament medicament;
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 
     public Medicament getMedicament() {
         return medicament;

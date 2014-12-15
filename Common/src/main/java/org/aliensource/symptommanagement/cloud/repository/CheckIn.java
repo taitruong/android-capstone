@@ -1,7 +1,5 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Objects;
 
 import java.util.ArrayList;
@@ -10,8 +8,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -24,16 +20,14 @@ public class CheckIn extends BaseModel implements BaseTimestampModel {
 
     protected long patientId;
 
-    // TODO @tt why does it create a join table?
-    // Ideally the SymptomTime has a reference check_in_id to this
     @OneToMany(fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL,
+            mappedBy = "checkIn")
     protected List<SymptomTime> symptomTimes = new ArrayList<SymptomTime>();
 
-    // TODO @tt why does it create a join table?
-    // Ideally the IntakeTime has a reference check_in_id to this
     @OneToMany(fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL,
+            mappedBy = "checkIn")
     protected List<IntakeTime> intakeTimes = new ArrayList<IntakeTime>();
 
     public long getTimestamp() {

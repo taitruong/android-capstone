@@ -1,9 +1,11 @@
 package org.aliensource.symptommanagement.cloud.repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
@@ -12,10 +14,24 @@ import javax.persistence.ManyToOne;
 @Entity
 public class IntakeTime extends BaseModel implements BaseTimestampModel {
 
+    @ManyToOne
+    @JoinColumn(name = "check_in_id")
+    //needs to be ignored, otherwise we get an infinite cycle in the JSON output
+    @JsonIgnore
+    protected CheckIn checkIn;
+
     protected long timestamp;
 
     @ManyToOne
     protected Medicament medicament;
+
+    public CheckIn getCheckIn() {
+        return checkIn;
+    }
+
+    public void setCheckIn(CheckIn checkIn) {
+        this.checkIn = checkIn;
+    }
 
     public long getTimestamp() {
         return timestamp;

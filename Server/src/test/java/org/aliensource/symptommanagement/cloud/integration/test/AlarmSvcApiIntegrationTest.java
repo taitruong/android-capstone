@@ -30,7 +30,7 @@ public class AlarmSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<AlarmS
 
     @Test
     public void testSave() {
-        long patientId = 111;
+        long patientId = 12;
         List<Alarm> alarms = service.findByPatientId(patientId);
         int sizeBefore = alarms.size();
 

@@ -32,7 +32,9 @@ public class Patient extends Person {
     )
     protected List<Doctor> doctors = new ArrayList<Doctor>();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            mappedBy = "patient")
     protected List<Medication> medications = new ArrayList<Medication>();
 
 //    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
