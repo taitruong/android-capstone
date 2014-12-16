@@ -2,6 +2,7 @@ package org.aliensource.symptommanagement.cloud.service;
 
 import org.aliensource.symptommanagement.cloud.repository.CheckIn;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.Reminder;
 import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public interface PatientSvcApi {
                     + "/{" + ServiceUtils.PARAMETER_ID + "}";
 
     public static final String SVC_PATH_PATIENT_CHECKIN = SVC_PATH_ID + "/checkIn";
+
+    public static final String SVC_PATH_PATIENT_REMINDER = SVC_PATH_ID + "/reminder";
 
     @GET(SVC_PATH)
     public List<Patient> findAll();
@@ -70,10 +73,16 @@ public interface PatientSvcApi {
             @Query(ServiceUtils.PARAMETER_FILTER) String filter);
 
     @POST(SVC_PATH_PATIENT_CHECKIN)
-    public Patient addCheckIn(
+    public CheckIn addCheckIn(
             @Path(ServiceUtils.PARAMETER_ID) long patientId,
             @Body CheckIn checkIn);
 
     @GET(SEARCH_PATH_SYMPTOM_TIMES_FOR_PATIENT)
     public List<SymptomTime>[] getSymptomTimesByEatDrinkOrSoreThroatMouthPain(@Path(ServiceUtils.PARAMETER_ID) long patientId);
+
+    @POST(SVC_PATH_PATIENT_REMINDER)
+    public Reminder addReminder(
+            @Path(ServiceUtils.PARAMETER_ID) long patientId,
+            @Body Reminder reminder);
+
 }

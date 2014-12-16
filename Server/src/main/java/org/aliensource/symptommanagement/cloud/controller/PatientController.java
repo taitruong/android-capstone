@@ -15,6 +15,8 @@ import org.aliensource.symptommanagement.cloud.repository.MedicamentRepository;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.PatientRepository;
+import org.aliensource.symptommanagement.cloud.repository.Reminder;
+import org.aliensource.symptommanagement.cloud.repository.ReminderRepository;
 import org.aliensource.symptommanagement.cloud.repository.Symptom;
 import org.aliensource.symptommanagement.cloud.repository.SymptomRepository;
 import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
@@ -68,6 +70,9 @@ public class PatientController {
 
     @Autowired
     private AlarmRepository alarmRepository;
+
+    @Autowired
+    private ReminderRepository reminderRepository;
 
     @RequestMapping(value=PatientSvcApi.SVC_PATH, method=RequestMethod.GET)
     public @ResponseBody List<Patient> findAll(){
@@ -155,12 +160,13 @@ public class PatientController {
 
 
     @RequestMapping(value= PatientSvcApi.SVC_PATH_PATIENT_CHECKIN, method= RequestMethod.POST)
-    public @ResponseBody Patient addCheckIn(
+    public @ResponseBody CheckIn addCheckIn(
             @PathVariable(ServiceUtils.PARAMETER_ID) long patientId,
             @RequestBody CheckIn detachedCheckIn) {
-        CheckIn checkIn = checkInRepository.save(new CheckIn());
+        CheckIn checkIn = new CheckIn();
         checkIn.setPatientId(patientId);
         checkIn.setTimestamp(detachedCheckIn.getTimestamp());
+        checkIn = checkInRepository.save(new CheckIn());
 
         List<SymptomTime> persistedSymptomTimes = new ArrayList<SymptomTime>();
         for (SymptomTime symptomTime: detachedCheckIn.getSymptomTimes()) {
@@ -187,7 +193,7 @@ public class PatientController {
 
         Patient patient = repository.findOne(patientId);
         createAlarms(patient, checkIn.getSymptomTimes());
-        return patient;
+        return checkIn;
     }
 
     protected void createAlarms(Patient patient, List<SymptomTime> checkInSymptomTimes) {
@@ -548,4 +554,24 @@ public class PatientController {
         //save
         addCheckIn(1, checkIn);
     }
+
+    @RequestMapping(value= PatientSvcApi.SVC_PATH_PATIENT_REMINDER, method= RequestMethod.POST)
+    public @ResponseBody Reminder addReminder(
+            @PathVariable(ServiceUtils.PARAMETER_ID) long patientId,
+            @RequestBody Reminder detachedModel) {
+        Patient patient = repository.findOne(patientId);
+        //attach patient first before checking for duplicate reminders
+        detachedModel.setPatient(patient);
+        //make sure there is no reminder with the same timestamp
+        //Reminder.equals() will then check for timestamp and patient
+        int index = patient.getReminders().indexOf(detachedModel);
+        if (index != -1) {
+            //return the attached model
+            return patient.getReminders().get(index);
+        }
+        Reminder model = reminderRepository.save(detachedModel);
+
+        return model;
+    }
+
 }

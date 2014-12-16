@@ -37,8 +37,10 @@ public class Patient extends Person {
             mappedBy = "patient")
     protected List<Medication> medications = new ArrayList<Medication>();
 
-//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    protected List<Alarm> alarms = new ArrayList<Alarm>();
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            mappedBy = "patient")
+    protected List<Reminder> reminders = new ArrayList<Reminder>();
 
     @Override
     //workaround otherwise JSON conversion complaints
@@ -72,6 +74,14 @@ public class Patient extends Person {
         this.medications = medications;
     }
 
+    public List<Reminder> getReminders() {
+        return reminders;
+    }
+
+    public void setReminders(List<Reminder> reminders) {
+        this.reminders = reminders;
+    }
+
     @Override
     public int hashCode() {
         // Google Guava provides great utilities for hashing
@@ -84,7 +94,8 @@ public class Patient extends Person {
                 medicalRecordNumber,
                 roles,
                 doctors,
-                medications
+                medications,
+                reminders
                 /*alarms*/);
     }
 
@@ -102,6 +113,7 @@ public class Patient extends Person {
                 && Objects.equal(roles, other.roles)
                 && Objects.equal(doctors, other.doctors)
                 && Objects.equal(medications, other.medications)
+                    && Objects.equal(reminders, other.reminders)
                 /*&& Objects.equal(alarms, other.alarms)*/;
         } else {
             return false;

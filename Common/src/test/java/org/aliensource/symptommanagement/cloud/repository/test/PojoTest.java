@@ -30,7 +30,7 @@ import com.openpojo.validation.test.impl.SetterTester;
  */
 public class PojoTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_CLASS_COUNT = 17;
+    private static final int EXPECTED_CLASS_COUNT = 18;
 
     // The package to org.aliensource.symptommanagement.android.videoup.test
     private static final String POJO_PACKAGE = Person.class.getPackage().getName();

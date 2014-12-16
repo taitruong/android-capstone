@@ -11,11 +11,13 @@ import org.aliensource.symptommanagement.cloud.repository.IntakeTime;
 import org.aliensource.symptommanagement.cloud.repository.Medicament;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
+import org.aliensource.symptommanagement.cloud.repository.Reminder;
 import org.aliensource.symptommanagement.cloud.repository.Symptom;
 import org.aliensource.symptommanagement.cloud.repository.SymptomTime;
 import org.aliensource.symptommanagement.cloud.service.AlarmSvcApi;
 import org.aliensource.symptommanagement.cloud.service.CheckInSvcApi;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
+import org.aliensource.symptommanagement.cloud.service.ReminderSvcApi;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
 import org.aliensource.symptommanagement.cloud.service.SymptomSvcApi;
 import org.junit.Test;
@@ -39,6 +41,7 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
     private final Patient model = TestUtils.randomPatientWithoutDoctorsAndRoles();
     private CheckInSvcApi checkInSvcApi = getService(CheckInSvcApi.class);
+    private ReminderSvcApi reminderSvcApi = getService(ReminderSvcApi.class);
 
     @Test
     public void testAdd() throws Exception {
@@ -118,22 +121,23 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
     }
 
     @Test
-    public void testCheckIn() {
+    public void testAddCheckIn() {
         //the patient we want to do the check-in
         long patientId = 1;
         Patient patient = service.findOne(patientId);
         assertNotNull(patient);
 
-        Calendar timestamp = new GregorianCalendar();
+        long timestamp = System.currentTimeMillis();
         //get last check-in and use this timestamp to continue a check-in at that time
         CheckInSvcApi checkInSvcApi = getService(CheckInSvcApi.class);
         List<CheckIn> checkIns = checkInSvcApi.findByPatientId(patientId);
         assertNotNull(checkIns);
         if (checkIns.size() > 0) {
-            long lastCheckInTime = checkIns.get(checkIns.size() - 1).getTimestamp();
-            timestamp.setTime(new Date((lastCheckInTime)));
+            GregorianCalendar lastCheckInTime = new GregorianCalendar();
+            lastCheckInTime.setTimeInMillis(checkIns.get(checkIns.size() - 1).getTimestamp());
             //add another hour
-            timestamp.add(Calendar.HOUR_OF_DAY, 1);
+            lastCheckInTime.add(Calendar.HOUR_OF_DAY, 1);
+            timestamp = lastCheckInTime.getTimeInMillis();
         }
 
         //create the symptom times
@@ -148,7 +152,7 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
             symptomTime.setSymptom(symptoms.get(0));
 
             symptomTime.setSeverity(1);
-            symptomTime.setTimestamp(timestamp.getTimeInMillis());
+            symptomTime.setTimestamp(timestamp);
 
             symptomTimes.add(symptomTime);
         }
@@ -158,30 +162,33 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         for (Medication medication : patient.getMedications()) {
             IntakeTime intakeTime = new IntakeTime();
             intakeTime.setMedicament(medication.getMedicament());
-            intakeTime.setTimestamp(timestamp.getTimeInMillis());
+            intakeTime.setTimestamp(timestamp);
             intakeTimes.add(intakeTime);
         }
 
         //attach to check-in
-        CheckIn checkIn = new CheckIn();
-        checkIn.setTimestamp(timestamp.getTimeInMillis());
-        checkIn.setIntakeTimes(intakeTimes);
-        checkIn.setSymptomTimes(symptomTimes);
+        CheckIn model = new CheckIn();
+        model.setTimestamp(timestamp);
+        model.setIntakeTimes(intakeTimes);
+        model.setSymptomTimes(symptomTimes);
 
         int beforeCheckInSize = checkInSvcApi.findByPatientId(patient.getId()).size();
 
-        patient = service.addCheckIn(patientId, checkIn);
-
-        //check-in saved?
+        model = service.addCheckIn(patientId, model);
+        //correct timestamp?
+        assertTrue("Saved timestamp is not the same", model.getTimestamp() == timestamp);
+        //correct patient id?
+        assertTrue("Wrong patient ID", model.getPatientId() == patientId);
+        //model saved?
         List<CheckIn> result = checkInSvcApi.findByPatientId(patient.getId());
         assertEquals(
                 beforeCheckInSize + 1, result.size());
         //get last check-in
-        checkIn = result.get(result.size() - 1);
+        model = result.get(result.size() - 1);
         //symptom times saved?
-        assertEquals(symptomTimes.size(), checkIn.getSymptomTimes().size());
+        assertEquals(symptomTimes.size(), model.getSymptomTimes().size());
         //intake times saved?
-        assertEquals(intakeTimes.size(), checkIn.getIntakeTimes().size());
+        assertEquals(intakeTimes.size(), model.getIntakeTimes().size());
         //test call to check-in controller to make sure whether there is no JPA or JSON problem
         checkInSvcApi.findAll();
     }
@@ -237,14 +244,14 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
             }
             System.out.println(">>>> start at " + DateTimeUtils.FORMAT_DDMMYYYY_HHMM.format(timestamp.getTime()));
         }
-        CheckIn checkIn = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 0);
+        CheckIn model = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 0);
 
         AlarmSvcApi alarmSvcApi = getService(AlarmSvcApi.class);
         List<Alarm> firstAlarms =  alarmSvcApi.findByPatientId(patientId);
         assertNotNull(firstAlarms);
         int alarmFirstSize = firstAlarms.size();
 
-        patient = service.addCheckIn(patientId, checkIn);
+        model = service.addCheckIn(patientId, model);
         List<Alarm> secondAlarms = alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         int alarmSecondSize = secondAlarms.size();
@@ -253,8 +260,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         assertEquals(alarmFirstSize, alarmSecondSize);
 
         timestamp.add(Calendar.HOUR_OF_DAY, 12);
-        checkIn = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 1);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 1);
+        model = service.addCheckIn(patientId, model);
         secondAlarms = alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -264,8 +271,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         //test severe alarm
         //first severe checkin
         timestamp.add(Calendar.HOUR_OF_DAY, 3);
-        checkIn = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 2);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 2);
+        model = service.addCheckIn(patientId, model);
         secondAlarms = alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -273,8 +280,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         assertEquals(alarmFirstSize, alarmSecondSize);
         //second severe alarm
         timestamp.add(Calendar.HOUR_OF_DAY, 12);
-        checkIn = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 2);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 2);
+        model = service.addCheckIn(patientId, model);
         secondAlarms = alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -283,8 +290,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
         //third severe alarm
         timestamp.add(Calendar.HOUR_OF_DAY, 20);
-        checkIn = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 2);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 2);
+        model = service.addCheckIn(patientId, model);
         secondAlarms = alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -293,8 +300,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
         //fourth moderate alarm
         timestamp.add(Calendar.HOUR_OF_DAY, 12);
-        checkIn = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 1);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 1);
+        model = service.addCheckIn(patientId, model);
         secondAlarms = alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -303,8 +310,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
         //fifth moderate alarm
         timestamp.add(Calendar.HOUR_OF_DAY, 16);
-        checkIn = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 2);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithSoreThroatSymptom(timestamp.getTimeInMillis(), 2);
+        model = service.addCheckIn(patientId, model);
         secondAlarms = alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -364,14 +371,14 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
             //add another hour
             timestamp.add(Calendar.HOUR_OF_DAY, 1);
         }
-        CheckIn checkIn = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 0);
+        CheckIn model = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 0);
 
         AlarmSvcApi alarmSvcApi = getService(AlarmSvcApi.class);
         List<Alarm> firstAlarms =  alarmSvcApi.findByPatientId(patientId);
         assertNotNull(firstAlarms);
         int alarmFirstSize = firstAlarms.size();
 
-        patient = service.addCheckIn(patientId, checkIn);
+        model = service.addCheckIn(patientId, model);
         List<Alarm> secondAlarms =  alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         int alarmSecondSize = secondAlarms.size();
@@ -380,8 +387,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         assertEquals(alarmFirstSize, alarmSecondSize);
 
         timestamp.add(Calendar.HOUR_OF_DAY, 12);
-        checkIn = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 1);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 1);
+        model = service.addCheckIn(patientId, model);
         secondAlarms =  alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -391,8 +398,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         //test severe alarm
         //first severe checkin
         timestamp.add(Calendar.HOUR_OF_DAY, 3);
-        checkIn = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 2);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 2);
+        model = service.addCheckIn(patientId, model);
         secondAlarms =  alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -400,8 +407,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
         assertEquals(alarmFirstSize, alarmSecondSize);
         //second severe alarm
         timestamp.add(Calendar.HOUR_OF_DAY, 12);
-        checkIn = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 2);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 2);
+        model = service.addCheckIn(patientId, model);
         secondAlarms =  alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -410,8 +417,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
         //third severe alarm
         timestamp.add(Calendar.HOUR_OF_DAY, 20);
-        checkIn = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 2);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 2);
+        model = service.addCheckIn(patientId, model);
         secondAlarms =  alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -420,8 +427,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
         //fourth moderate alarm
         timestamp.add(Calendar.HOUR_OF_DAY, 16);
-        checkIn = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 1);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 1);
+        model = service.addCheckIn(patientId, model);
         secondAlarms =  alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -430,8 +437,8 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
 
         //fifth moderate alarm
         timestamp.add(Calendar.HOUR_OF_DAY, 12);
-        checkIn = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 2);
-        patient = service.addCheckIn(patientId, checkIn);
+        model = createCheckInWithEatDrinkSymptom(timestamp.getTimeInMillis(), 2);
+        model = service.addCheckIn(patientId, model);
         secondAlarms =  alarmSvcApi.findByPatientId(patient.getId());
         assertNotNull(secondAlarms);
         alarmSecondSize = secondAlarms.size();
@@ -462,6 +469,66 @@ public class PatientSvcApiIntegrationTest extends BaseSvcApiIntegrationTest<Pati
     public void testGetSymptomTimesByEatDrinkOrSoreThroatMouthPain() {
         List<SymptomTime>[] result = service.getSymptomTimesByEatDrinkOrSoreThroatMouthPain(1);
         assertNotNull(result);
+    }
+
+    @Test
+    public void testAddReminder() {
+        //the patient we want to do the check-in
+        long patientId = 1;
+        Patient patient = service.findOne(patientId);
+        assertNotNull(patient);
+
+        //create reminder
+        long timestamp = new GregorianCalendar().getTimeInMillis();
+        Reminder model = new Reminder();
+        model.setTimestamp(timestamp);
+
+        int beforeReminderSize = reminderSvcApi.findByPatientId(patient.getId()).size();
+        int beforeReminderListSize = patient.getReminders().size();
+
+        model = service.addReminder(patientId, model);
+        //correct timestamp?
+        assertTrue("Saved timestamp is not the same", model.getTimestamp() == timestamp);
+        //model saved?
+        List<Reminder> result = reminderSvcApi.findByPatientId(patient.getId());
+        assertEquals("Expected: " + (beforeReminderSize + 1) +
+                        "Actual: " + result.size() +
+                        "Reminders returned by ReminderSvcApi is not correct",
+                beforeReminderSize + 1, result.size());
+        //model added to patient?
+        patient = service.findOne(patientId);
+        assertEquals("Expected: " + (beforeReminderListSize + 1) +
+                        "Actual: " + patient.getReminders().size() +
+                        "Reminders returned by PatientSvcApi is not correct",
+                beforeReminderListSize + 1, patient.getReminders().size());
+        //double-check
+        assertTrue(
+                "Reminder is not added to the patient", patient.getReminders().contains(model));
+
+        //save new reminder with exactly the same timestamp and make sure it is not duplicated
+        model = new Reminder();
+        model.setTimestamp(timestamp);
+        model = service.addReminder(patientId, model);
+        //correct timestamp?
+        assertTrue("Saved timestamp is not the same", model.getTimestamp() == timestamp);
+        //model saved?
+        result = reminderSvcApi.findByPatientId(patient.getId());
+        assertEquals("Expected: " + (beforeReminderSize + 1) +
+                        "Actual: " + result.size() +
+                        "Reminders returned by ReminderSvcApi is not correct",
+                beforeReminderSize + 1, result.size());
+        //model added to patient?
+        patient = service.findOne(patientId);
+        assertEquals("Expected: " + (beforeReminderListSize + 1) +
+                        "Actual: " + patient.getReminders().size() +
+                        "Reminders returned by PatientSvcApi is not correct",
+                beforeReminderListSize + 1, patient.getReminders().size());
+        //double-check
+        assertTrue(
+                "Reminder is not added to the patient", patient.getReminders().contains(model));
+        //test calls to make sure whether there is a JPA or JSON cyclic problem
+        reminderSvcApi.findAll();
+        service.findAll();
     }
 
     @Override

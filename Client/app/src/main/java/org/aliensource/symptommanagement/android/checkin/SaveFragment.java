@@ -138,14 +138,14 @@ public class SaveFragment extends AbstractFragment {
                                         //fix this later...
                                         checkIn.setIntakeTimes(intakeTimes);
                                         checkIn.setSymptomTimes(symptomTimes);
-                                        CallableTask.invoke(new Callable<Patient>() {
+                                        CallableTask.invoke(new Callable<CheckIn>() {
                                             @Override
-                                            public Patient call() throws Exception {
+                                            public CheckIn call() throws Exception {
                                                 return patientService.addCheckIn(patient.getId(), checkIn);
                                             }
-                                        }, new TaskCallback<Patient>() {
+                                        }, new TaskCallback<CheckIn>() {
                                             @Override
-                                            public void success(Patient patient) {
+                                            public void success(CheckIn checkIn) {
                                                 //reset values entered for check-in and return to MainActivity
                                                 CheckInUtils.resetCheckIn(getActivity(), true);
                                                 Intent intent = new Intent(getActivity(), MainActivity.class);
