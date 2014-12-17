@@ -35,6 +35,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Import(OAuth2SecurityConfiguration.class)
 // enable for using @PreAuthorize
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
+//TODO: upgrade to Spring Boot 1.2.0 - see: http://spring.io/blog/2014/12/11/spring-boot-1-2-0-released
+//TODO Spring Boot 1.2.0 @SpringBootApplication replaces @Configuration + @EnableAutoConfiguration + @ComponentScan
 public class Application {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Application.class);
