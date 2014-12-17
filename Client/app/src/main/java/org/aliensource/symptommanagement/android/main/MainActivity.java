@@ -63,7 +63,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 
-public class MainActivity extends SherlockFragmentActivity implements OnPatientsInteractionListener {
+public class MainActivity
+        extends SherlockFragmentActivity implements OnPatientsInteractionListener {
 
     public static final String ARGS_IS_DOCTOR = "is_doctor";
 
@@ -149,7 +150,8 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //TODO - not ideal to always call initMenus but I don't know yet how to remove the init logic in the onCreate()-method
+        //TODO - not ideal to always call initMenus but
+        // I don't know yet how to remove the init logic in the onCreate()-method
         initMenus();
         return super.onCreateOptionsMenu(menu);
     }
@@ -210,14 +212,27 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
      * Initializes the selections, date, and times in the Check-In tabs.
      * This allows to remember so that the user can continue later on
      */
-    public void initCheckIn(final GregorianCalendar checkInTime, final String date, final String time) {
+    public void initCheckIn(
+            final GregorianCalendar checkInTime,
+            final String date,
+            final String time) {
         //save default values in preferences
         //use by default current  time for checkin time, symptom time and intake time
 
         //symptom values
         final Activity activity = this;
-        initSymptom(0, date, time, checkInTime.getTimeInMillis(), ServiceUtils.SYMPTOM_TYPE_SORE_THROAT);
-        initSymptom(1, date, time, checkInTime.getTimeInMillis(), ServiceUtils.SYMPTOM_TYPE_EAT_DRINK);
+        initSymptom(
+                0,
+                date,
+                time,
+                checkInTime.getTimeInMillis(),
+                ServiceUtils.SYMPTOM_TYPE_SORE_THROAT);
+        initSymptom(
+                1,
+                date,
+                time,
+                checkInTime.getTimeInMillis(),
+                ServiceUtils.SYMPTOM_TYPE_EAT_DRINK);
 
         final PatientSvcApi patientService = PatientSvc.getInstance().init(this);
         final String username = MainUtils.getCredentials(this).username;
@@ -235,8 +250,14 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
                 int prefSuffix = 0;
                 for (Medication medication: medications) {
                     CheckInUtils.saveEditor(
-                            activity, prefSuffix,
-                            CheckInUtils.PREF_MEDICATION_PREFIX, medication.getId(), date, time, checkInTime.getTimeInMillis(), -1);
+                            activity,
+                            prefSuffix,
+                            CheckInUtils.PREF_MEDICATION_PREFIX,
+                            medication.getId(),
+                            date,
+                            time,
+                            checkInTime.getTimeInMillis(),
+                            -1);
                     prefSuffix++;
                 }
             }
@@ -406,18 +427,24 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
                         Toast.LENGTH_SHORT).show();
             }
 
-            //create the intent for the AlarmNotificationReceiver and then wrap it in a PendingIntent
-            Intent mAlarmNotificationReceiverIntent = new Intent(MainActivity.this, ReminderNotificationReceiver.class);
+            // create the intent for the AlarmNotificationReceiver and
+            // then wrap it in a PendingIntent
+            Intent mAlarmNotificationReceiverIntent =
+                    new Intent(MainActivity.this, ReminderNotificationReceiver.class);
 
             //the id must be passed to the receiver and defined in the PendingIntent
             alarmId++;
-            mAlarmNotificationReceiverIntent.putExtra(ReminderNotificationReceiver.ARGS_ALARM_ID, alarmId);
-            mAlarmNotificationReceiverIntent.putExtra(ReminderNotificationReceiver.ARGS_ALARM_TIME, reminderTime);
+            mAlarmNotificationReceiverIntent
+                    .putExtra(ReminderNotificationReceiver.ARGS_ALARM_ID, alarmId);
+            mAlarmNotificationReceiverIntent
+                    .putExtra(ReminderNotificationReceiver.ARGS_ALARM_TIME, reminderTime);
             PendingIntent mAlarmNotificationReceiverPendingIntent = PendingIntent.getBroadcast(
                     MainActivity.this,
-                    alarmId, //this ID must be unique for each PendingIntent, otherwise only the last is set as an alarm
+                    alarmId, //this ID must be unique for each PendingIntent,
+                    // otherwise only the last is set as an alarm
                     mAlarmNotificationReceiverIntent,
-                    //set flag otherwiese when an alarm is replace the old extra bundle is not replaced!
+                    //set flag otherwise when an alarm is replace
+                    // the old extra bundle is not replaced!
                     PendingIntent.FLAG_UPDATE_CURRENT);
             mAlarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
@@ -425,7 +452,8 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
                     AlarmManager.INTERVAL_DAY,
                     mAlarmNotificationReceiverPendingIntent);
 
-            mReminderNotificationReceiverPendingIntentMap.put(reminderTime, mAlarmNotificationReceiverPendingIntent);
+            mReminderNotificationReceiverPendingIntentMap
+                    .put(reminderTime, mAlarmNotificationReceiverPendingIntent);
         }
     }
 
@@ -440,13 +468,15 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
 
         GregorianCalendar now = new GregorianCalendar();
         //create the intent for the AlarmNotificationReceiver and then wrap it in a PendingIntent
-        Intent mAlarmNotificationReceiverIntent = new Intent(MainActivity.this, AlarmNotificationReceiver.class);
+        Intent mAlarmNotificationReceiverIntent =
+                new Intent(MainActivity.this, AlarmNotificationReceiver.class);
 
         //the id as request code
         alarmId++;
         PendingIntent mAlarmNotificationReceiverPendingIntent = PendingIntent.getBroadcast(
                 MainActivity.this,
-                alarmId, //this ID must be unique for each PendingIntent, otherwise only the last is set as an alarm
+                alarmId, //this ID must be unique for each PendingIntent,
+                // otherwise only the last is set as an alarm
                 mAlarmNotificationReceiverIntent,
                 //set flag otherwise when an alarm is replace the old extra bundle is not replaced!
                 PendingIntent.FLAG_UPDATE_CURRENT);
