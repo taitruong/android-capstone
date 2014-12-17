@@ -183,7 +183,7 @@ public class ReminderSettingsFragment extends AbstractFragment {
 
             ReminderPreferencesUtils.saveReminderAlarms(getActivity(), reminderAlarms);
             updateReminderTextViews(reminderAlarms);
-            ((MainActivity) getActivity()).initAlarms();
+            ((MainActivity) getActivity()).createNotifications();
         }
 
     }

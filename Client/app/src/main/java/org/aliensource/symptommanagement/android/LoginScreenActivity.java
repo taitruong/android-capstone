@@ -62,15 +62,16 @@ public class LoginScreenActivity extends Activity {
 
             @Override
             public Boolean call() throws Exception {
-                return svc.hasRole("doesnotmatter");
+                return svc.hasRole(SecurityService.ROLE_DOCTOR);
             }
         }, new TaskCallback<Boolean>() {
 
             @Override
-            public void success(Boolean result) {
+            public void success(Boolean isDoctor) {
                 // OAuth 2.0 grant was successful and we
                 // can talk to the server, open up the video listing
                 Intent intent = new Intent(LoginScreenActivity.this, MainActivity.class);
+                intent.putExtra(MainActivity.ARGS_IS_DOCTOR, isDoctor);
                 startActivity(intent);
             }
 

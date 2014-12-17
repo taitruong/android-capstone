@@ -41,14 +41,12 @@ import org.aliensource.symptommanagement.android.reminder.ReminderSettingsFragme
 import org.aliensource.symptommanagement.android.report.PatientReportFragment;
 import org.aliensource.symptommanagement.client.service.CallableTask;
 import org.aliensource.symptommanagement.client.service.PatientSvc;
-import org.aliensource.symptommanagement.client.service.SecuritySvc;
 import org.aliensource.symptommanagement.client.service.SymptomSvc;
 import org.aliensource.symptommanagement.client.service.TaskCallback;
 import org.aliensource.symptommanagement.cloud.repository.Medication;
 import org.aliensource.symptommanagement.cloud.repository.Patient;
 import org.aliensource.symptommanagement.cloud.repository.Symptom;
 import org.aliensource.symptommanagement.cloud.service.PatientSvcApi;
-import org.aliensource.symptommanagement.cloud.service.SecurityService;
 import org.aliensource.symptommanagement.cloud.service.ServiceUtils;
 import org.aliensource.symptommanagement.cloud.service.SymptomSvcApi;
 
@@ -66,6 +64,10 @@ import butterknife.InjectView;
 import butterknife.OnItemClick;
 
 public class MainActivity extends SherlockFragmentActivity implements OnPatientsInteractionListener {
+
+    public static final String ARGS_IS_DOCTOR = "is_doctor";
+
+    protected boolean isDoctor;
 
     @InjectView(R.id.main_layout)
     protected DrawerLayout mDrawerLayout;
@@ -90,6 +92,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        isDoctor = getIntent().getBooleanExtra(ARGS_IS_DOCTOR, false);
 		setContentView(R.layout.activity_main);
 
         View layout = (View) findViewById(R.id.main_layout);
@@ -100,7 +103,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
 
         initDrawerMenu(savedInstanceState);
 
-        initAlarms();
+        createNotifications();
     }
 
     private void initDrawerMenu(Bundle savedInstanceState) {
@@ -308,106 +311,57 @@ public class MainActivity extends SherlockFragmentActivity implements OnPatients
 	}
 
     private void initMenus() {
-        final SecurityService svc = SecuritySvc.getInstance().init(this);
-        if (svc != null) {
-            CallableTask.invoke(new Callable<Boolean>() {
+        String logout = getString(R.string.logout);
+        if (isDoctor) {
+            String menu1 = getString(R.string.patient_list);
+            menuTitles = new String[]{menu1, logout};
 
-                @Override
-                public Boolean call() throws Exception {
-                    return svc.hasRole(SecurityService.ROLE_DOCTOR);
-                }
-            }, new TaskCallback<Boolean>() {
+            Fragment fragment1 = new PatientsListFragment();
+            Bundle args1 = new Bundle();
+            args1.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patients_list);
+            fragment1.setArguments(args1);
 
-                @Override
-                public void success(Boolean isDoctor) {
-                    String logout = getString(R.string.logout);
-                    if (isDoctor) {
-                        String menu1 = getString(R.string.patient_list);
-                        menuTitles = new String[]{menu1, logout};
+            Fragment fragment2 = new PatientReportFragment();
+            Bundle args2 = new Bundle();
+            args2.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patient_report);
+            fragment2.setArguments(args2);
 
-                        Fragment fragment1 = new PatientsListFragment();
-                        Bundle args1 = new Bundle();
-                        args1.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patients_list);
-                        fragment1.setArguments(args1);
+            fragments = new Fragment[]{fragment1, fragment2};
+        } else {
+            String menu1 = getString(R.string.check_in);
+            String menu2 = getString(R.string.reminder_settings);
+            menuTitles = new String[]{menu1, menu2, logout};
 
-                        Fragment fragment2 = new PatientReportFragment();
-                        Bundle args2 = new Bundle();
-                        args2.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_patient_report);
-                        fragment2.setArguments(args2);
+            Fragment fragment1 = new CheckInFragment();
+            Bundle args1 = new Bundle();
+            args1.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in);
+            fragment1.setArguments(args1);
 
-                        fragments = new Fragment[]{fragment1, fragment2};
-                    } else {
-                        String menu1 = getString(R.string.check_in);
-                        String menu2 = getString(R.string.reminder_settings);
-                        menuTitles = new String[]{menu1, menu2, logout};
+            Fragment fragment2 = new ReminderSettingsFragment();
+            Bundle args2 = new Bundle();
+            args2.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_reminder_settings);
+            fragment2.setArguments(args2);
 
-                        Fragment fragment1 = new CheckInFragment();
-                        Bundle args1 = new Bundle();
-                        args1.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_check_in);
-                        fragment1.setArguments(args1);
-
-                        Fragment fragment2 = new ReminderSettingsFragment();
-                        Bundle args2 = new Bundle();
-                        args2.putInt(MainUtils.ARG_LAYOUT, R.layout.fragment_reminder_settings);
-                        fragment2.setArguments(args2);
-
-                        fragments = new Fragment[]{fragment1, fragment2};
-                    }
-
-                    // set up the drawer's list view with items and click listener
-                    mainMenuList.setAdapter(new ArrayAdapter<String>(MainActivity.this,
-                            R.layout.drawer_list_item, menuTitles));
-                }
-
-                @Override
-                public void error(Exception e) {
-                    Toast.makeText(
-                            MainActivity.this,
-                            "Unable to create menus. " + e.getMessage() ,
-                            Toast.LENGTH_SHORT).show();
-
-                    startActivity(new Intent(MainActivity.this,
-                            LoginScreenActivity.class));
-                }
-            });
+            fragments = new Fragment[]{fragment1, fragment2};
         }
+
+        // set up the drawer's list view with items and click listener
+        mainMenuList.setAdapter(new ArrayAdapter<String>(MainActivity.this,
+                R.layout.drawer_list_item, menuTitles));
     }
 
     /**
      * Also called by {@link ReminderSettingsFragment#saveReminderPreferences(String, String)}.
      */
-    public void initAlarms() {
-        final SecurityService svc = SecuritySvc.getInstance().init(this);
-        if (svc != null) {
-            CallableTask.invoke(new Callable<Boolean>() {
-
-                @Override
-                public Boolean call() throws Exception {
-                    return svc.hasRole(SecurityService.ROLE_PATIENT);
-                }
-            }, new TaskCallback<Boolean>() {
-
-                @Override
-                public void success(Boolean isPatient) {
-                    if (isPatient) {
-                        createReminderNotifications();
-                    } else {
-                        Intent startServiceIntent = new Intent(getApplicationContext(),
-                                AlarmService.class);
-                        // Start the Service
-                        startService(startServiceIntent);
-                        createAlarmNotifications();
-                    }
-                }
-
-                @Override
-                public void error(Exception e) {
-                    Toast.makeText(
-                            MainActivity.this,
-                            "Unable to initialize alarms",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+    public void createNotifications() {
+        if (isDoctor) {
+            Intent startServiceIntent = new Intent(getApplicationContext(),
+                    AlarmService.class);
+            // Start the Service
+            startService(startServiceIntent);
+            createAlarmNotifications();
+        } else {
+            createReminderNotifications();
         }
     }
 
